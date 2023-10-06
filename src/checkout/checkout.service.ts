@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { FindCheckoutDto } from './dto';
 import { Checkout } from '../types';
 
 @Injectable()
 export class CheckoutService {
   /** Look up a checkout by id */
-  async findCheckout({ id }: FindCheckoutDto): Promise<Checkout> {
+  async findCheckoutById(id: string): Promise<Checkout> {
     return {
       id,
       lines: [
