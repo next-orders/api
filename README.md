@@ -38,3 +38,13 @@ npm run test:e2e
 # Test coverage
 npm run test:cov
 ```
+
+## How to deploy
+
+You can use latest Docker Image:
+
+```shell
+docker pull ghcr.io/next-orders/api:main
+```
+
+Work in progress, so there are no configs for now.
