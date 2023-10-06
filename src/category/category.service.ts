@@ -1,48 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Category } from '../types';
 import { FindCategoryDto } from './dto';
+import { PrismaService } from '../db/prisma.service';
 
 @Injectable()
 export class CategoryService {
+  constructor(private readonly prisma: PrismaService) {}
+
   /** List of the shop's categories */
   async listCategories(): Promise<Category[]> {
+    const categories = await this.prisma.category.findMany();
+
     return [
-      {
-        id: '1',
-        name: 'Пицца',
-        slug: 'pizza',
-        level: 1,
-      },
-      {
-        id: '2',
-        name: 'Суши',
-        slug: 'sushi',
-        level: 1,
-      },
-      {
-        id: '3',
-        name: 'Вок',
-        slug: 'wok',
-        level: 1,
-      },
-      {
-        id: '4',
-        name: 'Бургеры',
-        slug: 'burger',
-        level: 1,
-      },
-      {
-        id: '5',
-        name: 'Десерты',
-        slug: 'dessert',
-        level: 1,
-      },
-      {
-        id: '6',
-        name: 'Роллы',
-        slug: 'roll',
-        level: 1,
-      },
+      ...categories,
       {
         id: '7',
         name: 'Еще категория',

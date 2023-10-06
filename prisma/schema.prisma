@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String
+  level    Int
+  products Product[]
+}
+
+model Product {
+  id         String           @id @default(cuid())
+  name       String
+  slug       String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now())
+  media      ProductMedia[]
+  variants   ProductVariant[]
+  categoryId String
+  category   Category         @relation(fields: [categoryId], references: [id])
+}
+
+model ProductVariant {
+  id           String         @id @default(cuid())
+  name         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  sku          String?
+  weightUnit   String?
+  weightValue  Float?
+  onSale       Boolean        @default(false)
+  currency     String?
+  gross        Float?
+  net          Float?
+  tax          Float?
+  media        ProductMedia[]
+  productId    String
+  product      Product        @relation(fields: [productId], references: [id])
+  checkoutLine CheckoutLine[]
+}
+
+model ProductMedia {
+  id               String          @id @default(cuid())
+  alt              String
+  url              String
+  productVariantId String?
+  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
+  productId        String?
+  product          Product?        @relation(fields: [productId], references: [id])
+}
+
+model Checkout {
+  id        String         @id @default(cuid())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now())
+  lines     CheckoutLine[]
+}
+
+model CheckoutLine {
+  id               String         @id @default(cuid())
+  quantity         Int
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  checkoutId       String
+  checkout         Checkout       @relation(fields: [checkoutId], references: [id])
+}

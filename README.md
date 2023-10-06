@@ -8,7 +8,9 @@ This part of product is for first frontend: https://github.com/next-orders/v1
 - Node.js
 - NestJS
 - Express
+- Prisma ORM
 - TypeScript
+- PostgreSQL as DB
 
 ## How to develop
 
