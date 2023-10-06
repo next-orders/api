@@ -6,7 +6,7 @@ export class CheckoutController {
   constructor(private readonly service: CheckoutService) {}
 
   @Get(':id')
-  findCheckoutById(@Param() id: string) {
+  findCheckoutById(@Param('id') id: string) {
     return this.service.findCheckoutById(id);
   }
 }

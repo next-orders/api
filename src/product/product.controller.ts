@@ -6,7 +6,7 @@ export class ProductController {
   constructor(private readonly service: ProductService) {}
 
   @Get('category/:id')
-  findProductsInCategory(@Param() id: string) {
+  findProductsInCategory(@Param('id') id: string) {
     return this.service.findProductsInCategory(id);
   }
 }
