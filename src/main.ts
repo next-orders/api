@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
+const DEFAULT_PREFIX = 'api';
+const GLOBAL_PREFIX = process.env.GLOBAL_PREFIX || DEFAULT_PREFIX;
+
 const DEFAULT_PORT = 4001;
 const PORT = process.env.PORT || DEFAULT_PORT;
 
@@ -24,6 +27,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.setGlobalPrefix(GLOBAL_PREFIX);
 
   await app.listen(PORT);
 
