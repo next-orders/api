@@ -1,107 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { Category } from '../types';
+import { Product } from '../types';
+import { categoryPizza } from './temp-data/pizza';
+import { categorySushi } from './temp-data/sushi';
+import { categoryWok } from './temp-data/wok';
+import { categoryBurger } from './temp-data/burger';
+import { categoryDessert } from './temp-data/dessert';
+import { categoryRoll } from './temp-data/roll';
 
 @Injectable()
 export class ProductService {
-  /** List of the shop's categories */
-  async listCategories(): Promise<Category[]> {
-    return [
-      {
-        id: '1',
-        name: 'Пицца',
-        slug: 'pizza',
-        level: 1,
-      },
-      {
-        id: '2',
-        name: 'Суши',
-        slug: 'sushi',
-        level: 1,
-      },
-      {
-        id: '3',
-        name: 'Вок',
-        slug: 'wok',
-        level: 1,
-      },
-      {
-        id: '4',
-        name: 'Бургеры',
-        slug: 'burger',
-        level: 1,
-      },
-      {
-        id: '5',
-        name: 'Десерты',
-        slug: 'dessert',
-        level: 1,
-      },
-      {
-        id: '6',
-        name: 'Роллы',
-        slug: 'roll',
-        level: 1,
-      },
-      {
-        id: '7',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '8',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '9',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '10',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '11',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '12',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '13',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '14',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '15',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '16',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-    ];
+  /** List of the shop's products */
+  async findProductsInCategory(id: string): Promise<Product[] | null> {
+    if (id === '1') return categoryPizza;
+    if (id === '2') return categorySushi;
+    if (id === '3') return categoryWok;
+    if (id === '4') return categoryBurger;
+    if (id === '5') return categoryDessert;
+    if (id === '6') return categoryRoll;
+
+    return null;
   }
 }
