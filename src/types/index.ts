@@ -13,6 +13,8 @@ export type Product = {
   updatedAt: Date;
   category: Category;
   variants?: ProductVariant[];
+  rating: number;
+  score: number;
 };
 
 export type ProductVariant = {

@@ -25,6 +25,8 @@ model Product {
   variants   ProductVariant[]
   categoryId String
   category   Category         @relation(fields: [categoryId], references: [id])
+  rating     Float            @default(0)
+  score      Int              @default(0)
 }
 
 model ProductVariant {
