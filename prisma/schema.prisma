@@ -16,17 +16,21 @@ model Category {
 }
 
 model Product {
-  id         String           @id @default(cuid())
-  name       String
-  slug       String
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @default(now())
-  media      ProductMedia[]
-  variants   ProductVariant[]
-  categoryId String
-  category   Category         @relation(fields: [categoryId], references: [id])
-  rating     Float            @default(0)
-  score      Int              @default(0)
+  id                     String           @id @default(cuid())
+  name                   String
+  slug                   String
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @default(now())
+  media                  ProductMedia[]
+  variants               ProductVariant[]
+  categoryId             String
+  category               Category         @relation(fields: [categoryId], references: [id])
+  rating                 Float            @default(0)
+  score                  Int              @default(0)
+  description            String?
+  seoTitle               String?
+  seoDescription         String?
+  isAvailableForPurchase Boolean          @default(true)
 }
 
 model ProductVariant {
