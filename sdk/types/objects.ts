@@ -15,6 +15,10 @@ export type Product = {
   variants?: ProductVariant[];
   rating: number;
   score: number;
+  description: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  isAvailableForPurchase: boolean;
 };
 
 export type ProductVariant = {

@@ -1,0 +1,63 @@
+{
+  "name": "@next-orders/api-sdk",
+  "version": "0.1.5",
+  "description": "TS Lib: Easy ability to make requests to main API via NPM package. 100% typed.",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublish": "npm run build",
+    "publish": "npm publish",
+    "eslint": "npx eslint src",
+    "format": "prettier --write ."
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {}
+  },
+  "files": [
+    "dist/**/*",
+    "LICENSE",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "sdk",
+    "types",
+    "typescript"
+  ],
+  "author": "Nick Kosarev <hmbanan666@hotmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/next-orders/api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/next-orders/api/issues"
+  },
+  "homepage": "https://github.com/next-orders/api#readme",
+  "dependencies": {
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
+    "typescript": "5.2.2"
+  }
+}

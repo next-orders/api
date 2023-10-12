@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Category } from '../types';
-import { FindCategoryDto } from './dto';
-import { PrismaService } from '../db/prisma.service';
+import { PrismaService } from '@/db/prisma.service';
+import { Category } from '@api-sdk';
 
 @Injectable()
 export class CategoryService {
@@ -74,15 +73,5 @@ export class CategoryService {
         level: 1,
       },
     ];
-  }
-
-  /** Look up a category by ID or slug */
-  async findCategory(dto: FindCategoryDto): Promise<Category | null> {
-    return {
-      id: '1',
-      name: 'Пицца',
-      slug: 'pizza',
-      level: 1,
-    };
   }
 }

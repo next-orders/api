@@ -1,6 +1,8 @@
 # compiled output
 /dist
+/sdk/dist
 /node_modules
+/sdk/node_modules
 .env
 
 # Logs

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Checkout } from '../types';
+import { Checkout } from '@api-sdk';
 
 @Injectable()
 export class CheckoutService {
