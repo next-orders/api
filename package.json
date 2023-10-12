@@ -16,10 +16,6 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config test/jest-e2e.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/next-orders/api.git"
-  },
   "keywords": [
     "ecommerce",
     "api",
@@ -29,6 +25,14 @@
   ],
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/next-orders/api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/next-orders/api/issues"
+  },
+  "homepage": "https://github.com/next-orders/api#readme",
   "dependencies": {
     "@nestjs/common": "10.2.7",
     "@nestjs/core": "10.2.7",
