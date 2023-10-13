@@ -74,4 +74,10 @@ export class CategoryService {
       },
     ];
   }
+
+  async findBySlug(slug: string): Promise<Category | null> {
+    return this.prisma.category.findFirst({
+      where: { slug },
+    });
+  }
 }

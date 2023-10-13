@@ -26,7 +26,11 @@ export class MainAPI {
   }
 
   public async getCategories() {
-    return this.coreRequest<Category[]>(`category/list`, 'GET');
+    return this.coreRequest<Category[]>('category/list', 'GET');
+  }
+
+  public async getCategoryBySlug(slug: string) {
+    return this.coreRequest<Category>(`category/slug/${slug}`, 'GET');
   }
 
   private async client<T = unknown, E = Error>(
