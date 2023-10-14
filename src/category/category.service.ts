@@ -8,71 +8,7 @@ export class CategoryService {
 
   /** List of the shop's categories */
   async listCategories(): Promise<Category[]> {
-    const categories = await this.prisma.category.findMany();
-
-    return [
-      ...categories,
-      {
-        id: '7',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '8',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '9',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '10',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '11',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '12',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '13',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '14',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '15',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-      {
-        id: '16',
-        name: 'Еще категория',
-        slug: '#',
-        level: 1,
-      },
-    ];
+    return this.prisma.category.findMany();
   }
 
   async findBySlug(slug: string): Promise<Category | null> {

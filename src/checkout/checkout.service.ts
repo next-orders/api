@@ -13,16 +13,16 @@ export class CheckoutService {
           quantity: 2,
           variant: {
             id: 'phiny2u518hnjvxbuwe79tk0',
-            name: 'Четыре сезона',
+            name: 'Four seasons',
             createdAt: new Date(),
             updatedAt: new Date(),
             sku: '11',
-            weightUnit: 'г',
+            weightUnit: 'g',
             weightValue: 545,
             onSale: false,
-            currency: 'RUB',
-            gross: 789,
-            net: 789,
+            currency: 'USD',
+            gross: 7.89,
+            net: 7.89,
             tax: 0,
             media: [
               {
