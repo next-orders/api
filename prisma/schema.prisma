@@ -43,9 +43,9 @@ model ProductVariant {
   weightValue  Float?
   onSale       Boolean        @default(false)
   currency     String?
-  gross        Float?
-  net          Float?
-  tax          Float?
+  gross        Decimal?       @db.Decimal(12, 2)
+  net          Decimal?       @db.Decimal(12, 2)
+  tax          Decimal?       @db.Decimal(12, 2)
   media        ProductMedia[]
   productId    String
   product      Product        @relation(fields: [productId], references: [id])
