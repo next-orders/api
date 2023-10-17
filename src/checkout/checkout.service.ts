@@ -14,6 +14,7 @@ export class CheckoutService {
           variant: {
             id: 'phiny2u518hnjvxbuwe79tk0',
             name: 'Four seasons',
+            description: '',
             createdAt: new Date(),
             updatedAt: new Date(),
             sku: '11',
@@ -27,8 +28,11 @@ export class CheckoutService {
             media: [
               {
                 id: 'djbekzdi4srsdmwneuexn8fx',
-                alt: 'Фото',
-                url: '/static/products/pizza/1.png',
+                media: {
+                  id: 'djbekzdi4srsdmwneuexn8fx',
+                  alt: 'Фото',
+                  url: '/static/products/pizza/1.png',
+                },
               },
             ],
           },

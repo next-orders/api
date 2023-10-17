@@ -6,7 +6,6 @@ import { Category } from '@api-sdk';
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** List of the shop's categories */
   async listCategories(): Promise<Category[]> {
     return this.prisma.category.findMany();
   }

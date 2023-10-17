@@ -7,12 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Main Entity
+model Shop {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now())
+  domains     Domain[]
+  media       Media[]
+  categories  Category[]
+  products    Product[]
+  employees   Employee[]
+  clients     Client[]
+  channels    Channel[]
+}
+
+// Shop Entities
+model Domain {
+  id        String    @id @default(cuid())
+  host      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  shopId    String
+  shop      Shop      @relation(fields: [shopId], references: [id])
+  channel   Channel[]
+}
+
+model Media {
+  id           String         @id @default(cuid())
+  alt          String
+  url          String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  shopId       String
+  shop         Shop           @relation(fields: [shopId], references: [id])
+  productMedia ProductMedia[]
+}
+
 model Category {
-  id       String    @id @default(cuid())
-  name     String
-  slug     String
-  level    Int
-  products Product[]
+  id        String    @id @default(cuid())
+  name      String
+  slug      String
+  level     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  shopId    String
+  shop      Shop      @relation(fields: [shopId], references: [id])
+  products  Product[]
 }
 
 model Product {
@@ -21,8 +63,6 @@ model Product {
   slug                   String
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @default(now())
-  media                  ProductMedia[]
-  variants               ProductVariant[]
   categoryId             String
   category               Category         @relation(fields: [categoryId], references: [id])
   rating                 Float            @default(0)
@@ -31,47 +71,135 @@ model Product {
   seoTitle               String?
   seoDescription         String?
   isAvailableForPurchase Boolean          @default(true)
+  shopId                 String
+  shop                   Shop             @relation(fields: [shopId], references: [id])
+  variants               ProductVariant[]
+}
+
+model Employee {
+  id          String               @id @default(cuid())
+  firstName   String
+  lastName    String?
+  isActive    Boolean              @default(true)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @default(now())
+  lastLogin   DateTime?
+  shopId      String
+  shop        Shop                 @relation(fields: [shopId], references: [id])
+  permissions EmployeePermission[]
+}
+
+model EmployeePermission {
+  id         String   @id @default(cuid())
+  code       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+}
+
+model EmployeeContact {
+  id        String   @id @default(cuid())
+  type      String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id])
+}
+
+model Channel {
+  id           String     @id @default(cuid())
+  slug         String
+  name         String
+  currencyCode String
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  shopId       String
+  shop         Shop       @relation(fields: [shopId], references: [id])
+  domainId     String?
+  domain       Domain?    @relation(fields: [domainId], references: [id])
+  menus        Menu[]
+  checkouts    Checkout[]
+}
+
+// Channel Entities
+model Menu {
+  id         String         @id @default(cuid())
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now())
+  channelId  String
+  channel    Channel        @relation(fields: [channelId], references: [id])
+  categories MenuCategory[]
+}
+
+model MenuCategory {
+  id        String           @id @default(cuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @default(now())
+  name      String
+  slug      String
+  menuId    String
+  menu      Menu             @relation(fields: [menuId], references: [id])
+  products  ProductVariant[]
 }
 
 model ProductVariant {
-  id           String         @id @default(cuid())
-  name         String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @default(now())
-  sku          String?
-  weightUnit   String?
-  weightValue  Float?
-  onSale       Boolean        @default(false)
-  currency     String?
-  gross        Float?
-  net          Float?
-  tax          Float?
-  media        ProductMedia[]
-  productId    String
-  product      Product        @relation(fields: [productId], references: [id])
-  checkoutLine CheckoutLine[]
+  id            String         @id @default(cuid())
+  name          String
+  description   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  sku           String?
+  weightUnit    String?
+  weightValue   Float?
+  onSale        Boolean        @default(false)
+  currency      String?
+  gross         Float?
+  net           Float?
+  tax           Float?
+  productId     String
+  product       Product        @relation(fields: [productId], references: [id])
+  categoryId    String
+  category      MenuCategory   @relation(fields: [categoryId], references: [id])
+  media         ProductMedia[]
+  checkoutLines CheckoutLine[]
 }
 
 model ProductMedia {
-  id               String          @id @default(cuid())
-  alt              String
-  url              String
-  productVariantId String?
-  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
-  productId        String?
-  product          Product?        @relation(fields: [productId], references: [id])
+  id               String         @id @default(cuid())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now())
+  mediaId          String
+  media            Media          @relation(fields: [mediaId], references: [id])
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
 }
 
 model Checkout {
   id        String         @id @default(cuid())
   createdAt DateTime       @default(now())
   updatedAt DateTime       @default(now())
+  channelId String
+  channel   Channel        @relation(fields: [channelId], references: [id])
   lines     CheckoutLine[]
 }
 
 model CheckoutLine {
   id               String         @id @default(cuid())
   quantity         Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now())
   productVariantId String
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
   checkoutId       String

@@ -1,4 +1,19 @@
-import { Category, Checkout, Product } from './types/objects';
+import {
+  Category,
+  Channel,
+  Checkout,
+  Menu,
+  MenuCategory,
+  Product,
+  Shop,
+} from './types/objects';
+
+type NextFetchRequestConfig = RequestInit & {
+  next?: {
+    revalidate?: number | false;
+    tags?: string[];
+  };
+};
 
 export class MainAPI {
   private readonly apiUrl: string;
@@ -9,33 +24,124 @@ export class MainAPI {
     this.apiToken = apiToken;
   }
 
-  public async getProductsInCategory(categoryId: string) {
-    return this.coreRequest<Product[]>(`product/category/${categoryId}`, 'GET');
+  public async getShop(
+    shopId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Shop>(
+      `shop/${shopId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
-  public async getProductBySlug(slug: string) {
-    return this.coreRequest<Product>(`product/slug/${slug}`, 'GET');
+  public async getChannel(
+    channelId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Channel>(
+      `channel/${channelId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
-  public async getProductById(id: string) {
-    return this.coreRequest<Product>(`product/${id}`, 'GET');
+  public async getMenuById(
+    menuId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Menu>(
+      `menu/${menuId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
-  public async getCheckout(id: string) {
-    return this.coreRequest<Checkout>(`checkout/${id}`, 'GET');
+  public async getProductsInCategory(
+    categoryId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Product[]>(
+      `product/category/${categoryId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
-  public async getCategories() {
-    return this.coreRequest<Category[]>('category/list', 'GET');
+  public async getProductBySlug(
+    slug: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Product>(
+      `product/slug/${slug}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
-  public async getCategoryBySlug(slug: string) {
-    return this.coreRequest<Category>(`category/slug/${slug}`, 'GET');
+  public async getProductById(
+    id: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Product>(
+      `product/${id}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getCheckout(
+    id: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Checkout>(
+      `checkout/${id}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getCategories(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<Category[]>(
+      'category/list',
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getCategoryBySlug(
+    slug: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Category>(
+      `category/slug/${slug}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getMenuCategories(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<MenuCategory[]>(
+      'menu-category/list',
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
   private async client<T = unknown, E = Error>(
     endpoint: string,
     customConfig: RequestInit = {},
+    externalConfig: NextFetchRequestConfig = {},
   ) {
     const { body, ...otherConfig } = customConfig;
 
@@ -46,8 +152,8 @@ export class MainAPI {
         Authorization: `Bearer ${this.apiToken}`,
       },
       body,
-      cache: 'no-store',
       ...otherConfig,
+      ...externalConfig,
     };
 
     const response = await fetch(`${this.apiUrl}/${endpoint}`, config);
@@ -66,12 +172,17 @@ export class MainAPI {
     endpoint: string,
     method: 'POST' | 'GET' = 'POST',
     data?: unknown,
+    externalConfig?: NextFetchRequestConfig,
   ) {
     try {
-      return await this.client<T>(endpoint, {
-        body: JSON.stringify(data),
-        method,
-      });
+      return await this.client<T>(
+        endpoint,
+        {
+          body: JSON.stringify(data),
+          method,
+        },
+        externalConfig,
+      );
     } catch (e) {
       if (e instanceof Error) {
         return e;
