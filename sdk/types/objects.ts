@@ -94,6 +94,7 @@ export type ProductVariant = {
   net?: number | null;
   tax?: number | null;
   media?: ProductMedia[];
+  category: MenuCategory;
 };
 
 export type ProductMedia = {

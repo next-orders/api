@@ -12,6 +12,7 @@ export class ProductVariantService {
     const products = await this.prisma.productVariant.findMany({
       where: { categoryId },
       include: {
+        category: true,
         media: {
           include: {
             media: true,
@@ -30,6 +31,7 @@ export class ProductVariantService {
     return this.prisma.productVariant.findFirst({
       where: { slug },
       include: {
+        category: true,
         media: {
           include: {
             media: true,
@@ -43,6 +45,7 @@ export class ProductVariantService {
     return this.prisma.productVariant.findUnique({
       where: { id },
       include: {
+        category: true,
         media: {
           include: {
             media: true,
