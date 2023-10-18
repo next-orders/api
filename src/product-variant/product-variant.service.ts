@@ -26,6 +26,19 @@ export class ProductVariantService {
     return products;
   }
 
+  async findProductVariantBySlug(slug: string): Promise<ProductVariant | null> {
+    return this.prisma.productVariant.findFirst({
+      where: { slug },
+      include: {
+        media: {
+          include: {
+            media: true,
+          },
+        },
+      },
+    });
+  }
+
   async findProductVariantById(id: string): Promise<ProductVariant | null> {
     return this.prisma.productVariant.findUnique({
       where: { id },

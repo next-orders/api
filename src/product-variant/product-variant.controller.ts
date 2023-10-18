@@ -10,6 +10,16 @@ export class ProductVariantController {
     return this.service.findProductVariantsInCategory(id);
   }
 
+  @Get('slug/:slug')
+  async findProductVariantBySlug(@Param('slug') slug: string) {
+    const product = await this.service.findProductVariantBySlug(slug);
+    if (!product) {
+      throw new NotFoundException();
+    }
+
+    return product;
+  }
+
   @Get(':id')
   async findProductVariantById(@Param('id') id: string) {
     const product = await this.service.findProductVariantById(id);

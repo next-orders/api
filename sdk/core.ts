@@ -109,6 +109,18 @@ export class MainAPI {
     );
   }
 
+  public async getProductVariantBySlug(
+    slug: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductVariant>(
+      `product-variant/slug/${slug}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getCheckout(
     id: string,
     externalConfig?: NextFetchRequestConfig,
