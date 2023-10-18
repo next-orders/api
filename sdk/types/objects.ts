@@ -93,16 +93,14 @@ export type ProductVariant = {
   gross?: number | null;
   net?: number | null;
   tax?: number | null;
-  media?: ProductMedia[];
+  media: ProductMedia[];
   category: MenuCategory;
 };
 
 export type ProductMedia = {
   id: string;
-  mediaId: string;
-  media?: Media;
-  createdAt: Date;
-  updatedAt: Date;
+  alt: string;
+  url: string;
 };
 
 export type Checkout = {

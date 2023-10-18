@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
-import { ProductVariant } from '@api-sdk';
+import { ProductMedia, ProductVariant } from '@api-sdk';
 
 @Injectable()
 export class ProductVariantService {
@@ -24,11 +24,27 @@ export class ProductVariantService {
       return null;
     }
 
-    return products;
+    const productsPrepared: ProductVariant[] = [];
+
+    // Move Media to root
+    for (const product of products) {
+      const media: ProductMedia[] = product.media.map((media) => ({
+        id: media.media.id,
+        alt: media.media.alt,
+        url: media.media.url,
+      }));
+
+      productsPrepared.push({
+        ...product,
+        media: media,
+      });
+    }
+
+    return productsPrepared;
   }
 
   async findProductVariantBySlug(slug: string): Promise<ProductVariant | null> {
-    return this.prisma.productVariant.findFirst({
+    const product = await this.prisma.productVariant.findFirst({
       where: { slug },
       include: {
         category: true,
@@ -39,10 +55,25 @@ export class ProductVariantService {
         },
       },
     });
+    if (!product) {
+      return null;
+    }
+
+    // Move Media to root
+    const media: ProductMedia[] = product.media.map((media) => ({
+      id: media.media.id,
+      alt: media.media.alt,
+      url: media.media.url,
+    }));
+
+    return {
+      ...product,
+      media,
+    };
   }
 
   async findProductVariantById(id: string): Promise<ProductVariant | null> {
-    return this.prisma.productVariant.findUnique({
+    const product = await this.prisma.productVariant.findUnique({
       where: { id },
       include: {
         category: true,
@@ -53,5 +84,20 @@ export class ProductVariantService {
         },
       },
     });
+    if (!product) {
+      return null;
+    }
+
+    // Move Media to root
+    const media: ProductMedia[] = product.media.map((media) => ({
+      id: media.media.id,
+      alt: media.media.alt,
+      url: media.media.url,
+    }));
+
+    return {
+      ...product,
+      media,
+    };
   }
 }
