@@ -8,6 +8,7 @@ import { MenuModule } from '@/menu/menu.module';
 import { MenuCategoryModule } from '@/menu-category/menu-category.module';
 import { ShopModule } from '@/shop/shop.module';
 import { ChannelModule } from '@/channel/channel.module';
+import { ProductVariantModule } from '@/product-variant/product-variant.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ChannelModule } from '@/channel/channel.module';
     ChannelModule,
     CategoryModule,
     ProductModule,
+    ProductVariantModule,
     CheckoutModule,
     MenuModule,
     MenuCategoryModule,

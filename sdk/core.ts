@@ -96,6 +96,18 @@ export class MainAPI {
     );
   }
 
+  public async getProductVariantsInCategory(
+    categoryId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Product[]>(
+      `product-variant/category/${categoryId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getCheckout(
     id: string,
     externalConfig?: NextFetchRequestConfig,

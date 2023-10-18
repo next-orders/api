@@ -13,7 +13,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 export class ProductController {
   constructor(private readonly service: ProductService) {}
 
-  // Product
   @Get('category/:id')
   findProductsInCategory(@Param('id') id: string) {
     return this.service.findProductsInCategory(id);
@@ -44,21 +43,5 @@ export class ProductController {
     return {
       ...dto,
     };
-  }
-
-  // ProductVariant
-  @Get('variant/category/:id')
-  findProductVariantsInCategory(@Param('id') id: string) {
-    return this.service.findProductVariantsInCategory(id);
-  }
-
-  @Get('variant/:id')
-  async findProductVariantById(@Param('id') id: string) {
-    const product = await this.service.findProductVariantById(id);
-    if (!product) {
-      throw new NotFoundException();
-    }
-
-    return product;
   }
 }
