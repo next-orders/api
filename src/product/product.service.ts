@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
-import { Product, ProductMedia, ProductVariant } from '@api-sdk';
+import { Product } from '@api-sdk';
+import { changeMediaInProductVariant } from '@/lib/helpers';
 
 @Injectable()
 export class ProductService {
@@ -27,21 +28,9 @@ export class ProductService {
       return null;
     }
 
-    const productVariantsPrepared: ProductVariant[] = [];
-
-    // Move Media to root
-    for (const productVariant of product.variants) {
-      const media: ProductMedia[] = productVariant.media.map((media) => ({
-        id: media.media.id,
-        alt: media.media.alt,
-        url: media.media.url,
-      }));
-
-      productVariantsPrepared.push({
-        ...productVariant,
-        media: media,
-      });
-    }
+    const productVariantsPrepared = changeMediaInProductVariant(
+      product.variants,
+    );
 
     return {
       ...product,
@@ -70,21 +59,9 @@ export class ProductService {
       return null;
     }
 
-    const productVariantsPrepared: ProductVariant[] = [];
-
-    // Move Media to root
-    for (const productVariant of product.variants) {
-      const media: ProductMedia[] = productVariant.media.map((media) => ({
-        id: media.media.id,
-        alt: media.media.alt,
-        url: media.media.url,
-      }));
-
-      productVariantsPrepared.push({
-        ...productVariant,
-        media: media,
-      });
-    }
+    const productVariantsPrepared = changeMediaInProductVariant(
+      product.variants,
+    );
 
     return {
       ...product,
@@ -116,21 +93,9 @@ export class ProductService {
     const productsPrepared: Product[] = [];
 
     for (const product of products) {
-      const productVariantsPrepared: ProductVariant[] = [];
-
-      // Move Media to root
-      for (const productVariant of product.variants) {
-        const media: ProductMedia[] = productVariant.media.map((media) => ({
-          id: media.media.id,
-          alt: media.media.alt,
-          url: media.media.url,
-        }));
-
-        productVariantsPrepared.push({
-          ...productVariant,
-          media: media,
-        });
-      }
+      const productVariantsPrepared = changeMediaInProductVariant(
+        product.variants,
+      );
 
       productsPrepared.push({
         ...product,

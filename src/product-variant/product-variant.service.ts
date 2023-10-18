@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
-import { ProductMedia, ProductVariant } from '@api-sdk';
+import { ProductVariant } from '@api-sdk';
+import { changeMediaInProductVariant } from '@/lib/helpers';
 
 @Injectable()
 export class ProductVariantService {
@@ -24,23 +25,7 @@ export class ProductVariantService {
       return null;
     }
 
-    const productsPrepared: ProductVariant[] = [];
-
-    // Move Media to root
-    for (const product of products) {
-      const media: ProductMedia[] = product.media.map((media) => ({
-        id: media.media.id,
-        alt: media.media.alt,
-        url: media.media.url,
-      }));
-
-      productsPrepared.push({
-        ...product,
-        media: media,
-      });
-    }
-
-    return productsPrepared;
+    return changeMediaInProductVariant(products);
   }
 
   async findProductVariantBySlug(slug: string): Promise<ProductVariant | null> {
@@ -59,17 +44,9 @@ export class ProductVariantService {
       return null;
     }
 
-    // Move Media to root
-    const media: ProductMedia[] = product.media.map((media) => ({
-      id: media.media.id,
-      alt: media.media.alt,
-      url: media.media.url,
-    }));
+    const productVariants = changeMediaInProductVariant([product]);
 
-    return {
-      ...product,
-      media,
-    };
+    return productVariants[0];
   }
 
   async findProductVariantById(id: string): Promise<ProductVariant | null> {
@@ -88,16 +65,8 @@ export class ProductVariantService {
       return null;
     }
 
-    // Move Media to root
-    const media: ProductMedia[] = product.media.map((media) => ({
-      id: media.media.id,
-      alt: media.media.alt,
-      url: media.media.url,
-    }));
+    const productVariants = changeMediaInProductVariant([product]);
 
-    return {
-      ...product,
-      media,
-    };
+    return productVariants[0];
   }
 }
