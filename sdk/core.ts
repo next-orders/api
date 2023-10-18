@@ -5,6 +5,7 @@ import {
   Menu,
   MenuCategory,
   Product,
+  ProductVariant,
   Shop,
 } from './types/objects';
 
@@ -100,7 +101,7 @@ export class MainAPI {
     categoryId: string,
     externalConfig?: NextFetchRequestConfig,
   ) {
-    return this.coreRequest<Product[]>(
+    return this.coreRequest<ProductVariant[]>(
       `product-variant/category/${categoryId}`,
       'GET',
       undefined,

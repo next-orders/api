@@ -80,6 +80,7 @@ export type MenuCategory = {
 
 export type ProductVariant = {
   id: string;
+  slug: string;
   name: string;
   description: string | null;
   createdAt: Date;
