@@ -9,6 +9,9 @@ export class MenuService {
   async findMenuById(id: string): Promise<Menu | null> {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
+      include: {
+        categories: true,
+      },
     });
     if (!menu) {
       return null;
