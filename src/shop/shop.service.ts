@@ -11,7 +11,15 @@ export class ShopService {
       where: { id },
       include: {
         domains: true,
-        channels: true,
+        channels: {
+          include: {
+            menus: {
+              include: {
+                categories: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!shop) {

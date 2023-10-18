@@ -13,6 +13,7 @@ export class ProductService {
         category: true,
         variants: {
           include: {
+            category: true,
             media: true,
           },
         },
@@ -27,6 +28,7 @@ export class ProductService {
         category: true,
         variants: {
           include: {
+            category: true,
             media: true,
           },
         },
@@ -34,7 +36,6 @@ export class ProductService {
     });
   }
 
-  /** List of the shop's products */
   async findProductsInCategory(categoryId: string): Promise<Product[] | null> {
     const products = await this.prisma.product.findMany({
       where: { categoryId },
@@ -42,6 +43,7 @@ export class ProductService {
         category: true,
         variants: {
           include: {
+            category: true,
             media: true,
           },
         },

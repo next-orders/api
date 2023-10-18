@@ -29,9 +29,9 @@ export class CheckoutService {
               {
                 id: 'djbekzdi4srsdmwneuexn8fx',
                 media: {
-                  id: 'djbekzdi4srsdmwneuexn8fx',
-                  alt: 'Фото',
-                  url: '/static/products/pizza/1.png',
+                  id: 'f9jibjq7nqm5e3uwd343rer7',
+                  alt: 'Four Seasons',
+                  url: 'https://v1.next-orders.org/static/products/pizza/1.png',
                 },
               },
             ],
