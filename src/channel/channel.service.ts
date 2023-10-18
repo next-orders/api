@@ -9,6 +9,13 @@ export class ChannelService {
   async findChannelById(id: string): Promise<Channel | null> {
     const channel = await this.prisma.channel.findUnique({
       where: { id },
+      include: {
+        menus: {
+          include: {
+            categories: true,
+          },
+        },
+      },
     });
     if (!channel) {
       return null;

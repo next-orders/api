@@ -59,6 +59,7 @@ export type Channel = {
   createdAt: Date;
   updatedAt: Date;
   domainId?: string | null;
+  menus: Menu[];
 };
 
 // Channel Entities
@@ -66,6 +67,7 @@ export type Menu = {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+  categories: MenuCategory[];
 };
 
 export type MenuCategory = {
