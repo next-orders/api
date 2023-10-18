@@ -1,39 +1,95 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
-import { Product } from '@api-sdk';
+import { Product, ProductMedia, ProductVariant } from '@api-sdk';
 
 @Injectable()
 export class ProductService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findProductById(id: string): Promise<Product | null> {
-    return this.prisma.product.findUnique({
+    const product = await this.prisma.product.findUnique({
       where: { id },
       include: {
         category: true,
         variants: {
           include: {
             category: true,
-            media: true,
+            media: {
+              include: {
+                media: true,
+              },
+            },
           },
         },
       },
     });
+    if (!product) {
+      return null;
+    }
+
+    const productVariantsPrepared: ProductVariant[] = [];
+
+    // Move Media to root
+    for (const productVariant of product.variants) {
+      const media: ProductMedia[] = productVariant.media.map((media) => ({
+        id: media.media.id,
+        alt: media.media.alt,
+        url: media.media.url,
+      }));
+
+      productVariantsPrepared.push({
+        ...productVariant,
+        media: media,
+      });
+    }
+
+    return {
+      ...product,
+      variants: productVariantsPrepared,
+    };
   }
 
   async findProductBySlug(slug: string): Promise<Product | null> {
-    return this.prisma.product.findFirst({
+    const product = await this.prisma.product.findFirst({
       where: { slug },
       include: {
         category: true,
         variants: {
           include: {
             category: true,
-            media: true,
+            media: {
+              include: {
+                media: true,
+              },
+            },
           },
         },
       },
     });
+    if (!product) {
+      return null;
+    }
+
+    const productVariantsPrepared: ProductVariant[] = [];
+
+    // Move Media to root
+    for (const productVariant of product.variants) {
+      const media: ProductMedia[] = productVariant.media.map((media) => ({
+        id: media.media.id,
+        alt: media.media.alt,
+        url: media.media.url,
+      }));
+
+      productVariantsPrepared.push({
+        ...productVariant,
+        media: media,
+      });
+    }
+
+    return {
+      ...product,
+      variants: productVariantsPrepared,
+    };
   }
 
   async findProductsInCategory(categoryId: string): Promise<Product[] | null> {
@@ -44,7 +100,11 @@ export class ProductService {
         variants: {
           include: {
             category: true,
-            media: true,
+            media: {
+              include: {
+                media: true,
+              },
+            },
           },
         },
       },
@@ -53,6 +113,31 @@ export class ProductService {
       return null;
     }
 
-    return products;
+    const productsPrepared: Product[] = [];
+
+    for (const product of products) {
+      const productVariantsPrepared: ProductVariant[] = [];
+
+      // Move Media to root
+      for (const productVariant of product.variants) {
+        const media: ProductMedia[] = productVariant.media.map((media) => ({
+          id: media.media.id,
+          alt: media.media.alt,
+          url: media.media.url,
+        }));
+
+        productVariantsPrepared.push({
+          ...productVariant,
+          media: media,
+        });
+      }
+
+      productsPrepared.push({
+        ...product,
+        variants: productVariantsPrepared,
+      });
+    }
+
+    return productsPrepared;
   }
 }

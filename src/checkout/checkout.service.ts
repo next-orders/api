@@ -27,12 +27,9 @@ export class CheckoutService {
             tax: 0,
             media: [
               {
-                id: 'djbekzdi4srsdmwneuexn8fx',
-                media: {
-                  id: 'f9jibjq7nqm5e3uwd343rer7',
-                  alt: 'Four Seasons',
-                  url: 'https://v1.next-orders.org/static/products/pizza/1.png',
-                },
+                id: 'f9jibjq7nqm5e3uwd343rer7',
+                alt: 'Four Seasons',
+                url: 'https://v1.next-orders.org/static/products/pizza/1.png',
               },
             ],
           },
