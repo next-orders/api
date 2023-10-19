@@ -6,5 +6,6 @@ import { ProductVariantService } from '@/product-variant/product-variant.service
 @Module({
   controllers: [ProductVariantController],
   providers: [ProductVariantService, PrismaService],
+  exports: [ProductVariantService],
 })
 export class ProductVariantModule {}

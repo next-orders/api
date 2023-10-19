@@ -21,9 +21,7 @@ export class AppController {
   apiVersion() {
     return {
       ok: true,
-      version: {
-        api: '0.1.0',
-      },
+      version: '0.1.0',
     };
   }
 }
