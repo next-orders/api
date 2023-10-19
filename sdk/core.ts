@@ -2,6 +2,7 @@ import {
   Category,
   Channel,
   Checkout,
+  Media,
   Menu,
   MenuCategory,
   Product,
@@ -52,6 +53,15 @@ export class MainAPI {
   public async getChannels(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Channel[]>(
       `channel/list`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getAllMedia(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<Media[]>(
+      `media/list`,
       'GET',
       undefined,
       externalConfig,

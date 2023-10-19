@@ -9,11 +9,13 @@ import { MenuCategoryModule } from '@/menu-category/menu-category.module';
 import { ShopModule } from '@/shop/shop.module';
 import { ChannelModule } from '@/channel/channel.module';
 import { ProductVariantModule } from '@/product-variant/product-variant.module';
+import { MediaModule } from '@/media/media.module';
 
 @Module({
   imports: [
     ShopModule,
     ChannelModule,
+    MediaModule,
     CategoryModule,
     ProductModule,
     ProductVariantModule,
