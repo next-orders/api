@@ -65,6 +65,11 @@ export class CheckoutService {
       return null;
     }
 
+    // Max lines = 25
+    if (tempCheckout.lines.length >= 25) {
+      return null;
+    }
+
     // Product Found. Add one to Cart
     const line: CheckoutLine = {
       id: createId(),
@@ -77,11 +82,10 @@ export class CheckoutService {
       lines: [...tempCheckout.lines, line],
     };
 
-    return { ok: true, tempCheckout };
+    return { ok: true, result: tempCheckout };
   }
 
   async findCheckoutById(id: string) {
-    Logger.log(`Checkout ${id}: getting data`);
     return tempCheckout;
   }
 }

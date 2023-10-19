@@ -182,6 +182,18 @@ export class MainAPI {
     );
   }
 
+  public async getMenuCategoryBySlug(
+    slug: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<MenuCategory>(
+      `menu-category/slug/${slug}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   private async client<T = unknown, E = Error>(
     endpoint: string,
     customConfig: RequestInit = {},
