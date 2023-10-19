@@ -3,6 +3,8 @@ Frontend needs data from backend: categories, products, checkouts, etc.
 
 This part of product is for first frontend: https://github.com/next-orders/v1
 
+![next-orders-entities](https://github.com/next-orders/api/blob/main/.github/next-orders-entities.png?raw=true)
+
 ## Stack
 
 - Node.js

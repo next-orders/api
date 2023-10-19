@@ -10,7 +10,11 @@ export class MenuService {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
       include: {
-        categories: true,
+        categories: {
+          include: {
+            products: true,
+          },
+        },
       },
     });
     if (!menu) {
