@@ -16,4 +16,14 @@ export class AppController {
       ok: true,
     };
   }
+
+  @Get('version')
+  apiVersion() {
+    return {
+      ok: true,
+      version: {
+        api: '0.1.0',
+      },
+    };
+  }
 }
