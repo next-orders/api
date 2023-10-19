@@ -102,18 +102,6 @@ export class MainAPI {
     );
   }
 
-  public async getProductBySlug(
-    slug: string,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.coreRequest<Product>(
-      `product/slug/${slug}`,
-      'GET',
-      undefined,
-      externalConfig,
-    );
-  }
-
   public async getProductById(
     id: string,
     externalConfig?: NextFetchRequestConfig,
@@ -165,18 +153,6 @@ export class MainAPI {
   public async getCategories(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Category[]>(
       'category/list',
-      'GET',
-      undefined,
-      externalConfig,
-    );
-  }
-
-  public async getCategoryBySlug(
-    slug: string,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.coreRequest<Category>(
-      `category/slug/${slug}`,
       'GET',
       undefined,
       externalConfig,

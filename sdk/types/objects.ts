@@ -28,7 +28,6 @@ export type Media = {
 export type Category = {
   id: string;
   name: string;
-  slug: string;
   level: number;
   createdAt: Date;
   updatedAt: Date;
@@ -37,16 +36,13 @@ export type Category = {
 export type Product = {
   id: string;
   name: string;
-  slug: string;
+  description: string | null;
   createdAt: Date;
   updatedAt: Date;
   category: Category;
   variants?: ProductVariant[];
   rating: number;
   score: number;
-  description: string | null;
-  seoTitle: string | null;
-  seoDescription: string | null;
   isAvailableForPurchase: boolean;
 };
 
@@ -54,6 +50,7 @@ export type Channel = {
   id: string;
   slug: string;
   name: string;
+  description: string | null;
   currencyCode: string;
   isActive: boolean;
   createdAt: Date;
@@ -93,6 +90,8 @@ export type ProductVariant = {
   gross?: number | null;
   net?: number | null;
   tax?: number | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
   media: ProductMedia[];
   category: MenuCategory;
 };

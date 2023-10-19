@@ -48,7 +48,6 @@ model Media {
 model Category {
   id        String    @id @default(cuid())
   name      String
-  slug      String
   level     Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
@@ -60,16 +59,13 @@ model Category {
 model Product {
   id                     String           @id @default(cuid())
   name                   String
-  slug                   String
+  description            String?
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @default(now())
   categoryId             String
   category               Category         @relation(fields: [categoryId], references: [id])
   rating                 Float            @default(0)
   score                  Int              @default(0)
-  description            String?
-  seoTitle               String?
-  seoDescription         String?
   isAvailableForPurchase Boolean          @default(true)
   shopId                 String
   shop                   Shop             @relation(fields: [shopId], references: [id])
@@ -121,6 +117,7 @@ model Channel {
   id           String     @id @default(cuid())
   slug         String
   name         String
+  description  String?
   currencyCode String
   isActive     Boolean    @default(true)
   createdAt    DateTime   @default(now())
@@ -155,26 +152,28 @@ model MenuCategory {
 }
 
 model ProductVariant {
-  id            String         @id @default(cuid())
-  name          String
-  description   String?
-  slug          String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
-  sku           String?
-  weightUnit    String?
-  weightValue   Float?
-  onSale        Boolean        @default(false)
-  currency      String?
-  gross         Float?
-  net           Float?
-  tax           Float?
-  productId     String
-  product       Product        @relation(fields: [productId], references: [id])
-  categoryId    String
-  category      MenuCategory   @relation(fields: [categoryId], references: [id])
-  media         ProductMedia[]
-  checkoutLines CheckoutLine[]
+  id             String         @id @default(cuid())
+  name           String
+  description    String?
+  slug           String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now())
+  sku            String?
+  weightUnit     String?
+  weightValue    Float?
+  onSale         Boolean        @default(false)
+  currency       String?
+  gross          Float?
+  net            Float?
+  tax            Float?
+  seoTitle       String?
+  seoDescription String?
+  productId      String
+  product        Product        @relation(fields: [productId], references: [id])
+  categoryId     String
+  category       MenuCategory   @relation(fields: [categoryId], references: [id])
+  media          ProductMedia[]
+  checkoutLines  CheckoutLine[]
 }
 
 model ProductMedia {

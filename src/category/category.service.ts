@@ -9,10 +9,4 @@ export class CategoryService {
   async listCategories(): Promise<Category[]> {
     return this.prisma.category.findMany();
   }
-
-  async findBySlug(slug: string): Promise<Category | null> {
-    return this.prisma.category.findFirst({
-      where: { slug },
-    });
-  }
 }

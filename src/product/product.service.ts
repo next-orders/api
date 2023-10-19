@@ -38,37 +38,6 @@ export class ProductService {
     };
   }
 
-  async findProductBySlug(slug: string): Promise<Product | null> {
-    const product = await this.prisma.product.findFirst({
-      where: { slug },
-      include: {
-        category: true,
-        variants: {
-          include: {
-            category: true,
-            media: {
-              include: {
-                media: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    if (!product) {
-      return null;
-    }
-
-    const productVariantsPrepared = changeMediaInProductVariant(
-      product.variants,
-    );
-
-    return {
-      ...product,
-      variants: productVariantsPrepared,
-    };
-  }
-
   async findProductsInCategory(categoryId: string): Promise<Product[] | null> {
     const products = await this.prisma.product.findMany({
       where: { categoryId },
