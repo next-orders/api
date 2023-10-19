@@ -35,6 +35,7 @@ export type Category = {
 
 export type Product = {
   id: string;
+  type: 'INGREDIENT' | 'READY' | 'PRODUCTION' | string;
   name: string;
   description: string | null;
   createdAt: Date;

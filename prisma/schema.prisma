@@ -56,8 +56,10 @@ model Category {
   products  Product[]
 }
 
+// Type: INGREDIENT, READY, or PRODUCTION
 model Product {
   id                     String           @id @default(cuid())
+  type                   String
   name                   String
   description            String?
   createdAt              DateTime         @default(now())
