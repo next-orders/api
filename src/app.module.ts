@@ -10,12 +10,14 @@ import { ShopModule } from '@/shop/shop.module';
 import { ChannelModule } from '@/channel/channel.module';
 import { ProductVariantModule } from '@/product-variant/product-variant.module';
 import { MediaModule } from '@/media/media.module';
+import { DomainModule } from '@/domain/domain.module';
 
 @Module({
   imports: [
     ShopModule,
     ChannelModule,
     MediaModule,
+    DomainModule,
     CategoryModule,
     ProductModule,
     ProductVariantModule,

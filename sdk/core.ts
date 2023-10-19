@@ -2,6 +2,7 @@ import {
   Category,
   Channel,
   Checkout,
+  Domain,
   Media,
   Menu,
   MenuCategory,
@@ -62,6 +63,15 @@ export class MainAPI {
   public async getAllMedia(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Media[]>(
       `media/list`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getAllDomains(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<Domain[]>(
+      `domain/list`,
       'GET',
       undefined,
       externalConfig,
