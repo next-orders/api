@@ -40,7 +40,17 @@ export class CheckoutService {
     const isAlreadyInCart = !!findLine;
     if (isAlreadyInCart) {
       // +1
-      findLine.quantity = findLine.quantity + 1;
+      const updatedLines = tempCheckout.lines.map((line) => {
+        if (line.variant.id === variant.id) {
+          line.quantity++;
+        }
+        return line;
+      });
+
+      tempCheckout = {
+        ...tempCheckout,
+        lines: updatedLines,
+      };
     } else {
       // Add new to Cart
       const newLine: CheckoutLine = {

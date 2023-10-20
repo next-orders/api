@@ -10,7 +10,10 @@ import {
   ProductVariant,
   Shop,
 } from './types/objects';
-import { ProductVariantAddToCheckoutRequest } from './endpoints';
+import {
+  ProductVariantAddToCheckoutRequest,
+  ProductVariantAddToCheckoutResponse,
+} from './endpoints';
 
 type NextFetchRequestConfig = RequestInit & {
   next?: {
@@ -156,7 +159,7 @@ export class MainAPI {
     data: ProductVariantAddToCheckoutRequest,
     externalConfig?: NextFetchRequestConfig,
   ) {
-    return this.coreRequest<Checkout>(
+    return this.coreRequest<ProductVariantAddToCheckoutResponse>(
       `checkout/${checkoutId}/add`,
       'POST',
       data,
