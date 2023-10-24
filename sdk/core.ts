@@ -94,6 +94,15 @@ export class MainAPI {
     );
   }
 
+  public async getProducts(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<Product[]>(
+      `product/list`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getProductsInCategory(
     categoryId: string,
     externalConfig?: NextFetchRequestConfig,

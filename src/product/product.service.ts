@@ -38,6 +38,42 @@ export class ProductService {
     };
   }
 
+  async findProducts(): Promise<Product[] | null> {
+    const products = await this.prisma.product.findMany({
+      include: {
+        category: true,
+        variants: {
+          include: {
+            category: true,
+            media: {
+              include: {
+                media: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!products) {
+      return null;
+    }
+
+    const productsPrepared: Product[] = [];
+
+    for (const product of products) {
+      const productVariantsPrepared = changeMediaInProductVariant(
+        product.variants,
+      );
+
+      productsPrepared.push({
+        ...product,
+        variants: productVariantsPrepared,
+      });
+    }
+
+    return productsPrepared;
+  }
+
   async findProductsInCategory(categoryId: string): Promise<Product[] | null> {
     const products = await this.prisma.product.findMany({
       where: { categoryId },

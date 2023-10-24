@@ -18,6 +18,16 @@ export class ProductController {
     return this.service.findProductsInCategory(id);
   }
 
+  @Get('list')
+  async findProducts() {
+    const products = await this.service.findProducts();
+    if (!products) {
+      throw new NotFoundException();
+    }
+
+    return products;
+  }
+
   @Get(':id')
   async findProductById(@Param('id') id: string) {
     const product = await this.service.findProductById(id);
