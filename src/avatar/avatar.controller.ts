@@ -9,7 +9,7 @@ const dynamicImport = async (packageName: string) =>
 
 @Controller('avatar')
 export class AvatarController {
-  @Header('Cache-Control', 'public, max-age=31536000, immutable')
+  @Header('Cache-Control', 'max-age=31536000, public')
   @Header('Content-Type', 'image/svg+xml')
   @Get(':seed')
   async generateSVGAvatar(
