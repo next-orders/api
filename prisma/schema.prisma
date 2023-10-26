@@ -120,14 +120,29 @@ model EmployeeContact {
 }
 
 model Client {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   firstName String
   lastName  String?
-  isActive  Boolean  @default(true)
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now())
+  level     Int           @default(0)
+  gender    String        @default("UNKNOWN")
+  emotion   Int           @default(7)
+  loyalty   Int           @default(0)
+  avatarId  String
+  shopId    String
+  shop      Shop          @relation(fields: [shopId], references: [id])
+  traits    ClientTrait[]
+}
+
+model ClientTrait {
+  id        String   @id @default(cuid())
+  type      String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  shopId    String
-  shop      Shop     @relation(fields: [shopId], references: [id])
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id])
 }
 
 model Channel {

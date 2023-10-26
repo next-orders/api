@@ -47,6 +47,37 @@ export type Product = {
   isAvailableForPurchase: boolean;
 };
 
+export type Client = {
+  id: string;
+  firstName: string;
+  lastName: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  level: number;
+  gender: 'UNKNOWN' | 'MALE' | 'FEMALE' | string;
+  emotion: number;
+  loyalty: number;
+  avatarId: string;
+  traits: ClientTrait[];
+};
+
+export type ClientTrait = {
+  id: string;
+  type:
+    | 'ORDERLY'
+    | 'SPONTANEOUS'
+    | 'COLD'
+    | 'WELL-FED'
+    | 'SATISFIED'
+    | 'PICKY'
+    | 'CAUTIOUS'
+    | 'BLANK'
+    | string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Channel = {
   id: string;
   slug: string;

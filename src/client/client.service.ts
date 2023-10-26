@@ -1,0 +1,30 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '@/db/prisma.service';
+import { Client } from '@api-sdk';
+
+@Injectable()
+export class ClientService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findAllClients(): Promise<Client[] | null> {
+    return this.prisma.client.findMany({
+      include: {
+        traits: true,
+      },
+    });
+  }
+
+  async findClientById(id: string): Promise<Client | null> {
+    const client = await this.prisma.client.findUnique({
+      where: { id },
+      include: {
+        traits: true,
+      },
+    });
+    if (!client) {
+      return null;
+    }
+
+    return client;
+  }
+}

@@ -2,6 +2,7 @@ import {
   Category,
   Channel,
   Checkout,
+  Client,
   Domain,
   Media,
   Menu,
@@ -88,6 +89,27 @@ export class MainAPI {
   ) {
     return this.coreRequest<Menu>(
       `menu/${menuId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getClients(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<Client[]>(
+      `client/list`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getClientById(
+    clientId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Client>(
+      `client/${clientId}`,
       'GET',
       undefined,
       externalConfig,

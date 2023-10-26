@@ -12,6 +12,7 @@ import { ProductVariantModule } from '@/product-variant/product-variant.module';
 import { MediaModule } from '@/media/media.module';
 import { DomainModule } from '@/domain/domain.module';
 import { AvatarModule } from '@/avatar/avatar.module';
+import { ClientModule } from '@/client/client.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AvatarModule } from '@/avatar/avatar.module';
     ChannelModule,
     MediaModule,
     DomainModule,
+    ClientModule,
     CategoryModule,
     ProductModule,
     ProductVariantModule,
