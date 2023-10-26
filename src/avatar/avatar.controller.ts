@@ -10,6 +10,7 @@ const dynamicImport = async (packageName: string) =>
 @Controller('avatar')
 export class AvatarController {
   @Header('Cache-Control', 'max-age=31536000, public')
+  @Header('Etag', 'static')
   @Header('Content-Type', 'image/svg+xml')
   @Get(':seed')
   async generateSVGAvatar(
@@ -17,6 +18,7 @@ export class AvatarController {
     @Query('gender') gender: string,
     @Query('size') size: string,
     @Query('emotion') emotion: string,
+    @Query('clothing') clothing: string,
   ) {
     const sizeNumber = size ? Number(size) : 150;
     const emotionNumber = emotion ? Number(emotion) : null;
@@ -63,6 +65,22 @@ export class AvatarController {
 
     const face = emotionChosen ? [emotionChosen] : allFaces;
 
+    const availableClothingColors = [
+      { name: 'amber', color: 'fbbf24' },
+      { name: 'green', color: '4ade80' },
+      { name: 'blue', color: '60a5fa' },
+      { name: 'teal', color: '2dd4bf' },
+      { name: 'pink', color: 'f472b6' },
+      { name: 'violet', color: 'a78bfa' },
+    ];
+
+    const findClothingColor = availableClothingColors.find(
+      (color) => color.name === clothing,
+    );
+    const clothingColor = findClothingColor
+      ? [findClothingColor.color]
+      : ['f4f4f5'];
+
     const options: Partial<StyleOptions<Options>> = {
       seed,
       face,
@@ -79,6 +97,7 @@ export class AvatarController {
       ],
       maskProbability: 0,
       skinColor: ['fce5d3'],
+      clothingColor,
       scale: 80,
       translateX: -5,
       ...choosePartsByGender(gender),
