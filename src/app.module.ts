@@ -11,6 +11,7 @@ import { ChannelModule } from '@/channel/channel.module';
 import { ProductVariantModule } from '@/product-variant/product-variant.module';
 import { MediaModule } from '@/media/media.module';
 import { DomainModule } from '@/domain/domain.module';
+import { AvatarModule } from '@/avatar/avatar.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DomainModule } from '@/domain/domain.module';
     CheckoutModule,
     MenuModule,
     MenuCategoryModule,
+    AvatarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

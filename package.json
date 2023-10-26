@@ -34,6 +34,8 @@
   },
   "homepage": "https://github.com/next-orders/api#readme",
   "dependencies": {
+    "@dicebear/open-peeps": "^7.0.1",
+    "@dicebear/core": "^7.0.1",
     "@nestjs/common": "10.2.7",
     "@nestjs/core": "10.2.7",
     "@nestjs/platform-express": "10.2.7",
