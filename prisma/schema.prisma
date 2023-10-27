@@ -127,7 +127,7 @@ model Client {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now())
   level     Int           @default(0)
-  gender    String        @default("UNKNOWN")
+  gender    Gender        @default(UNKNOWN)
   emotion   Int           @default(7)
   loyalty   Int           @default(0)
   avatarId  String
@@ -236,4 +236,10 @@ model CheckoutLine {
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
   checkoutId       String
   checkout         Checkout       @relation(fields: [checkoutId], references: [id])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNKNOWN
 }

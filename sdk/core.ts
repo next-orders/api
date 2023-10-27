@@ -228,6 +228,22 @@ export class MainAPI {
     );
   }
 
+  public getAvatarURL(
+    avatarId: string,
+    size: number,
+    params?: {
+      gender?: 'MALE' | 'FEMALE' | 'UNKNOWN';
+      emotion?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+      clothing?: 'amber' | 'green' | 'blue' | 'teal' | 'pink' | 'violet';
+    },
+  ) {
+    const gender = params?.gender ? `&gender=${params.gender}` : '';
+    const emotion = params?.emotion ? `&emotion=${params.emotion}` : '';
+    const clothing = params?.clothing ? `&clothing=${params.clothing}` : '';
+
+    return `${this.apiUrl}/avatar/${avatarId}?size=${size}${gender}${emotion}${clothing}`;
+  }
+
   private async client<T = unknown, E = Error>(
     endpoint: string,
     customConfig: RequestInit = {},

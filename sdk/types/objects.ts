@@ -55,7 +55,7 @@ export type Client = {
   createdAt: Date;
   updatedAt: Date;
   level: number;
-  gender: 'UNKNOWN' | 'MALE' | 'FEMALE' | string;
+  gender: 'UNKNOWN' | 'MALE' | 'FEMALE';
   emotion: number;
   loyalty: number;
   avatarId: string;
