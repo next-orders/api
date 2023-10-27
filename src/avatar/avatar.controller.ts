@@ -66,12 +66,12 @@ export class AvatarController {
     const face = emotionChosen ? [emotionChosen] : allFaces;
 
     const availableClothingColors = [
-      { name: 'amber', color: 'fbbf24' },
-      { name: 'green', color: '4ade80' },
-      { name: 'blue', color: '60a5fa' },
-      { name: 'teal', color: '2dd4bf' },
-      { name: 'pink', color: 'f472b6' },
-      { name: 'violet', color: 'a78bfa' },
+      { name: 'amber', color: 'fcd34d' },
+      { name: 'green', color: '86efac' },
+      { name: 'blue', color: '93c5fd' },
+      { name: 'teal', color: '5eead4' },
+      { name: 'pink', color: 'f9a8d4' },
+      { name: 'violet', color: 'c4b5fd' },
     ];
 
     const findClothingColor = availableClothingColors.find(
