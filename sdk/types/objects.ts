@@ -35,7 +35,7 @@ export type Category = {
 
 export type Product = {
   id: string;
-  type: 'INGREDIENT' | 'READY' | 'PRODUCTION' | string;
+  type: 'PRODUCTION' | 'READY' | 'INGREDIENT';
   name: string;
   description: string | null;
   createdAt: Date;
@@ -65,15 +65,14 @@ export type Client = {
 export type ClientTrait = {
   id: string;
   type:
+    | 'BLANK'
     | 'ORDERLY'
     | 'SPONTANEOUS'
     | 'COLD'
-    | 'WELL-FED'
+    | 'WELL_FED'
     | 'SATISFIED'
     | 'PICKY'
-    | 'CAUTIOUS'
-    | 'BLANK'
-    | string;
+    | 'CAUTIOUS';
   createdAt: Date;
   updatedAt: Date;
 };

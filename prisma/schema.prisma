@@ -71,10 +71,9 @@ model WarehouseProduct {
   unit      String
 }
 
-// Type: INGREDIENT, READY, or PRODUCTION
 model Product {
   id                     String           @id @default(cuid())
-  type                   String
+  type                   ProductType      @default(PRODUCTION)
   name                   String
   description            String?
   createdAt              DateTime         @default(now())
@@ -137,12 +136,12 @@ model Client {
 }
 
 model ClientTrait {
-  id        String   @id @default(cuid())
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id        String          @id @default(cuid())
+  type      ClientTraitType @default(BLANK)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @default(now())
   clientId  String
-  client    Client   @relation(fields: [clientId], references: [id])
+  client    Client          @relation(fields: [clientId], references: [id])
 }
 
 model Channel {
@@ -242,4 +241,21 @@ enum Gender {
   MALE
   FEMALE
   UNKNOWN
+}
+
+enum ProductType {
+  PRODUCTION
+  READY
+  INGREDIENT
+}
+
+enum ClientTraitType {
+  BLANK
+  ORDERLY
+  SPONTANEOUS
+  COLD
+  WELL_FED
+  SATISFIED
+  PICKY
+  CAUTIOUS
 }
