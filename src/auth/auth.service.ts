@@ -3,7 +3,11 @@ import { PrismaService } from '@/db/prisma.service';
 import { EmployeeService } from '@/employee/employee.service';
 import { SignInByEmailDto } from '@/auth/dto/signin-by-email.dto';
 import { JwtService } from '@nestjs/jwt';
-import { JWTEmployeeAccessTokenPayload, JWTEmployeeData } from '@api-sdk';
+import {
+  EmployeePermission,
+  JWTEmployeeAccessTokenPayload,
+  JWTEmployeeData,
+} from '@api-sdk';
 import { createId } from '@paralleldrive/cuid2';
 
 @Injectable()
@@ -33,7 +37,9 @@ export class AuthService {
 
     // Get all Permissions
     const permissionsFull = employee.permissions;
-    const permissions = permissionsFull.map((p) => p.type);
+    const permissions = permissionsFull.map(
+      (p: { type: EmployeePermission['type'] }) => p.type,
+    );
 
     // Generate a JWT
     const sub = createId();
