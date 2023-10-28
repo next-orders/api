@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from '@/product/product.module';
@@ -13,14 +15,24 @@ import { MediaModule } from '@/media/media.module';
 import { DomainModule } from '@/domain/domain.module';
 import { AvatarModule } from '@/avatar/avatar.module';
 import { ClientModule } from '@/client/client.module';
+import { EmployeeModule } from '@/employee/employee.module';
+import { AuthModule } from '@/auth/auth.module';
+import { AuthGuard } from '@/auth/auth.guard';
 
 @Module({
   imports: [
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET ?? 'no-secret',
+      signOptions: { expiresIn: '30d' },
+    }),
     ShopModule,
     ChannelModule,
     MediaModule,
     DomainModule,
     ClientModule,
+    EmployeeModule,
+    AuthModule,
     CategoryModule,
     ProductModule,
     ProductVariantModule,
@@ -30,6 +42,12 @@ import { ClientModule } from '@/client/client.module';
     AvatarModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

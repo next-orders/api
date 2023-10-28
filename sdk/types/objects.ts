@@ -47,6 +47,11 @@ export type Product = {
   isAvailableForPurchase: boolean;
 };
 
+export type EmployeePermission = {
+  id: string;
+  type: 'READ_CLIENTS' | 'EDIT_CLIENTS';
+};
+
 export type Client = {
   id: string;
   firstName: string;
@@ -142,4 +147,10 @@ export type CheckoutLine = {
   id: string;
   quantity: number;
   variant: ProductVariant;
+};
+
+export type AvatarParams = {
+  gender?: 'MALE' | 'FEMALE' | 'UNKNOWN';
+  emotion?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | number;
+  clothing?: 'amber' | 'green' | 'blue' | 'teal' | 'pink' | 'violet';
 };

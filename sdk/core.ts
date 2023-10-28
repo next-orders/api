@@ -1,4 +1,6 @@
+import { client } from './client';
 import {
+  AvatarParams,
   Category,
   Channel,
   Checkout,
@@ -14,14 +16,10 @@ import {
 import {
   ProductVariantAddToCheckoutRequest,
   ProductVariantAddToCheckoutResponse,
+  SignInByEmailRequest,
+  SignInByEmailResponse,
 } from './endpoints';
-
-type NextFetchRequestConfig = RequestInit & {
-  next?: {
-    revalidate?: number | false;
-    tags?: string[];
-  };
-};
+import { NextFetchRequestConfig } from './types/next';
 
 export class MainAPI {
   private readonly apiUrl: string;
@@ -228,50 +226,24 @@ export class MainAPI {
     );
   }
 
-  public getAvatarURL(
-    avatarId: string,
-    size: number,
-    params?: {
-      gender?: 'MALE' | 'FEMALE' | 'UNKNOWN';
-      emotion?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-      clothing?: 'amber' | 'green' | 'blue' | 'teal' | 'pink' | 'violet';
-    },
+  public async signInEmployeeByEmail(
+    data: SignInByEmailRequest,
+    externalConfig?: NextFetchRequestConfig,
   ) {
+    return this.coreRequest<SignInByEmailResponse>(
+      `auth/employee/email`,
+      'POST',
+      data,
+      externalConfig,
+    );
+  }
+
+  public getAvatarURL(avatarId: string, size: number, params?: AvatarParams) {
     const gender = params?.gender ? `&gender=${params.gender}` : '';
     const emotion = params?.emotion ? `&emotion=${params.emotion}` : '';
     const clothing = params?.clothing ? `&clothing=${params.clothing}` : '';
 
     return `${this.apiUrl}/avatar/${avatarId}?size=${size}${gender}${emotion}${clothing}`;
-  }
-
-  private async client<T = unknown, E = Error>(
-    endpoint: string,
-    customConfig: RequestInit = {},
-    externalConfig: NextFetchRequestConfig = {},
-  ) {
-    const { body, ...otherConfig } = customConfig;
-
-    const config: RequestInit = {
-      method: otherConfig?.method || 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: `Bearer ${this.apiToken}`,
-      },
-      body,
-      ...otherConfig,
-      ...externalConfig,
-    };
-
-    const response = await fetch(`${this.apiUrl}/${endpoint}`, config);
-
-    if (response.ok) {
-      return (await response.json()) as T;
-    }
-
-    const errorMessage = await response.text();
-    return (await Promise.reject(
-      new Error(`${response.status}: ${response.statusText}, ${errorMessage}`),
-    )) as E;
   }
 
   private async coreRequest<T>(
@@ -281,7 +253,11 @@ export class MainAPI {
     externalConfig?: NextFetchRequestConfig,
   ) {
     try {
-      return await this.client<T>(
+      return await client<T>(
+        {
+          token: this.apiToken,
+          url: this.apiUrl,
+        },
         endpoint,
         {
           body: JSON.stringify(data),

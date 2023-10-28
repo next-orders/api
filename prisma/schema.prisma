@@ -99,23 +99,37 @@ model Employee {
   shopId      String
   shop        Shop                 @relation(fields: [shopId], references: [id])
   permissions EmployeePermission[]
+  contacts    EmployeeContact[]
+  passwords   EmployeePassword[]
 }
 
 model EmployeePermission {
+  id         String                 @id @default(cuid())
+  type       EmployeePermissionType
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @default(now())
+  employeeId String
+  employee   Employee               @relation(fields: [employeeId], references: [id])
+}
+
+model EmployeeContact {
+  id                      String              @id @default(cuid())
+  type                    EmployeeContactType
+  value                   String
+  isUsedForAuthentication Boolean             @default(false)
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @default(now())
+  employeeId              String
+  employee                Employee            @relation(fields: [employeeId], references: [id])
+}
+
+model EmployeePassword {
   id         String   @id @default(cuid())
-  code       String
+  hash       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
   employeeId String
   employee   Employee @relation(fields: [employeeId], references: [id])
-}
-
-model EmployeeContact {
-  id        String   @id @default(cuid())
-  type      String
-  value     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
 }
 
 model Client {
@@ -258,4 +272,13 @@ enum ClientTraitType {
   SATISFIED
   PICKY
   CAUTIOUS
+}
+
+enum EmployeeContactType {
+  EMAIL
+}
+
+enum EmployeePermissionType {
+  READ_CLIENTS
+  EDIT_CLIENTS
 }

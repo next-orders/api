@@ -3,12 +3,14 @@ import { PossibleEmotion } from '@/avatar/types';
 import { Options } from '@dicebear/open-peeps';
 import { StyleOptions } from '@dicebear/core';
 import { choosePartsByGender, clearSvg, generateHSL } from '@/avatar/helpers';
+import { Public } from '@/auth/auth.decorator';
 
 const dynamicImport = async (packageName: string) =>
   new Function(`return import('${packageName}')`)();
 
 @Controller('avatar')
 export class AvatarController {
+  @Public()
   @Header('Cache-Control', 'max-age=31536000, public')
   @Header('Etag', 'static')
   @Header('Content-Type', 'image/svg+xml')
