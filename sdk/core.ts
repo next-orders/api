@@ -20,6 +20,7 @@ import {
   SignInByEmailResponse,
 } from './endpoints';
 import { NextFetchRequestConfig } from './types/next';
+import { JWTEmployeeAccessTokenPayload } from './types/jwt';
 
 export class MainAPI {
   private readonly apiUrl: string;
@@ -234,6 +235,18 @@ export class MainAPI {
       `auth/employee/email`,
       'POST',
       data,
+      externalConfig,
+    );
+  }
+
+  public async verifyToken(
+    token: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<JWTEmployeeAccessTokenPayload>(
+      `auth/verify/${token}`,
+      'GET',
+      undefined,
       externalConfig,
     );
   }

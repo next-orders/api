@@ -1,8 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -14,6 +17,17 @@ import { Public } from '@/auth/auth.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly service: AuthService) {}
+
+  @Public()
+  @Get('verify/:token')
+  async verifyToken(@Param('token') token: string) {
+    const payload = await this.service.verifyToken(token);
+    if (!payload) {
+      throw new BadRequestException();
+    }
+
+    return payload;
+  }
 
   @Public()
   @HttpCode(HttpStatus.OK)

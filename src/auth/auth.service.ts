@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
 import { EmployeeService } from '@/employee/employee.service';
 import { SignInByEmailDto } from '@/auth/dto/signin-by-email.dto';
@@ -17,6 +17,21 @@ export class AuthService {
     private readonly jwt: JwtService,
     private readonly prisma: PrismaService,
   ) {}
+
+  async verifyToken(token: string) {
+    try {
+      const payload =
+        await this.jwt.verifyAsync<JWTEmployeeAccessTokenPayload>(token);
+      if (!payload.user) {
+        return null;
+      }
+
+      return payload;
+    } catch (err) {
+      Logger.warn(err, 'verifyToken');
+      return null;
+    }
+  }
 
   async signInByEmail(dto: SignInByEmailDto) {
     const employee = await this.employee.findEmployeeByContact(
