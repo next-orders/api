@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { compare } from 'bcrypt';
 import { PrismaService } from '@/db/prisma.service';
 
 @Injectable()
@@ -32,7 +33,8 @@ export class EmployeeService {
 
     for (const p of passwords) {
       // Check Hash
-      if (p.hash === password) {
+      const match = await compare(password, p.hash);
+      if (match) {
         // This Password is valid!
         return true;
       }
