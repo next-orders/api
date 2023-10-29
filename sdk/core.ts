@@ -251,6 +251,15 @@ export class MainAPI {
     );
   }
 
+  public async signInDemoData(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<{ email: string; password: string }>(
+      `auth/employee/demo`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public getAvatarURL(avatarId: string, size: number, params?: AvatarParams) {
     const gender = params?.gender ? `&gender=${params.gender}` : '';
     const emotion = params?.emotion ? `&emotion=${params.emotion}` : '';

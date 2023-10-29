@@ -42,4 +42,13 @@ export class AuthController {
 
     return jwt;
   }
+
+  @Public()
+  @Get('employee/demo')
+  async getDemoSignIn() {
+    return {
+      email: process.env.DEMO_AUTH_EMAIL as string,
+      password: process.env.DEMO_AUTH_PASS as string,
+    };
+  }
 }
