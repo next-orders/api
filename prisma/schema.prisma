@@ -159,20 +159,24 @@ model ClientTrait {
 }
 
 model Channel {
-  id           String     @id @default(cuid())
-  slug         String
-  name         String
-  description  String?
-  currencyCode String
-  isActive     Boolean    @default(true)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now())
-  shopId       String
-  shop         Shop       @relation(fields: [shopId], references: [id])
-  domainId     String?
-  domain       Domain?    @relation(fields: [domainId], references: [id])
-  menus        Menu[]
-  checkouts    Checkout[]
+  id                 String     @id @default(cuid())
+  slug               String
+  name               String
+  description        String?
+  currencyCode       String
+  isActive           Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @default(now())
+  accentTextColor    String     @default("#65a30d")
+  accentButtonColor  String     @default("#d9f99d")
+  accentGradientFrom String?
+  accentGradientTo   String?
+  shopId             String
+  shop               Shop       @relation(fields: [shopId], references: [id])
+  domainId           String?
+  domain             Domain?    @relation(fields: [domainId], references: [id])
+  menus              Menu[]
+  checkouts          Checkout[]
 }
 
 // Channel Entities

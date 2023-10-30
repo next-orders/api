@@ -92,6 +92,10 @@ export type Channel = {
   createdAt: Date;
   updatedAt: Date;
   domainId?: string | null;
+  accentTextColor: string;
+  accentButtonColor: string;
+  accentGradientFrom: string | null;
+  accentGradientTo: string | null;
   menus: Menu[];
 };
 
