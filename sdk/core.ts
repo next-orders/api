@@ -227,6 +227,10 @@ export class MainAPI {
     );
   }
 
+  public getMenuCategoryIconURL(categoryCode: string) {
+    return `${this.apiUrl}/image/static/${categoryCode}.png`;
+  }
+
   public async signInEmployeeByEmail(
     data: SignInByEmailRequest,
     externalConfig?: NextFetchRequestConfig,

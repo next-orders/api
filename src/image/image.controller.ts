@@ -6,8 +6,6 @@ import { Public } from '@/auth/auth.decorator';
 
 @Controller('image')
 export class ImageController {
-  constructor() {}
-
   @Public()
   @Get('static/:imageName')
   async getLocalImage(

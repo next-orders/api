@@ -113,7 +113,17 @@ export type MenuCategory = {
   updatedAt: Date;
   name: string;
   slug: string;
+  icon: MenuCategoryIcon;
 };
+
+export type MenuCategoryIcon =
+  | 'DEFAULT'
+  | 'BURGER'
+  | 'CAKE'
+  | 'PIZZA'
+  | 'ROLL'
+  | 'SUSHI'
+  | 'WOK';
 
 export type ProductVariant = {
   id: string;
