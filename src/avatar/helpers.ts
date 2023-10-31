@@ -1,5 +1,59 @@
 import { Options } from '@dicebear/open-peeps';
 import { StyleOptions } from '@dicebear/core';
+import { PossibleAccessories, PossibleEmotion } from '@/avatar/types';
+
+// 1 to 10
+export const emotions: PossibleEmotion[] = [
+  'rage',
+  'veryAngry',
+  'solemn',
+  'tired',
+  'serious',
+  'eyesClosed',
+  'smile',
+  'calm',
+  'eatingHappy',
+  'lovingGrin1',
+];
+
+const possibleAccessories: PossibleAccessories[] = [
+  'glasses',
+  'glasses2',
+  'glasses3',
+  'glasses4',
+  'glasses5',
+  'sunglasses',
+  'sunglasses2',
+];
+
+const allFaces: Options['face'] = [
+  ...emotions,
+  'suspicious',
+  'contempt',
+  'hectic',
+  'driven',
+  'smileTeethGap',
+  'smileLOL',
+  'smileBig',
+  'lovingGrin2',
+  'fear',
+  'explaining',
+  'cute',
+  'concernedFear',
+  'concerned',
+  'cheeky',
+  'blank',
+  'awe',
+];
+
+const availableClothingColors = [
+  { name: 'amber', color: 'fcd34d' },
+  { name: 'green', color: '86efac' },
+  { name: 'blue', color: '93c5fd' },
+  { name: 'teal', color: '5eead4' },
+  { name: 'pink', color: 'f9a8d4' },
+  { name: 'violet', color: 'c4b5fd' },
+];
 
 const male: Partial<StyleOptions<Options>> = {
   head: [
@@ -92,6 +146,36 @@ export const choosePartsByGender = (gender: string | undefined) => {
 
   if (gender.toLowerCase() === 'male') return male;
   if (gender.toLowerCase() === 'female') return female;
+};
+
+const chooseEmotionByNumber = (emotion: number | null) => {
+  let emotionChosen: PossibleEmotion | null = null;
+
+  if (emotion && emotion >= 1 && emotion <= 10) {
+    emotionChosen = emotions[emotion - 1];
+  }
+
+  return emotionChosen;
+};
+
+export const chooseClothingColor = (clothing: string | null | undefined) => {
+  const findClothingColor = availableClothingColors.find(
+    (color) => color.name === clothing,
+  );
+  return findClothingColor ? [findClothingColor.color] : ['f4f4f5'];
+};
+
+export const getPossibleFaces = (emotion: number | null) => {
+  const emotionChosen = chooseEmotionByNumber(emotion);
+  return emotionChosen ? [emotionChosen] : allFaces;
+};
+
+export const getPossibleAccessories = () => {
+  return possibleAccessories;
+};
+
+export const getPossibleSkinColors = () => {
+  return ['fce5d3'];
 };
 
 export const clearSvg = (svg: string) => {

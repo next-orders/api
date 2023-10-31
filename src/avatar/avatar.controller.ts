@@ -1,8 +1,15 @@
 import { Controller, Get, Header, Param, Query } from '@nestjs/common';
-import { PossibleEmotion } from '@/avatar/types';
 import { Options } from '@dicebear/open-peeps';
 import { StyleOptions } from '@dicebear/core';
-import { choosePartsByGender, clearSvg, generateHSL } from '@/avatar/helpers';
+import {
+  chooseClothingColor,
+  choosePartsByGender,
+  clearSvg,
+  generateHSL,
+  getPossibleAccessories,
+  getPossibleFaces,
+  getPossibleSkinColors,
+} from '@/avatar/helpers';
 import { Public } from '@/auth/auth.decorator';
 
 const dynamicImport = async (packageName: string) =>
@@ -25,83 +32,17 @@ export class AvatarController {
     const sizeNumber = size ? Number(size) : 150;
     const emotionNumber = emotion ? Number(emotion) : null;
 
-    // 1 to 10
-    const emotions: PossibleEmotion[] = [
-      'rage',
-      'veryAngry',
-      'solemn',
-      'tired',
-      'serious',
-      'eyesClosed',
-      'smile',
-      'calm',
-      'eatingHappy',
-      'lovingGrin1',
-    ];
-
-    let emotionChosen: PossibleEmotion | null = null;
-
-    if (emotionNumber && emotionNumber >= 1 && emotionNumber <= 10) {
-      emotionChosen = emotions[emotionNumber - 1];
-    }
-
-    const allFaces: Options['face'] = [
-      ...emotions,
-      'suspicious',
-      'contempt',
-      'hectic',
-      'driven',
-      'smileTeethGap',
-      'smileLOL',
-      'smileBig',
-      'lovingGrin2',
-      'fear',
-      'explaining',
-      'cute',
-      'concernedFear',
-      'concerned',
-      'cheeky',
-      'blank',
-      'awe',
-    ];
-
-    const face = emotionChosen ? [emotionChosen] : allFaces;
-
-    const availableClothingColors = [
-      { name: 'amber', color: 'fcd34d' },
-      { name: 'green', color: '86efac' },
-      { name: 'blue', color: '93c5fd' },
-      { name: 'teal', color: '5eead4' },
-      { name: 'pink', color: 'f9a8d4' },
-      { name: 'violet', color: 'c4b5fd' },
-    ];
-
-    const findClothingColor = availableClothingColors.find(
-      (color) => color.name === clothing,
-    );
-    const clothingColor = findClothingColor
-      ? [findClothingColor.color]
-      : ['f4f4f5'];
-
     const options: Partial<StyleOptions<Options>> = {
       seed,
-      face,
       size: sizeNumber,
-      accessoriesProbability: 20,
-      accessories: [
-        'glasses',
-        'glasses2',
-        'glasses3',
-        'glasses4',
-        'glasses5',
-        'sunglasses',
-        'sunglasses2',
-      ],
-      maskProbability: 0,
-      skinColor: ['fce5d3'],
-      clothingColor,
       scale: 80,
       translateX: -5,
+      accessoriesProbability: 20,
+      maskProbability: 0,
+      face: getPossibleFaces(emotionNumber),
+      accessories: getPossibleAccessories(),
+      skinColor: getPossibleSkinColors(),
+      clothingColor: chooseClothingColor(clothing),
       ...choosePartsByGender(gender),
     };
 
@@ -111,6 +52,7 @@ export class AvatarController {
     const createAvatar = core.createAvatar;
     const svg = createAvatar(openPeeps, options).toString();
 
+    // Dynamic Background
     const [backgroundColor1, backgroundColor2] = generateHSL();
 
     const gradient = `

@@ -9,3 +9,12 @@ export type PossibleEmotion =
   | 'calm'
   | 'eatingHappy'
   | 'lovingGrin1';
+
+export type PossibleAccessories =
+  | 'glasses'
+  | 'glasses2'
+  | 'glasses3'
+  | 'glasses4'
+  | 'glasses5'
+  | 'sunglasses'
+  | 'sunglasses2';
