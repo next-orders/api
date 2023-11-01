@@ -33,29 +33,27 @@ export class MediaService {
   }
 
   async uploadMedia(file: Express.Multer.File, dto: UploadMediaDto) {
-    const id = createId();
+    const isPossibleExtension = this.checkIfPossibleFileExtension(
+      file?.mimetype,
+    );
 
-    const extension = this.checkIfPossibleFileExtension(file?.mimetype);
-
-    const key = file?.originalname;
-    const body = file?.buffer;
-
-    if (!extension) {
+    if (!isPossibleExtension) {
       return new Error('File extension is not correct');
     }
-    if (!key) {
-      return new Error('File key is not defined');
+    if (!file?.originalname) {
+      return new Error('File name is not defined');
     }
-    if (!body) {
-      return new Error('File body is not defined');
+    if (!file?.buffer) {
+      return new Error('File buffer is not defined');
     }
 
     // Resize Image
-    const resized = await this.resizeImage(file.buffer, 1200);
+    const resized = await this.resizeImage(file.buffer, 1800);
     if (!resized) {
       return new Error('Problem with file resize');
     }
 
+    const id = createId();
     const fileName = id + '.jpg';
     const url = `${this.apiUrl}/media/static/${fileName}`;
 
@@ -77,17 +75,16 @@ export class MediaService {
     };
   }
 
-  checkIfPossibleFileExtension(mimetype: string): string | null {
-    if (!mimetype) return null;
-
+  checkIfPossibleFileExtension(mimetype: string): boolean {
     switch (mimetype) {
       case 'image/jpeg':
       case 'image/jpg':
-        return 'jpg';
       case 'image/png':
-        return 'png';
+      case 'image/webp':
+      case 'image/avif':
+        return true;
       default:
-        return null;
+        return false;
     }
   }
 
