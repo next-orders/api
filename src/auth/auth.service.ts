@@ -22,8 +22,12 @@ export class AuthService {
 
   async verifyToken(token: string) {
     try {
-      const payload =
-        await this.jwt.verifyAsync<JWTEmployeeAccessTokenPayload>(token);
+      const payload = await this.jwt.verifyAsync<JWTEmployeeAccessTokenPayload>(
+        token,
+        {
+          secret: this.config.getOrThrow('JWT_SECRET'),
+        },
+      );
       if (!payload.user) {
         return null;
       }
