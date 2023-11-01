@@ -1,6 +1,8 @@
 import { z } from 'zod';
+import { Media } from '../types/objects';
 
 export const UploadMediaRequestSchema = z.object({
+  shopId: z.string(),
   alt: z.string(),
   file: z.any(),
 });
@@ -8,7 +10,5 @@ export const UploadMediaRequestSchema = z.object({
 export type UploadMediaRequest = z.infer<typeof UploadMediaRequestSchema>;
 export type UploadMediaResponse = {
   ok: boolean;
-  result: {
-    name: string;
-  };
+  result: Media;
 };

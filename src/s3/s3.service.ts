@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
 @Injectable()
 export class S3Service {
@@ -27,5 +31,24 @@ export class S3Service {
         Body: file,
       }),
     );
+  }
+
+  async get(fileName: string) {
+    try {
+      const file = await this.client.send(
+        new GetObjectCommand({
+          Bucket: this.bucketName,
+          Key: fileName,
+        }),
+      );
+
+      if (file.Body) {
+        return file.Body.transformToByteArray();
+      }
+    } catch (err) {
+      return null;
+    }
+
+    return null;
   }
 }

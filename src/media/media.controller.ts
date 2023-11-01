@@ -1,17 +1,23 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   NotFoundException,
+  Param,
   ParseFilePipe,
   Post,
+  Res,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { MediaService } from '@/media/media.service';
-import { Permissions } from '@/auth/auth.decorator';
+import { Permissions, Public } from '@/auth/auth.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadMediaDto } from '@/media/dto/upload-media.dto';
+import { UploadMediaResponse } from '@api-sdk';
 
 @Controller('media')
 export class MediaController {
@@ -36,7 +42,28 @@ export class MediaController {
     file: Express.Multer.File,
     @Body()
     dto: UploadMediaDto,
-  ) {
-    return this.service.uploadMedia(file, dto);
+  ): Promise<UploadMediaResponse> {
+    const uploaded = await this.service.uploadMedia(file, dto);
+    if (!uploaded || uploaded instanceof Error) {
+      throw new BadRequestException(uploaded?.message);
+    }
+
+    return uploaded;
+  }
+
+  @Public()
+  @Get('static/:fileName')
+  async getMediaFileFromBucket(
+    @Param('fileName') fileName: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const file = await this.service.getMediaFileFromBucket(fileName);
+    if (!file) {
+      throw new NotFoundException();
+    }
+
+    res.contentType('image/jpg');
+
+    return new StreamableFile(file);
   }
 }
