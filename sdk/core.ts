@@ -18,6 +18,8 @@ import {
   ProductVariantAddToCheckoutResponse,
   SignInByEmailRequest,
   SignInByEmailResponse,
+  UploadMediaRequest,
+  UploadMediaResponse,
 } from './endpoints';
 import { NextFetchRequestConfig } from './types/next';
 import { JWTEmployeeAccessTokenPayload } from './types/jwt';
@@ -69,6 +71,18 @@ export class MainAPI {
       `media/list`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async uploadMedia(
+    data: UploadMediaRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<UploadMediaResponse>(
+      `media/upload`,
+      'POST',
+      data,
       externalConfig,
     );
   }

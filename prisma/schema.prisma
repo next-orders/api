@@ -286,6 +286,8 @@ enum EmployeeContactType {
 enum EmployeePermissionType {
   READ_CLIENTS
   EDIT_CLIENTS
+  READ_MEDIA
+  EDIT_MEDIA
 }
 
 enum MenuCategoryIcon {

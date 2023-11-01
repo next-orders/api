@@ -9,10 +9,12 @@ import {
   JWTEmployeeData,
 } from '@api-sdk';
 import { createId } from '@paralleldrive/cuid2';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly config: ConfigService,
     private readonly employee: EmployeeService,
     private readonly jwt: JwtService,
     private readonly prisma: PrismaService,
@@ -68,7 +70,9 @@ export class AuthService {
       user,
     };
 
-    const access_token = await this.jwt.signAsync(payload);
+    const access_token = await this.jwt.signAsync(payload, {
+      secret: this.config.getOrThrow('JWT_SECRET'),
+    });
 
     // TODO: Add new token to DB
 

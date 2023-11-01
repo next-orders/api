@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from '@/product/product.module';
@@ -22,10 +23,22 @@ import { ImageModule } from '@/image/image.module';
 
 @Module({
   imports: [
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET ?? 'no-secret',
-      signOptions: { expiresIn: '30d' },
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          global: true,
+          secret: config.getOrThrow<string>('JWT_SECRET'),
+          signOptions: {
+            expiresIn: config.getOrThrow<string | number>(
+              'JWT_EXPIRATION_TIME',
+            ),
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     ShopModule,
     ChannelModule,

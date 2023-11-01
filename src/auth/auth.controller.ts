@@ -13,10 +13,14 @@ import { AuthService } from '@/auth/auth.service';
 import { SignInByEmailDto } from '@/auth/dto/signin-by-email.dto';
 import { SignInByEmailResponse } from '@api-sdk';
 import { Public } from '@/auth/auth.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly service: AuthService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly service: AuthService,
+  ) {}
 
   @Public()
   @Get('verify/:token')
@@ -47,8 +51,8 @@ export class AuthController {
   @Get('employee/demo')
   async getDemoSignIn() {
     return {
-      email: process.env.DEMO_AUTH_EMAIL as string,
-      password: process.env.DEMO_AUTH_PASS as string,
+      email: this.config.get<string>('DEMO_AUTH_EMAIL'),
+      password: this.config.get<string>('DEMO_AUTH_PASS'),
     };
   }
 }

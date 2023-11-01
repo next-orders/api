@@ -3,9 +3,12 @@ import type { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
 import { join } from 'path';
 import { Public } from '@/auth/auth.decorator';
+import { S3Service } from '@/s3/s3.service';
 
 @Controller('image')
 export class ImageController {
+  constructor(private readonly s3: S3Service) {}
+
   @Public()
   @Get('static/:imageName')
   async getLocalImage(
