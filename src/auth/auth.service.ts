@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { createId } from '@paralleldrive/cuid2';
@@ -34,7 +34,6 @@ export class AuthService {
 
       return payload;
     } catch (err) {
-      Logger.warn(err, 'verifyToken');
       return null;
     }
   }
@@ -57,8 +56,7 @@ export class AuthService {
     }
 
     // Get all Permissions
-    const permissionsFull = employee.permissions;
-    const permissions = permissionsFull.map(
+    const permissions = employee.permissions.map(
       (p: { type: EmployeePermission['type'] }) => p.type,
     );
 

@@ -49,11 +49,9 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
     requiredPermissions: EmployeePermission['type'][],
   ): Promise<boolean> {
-    // Have required
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      // Have required permissions, but token is not defined
       throw new HttpException(
         'You have no access token',
         HttpStatus.UNAUTHORIZED,
@@ -62,21 +60,17 @@ export class AuthGuard implements CanActivate {
 
     const payload = await this.extractPayloadFromToken(token);
     if (!payload) {
-      // Payload in token is not correct
       throw new HttpException(
         'Payload in token is not correct',
         HttpStatus.FORBIDDEN,
       );
     }
 
-    const permissions = payload.user.permissions;
-
     // All required permissions must be in token payload
     for (const p of requiredPermissions) {
-      if (!permissions.includes(p)) {
-        // This required permission is not found
+      if (!payload.user.permissions.includes(p)) {
         throw new HttpException(
-          `You have no required permissions: ${p}`,
+          `You have no required permission: ${p}`,
           HttpStatus.FORBIDDEN,
         );
       }

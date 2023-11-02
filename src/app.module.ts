@@ -19,7 +19,6 @@ import { ClientModule } from '@/client/client.module';
 import { EmployeeModule } from '@/employee/employee.module';
 import { AuthModule } from '@/auth/auth.module';
 import { AuthGuard } from '@/auth/auth.guard';
-import { ImageModule } from '@/image/image.module';
 
 @Module({
   imports: [
@@ -54,7 +53,6 @@ import { ImageModule } from '@/image/image.module';
     MenuModule,
     MenuCategoryModule,
     AvatarModule,
-    ImageModule,
   ],
   controllers: [AppController],
   providers: [

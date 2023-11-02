@@ -54,6 +54,22 @@ export class MediaController {
   }
 
   @Public()
+  @Get('static/icon/:iconName')
+  async getIconFromBucket(
+    @Param('iconName') iconName: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const file = await this.service.getMediaFileFromBucket('icon/' + iconName);
+    if (!file) {
+      throw new NotFoundException();
+    }
+
+    res.contentType('image/png');
+
+    return new StreamableFile(file);
+  }
+
+  @Public()
   @Get('static/:fileName')
   async getMediaFileFromBucket(
     @Param('fileName') fileName: string,

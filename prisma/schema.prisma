@@ -196,7 +196,7 @@ model MenuCategory {
   name      String
   slug      String
   menuId    String
-  icon      MenuCategoryIcon @default(DEFAULT)
+  iconUrl   String?
   menu      Menu             @relation(fields: [menuId], references: [id])
   products  ProductVariant[]
 }
@@ -288,14 +288,4 @@ enum EmployeePermissionType {
   EDIT_CLIENTS
   READ_MEDIA
   EDIT_MEDIA
-}
-
-enum MenuCategoryIcon {
-  DEFAULT
-  BURGER
-  CAKE
-  PIZZA
-  ROLL
-  SUSHI
-  WOK
 }
