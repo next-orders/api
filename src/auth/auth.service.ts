@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@/db/prisma.service';
-import { EmployeeService } from '@/employee/employee.service';
-import { SignInByEmailDto } from '@/auth/dto/signin-by-email.dto';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import {
+import { createId } from '@paralleldrive/cuid2';
+import type {
   EmployeePermission,
   JWTEmployeeAccessTokenPayload,
   JWTEmployeeData,
 } from '@api-sdk';
-import { createId } from '@paralleldrive/cuid2';
-import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@/db/prisma.service';
+import { EmployeeService } from '@/employee/employee.service';
+import { SignInByEmailDto } from '@/auth/dto/signin-by-email.dto';
 
 @Injectable()
 export class AuthService {
