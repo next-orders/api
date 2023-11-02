@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseFilePipe,
@@ -28,7 +30,7 @@ export class MediaController {
   async findAllMedia() {
     const media = await this.service.findAllMedia();
     if (!media) {
-      throw new NotFoundException();
+      throw new HttpException('You have no Media', HttpStatus.NOT_FOUND);
     }
 
     return media;

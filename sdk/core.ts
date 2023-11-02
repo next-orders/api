@@ -23,6 +23,7 @@ import {
 } from './endpoints';
 import { NextFetchRequestConfig } from './types/next';
 import { JWTEmployeeAccessTokenPayload } from './types/jwt';
+import { ErrorGeneral } from './types/errors';
 
 export class MainAPI {
   private readonly apiUrl: string;
@@ -286,31 +287,23 @@ export class MainAPI {
     return `${this.apiUrl}/avatar/${avatarId}?size=${size}${gender}${emotion}${clothing}`;
   }
 
-  private async coreRequest<T>(
+  private async coreRequest<T, E = ErrorGeneral>(
     endpoint: string,
     method: 'POST' | 'GET' = 'POST',
     data?: unknown,
     externalConfig?: NextFetchRequestConfig,
   ) {
-    try {
-      return await client<T>(
-        {
-          token: this.apiToken,
-          url: this.apiUrl,
-        },
-        endpoint,
-        {
-          body: JSON.stringify(data),
-          method,
-        },
-        externalConfig,
-      );
-    } catch (e) {
-      if (e instanceof Error) {
-        return e;
-      }
-    }
-
-    return Error(`Error unknown on coreRequest: endpoint ${endpoint}`);
+    return client<T, E>(
+      {
+        token: this.apiToken,
+        url: this.apiUrl,
+      },
+      endpoint,
+      {
+        body: JSON.stringify(data),
+        method,
+      },
+      externalConfig,
+    );
   }
 }

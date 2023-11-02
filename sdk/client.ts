@@ -1,6 +1,8 @@
 import { NextFetchRequestConfig } from './types/next';
+import { ErrorBase } from './errors';
+import { ErrorGeneral } from './types/errors';
 
-export async function client<T = unknown, E = Error>(
+export async function client<T = unknown, E = ErrorGeneral>(
   api: {
     token: string;
     url: string;
@@ -28,8 +30,7 @@ export async function client<T = unknown, E = Error>(
     return (await response.json()) as T;
   }
 
-  const errorMessage = await response.text();
   return (await Promise.reject(
-    new Error(`${response.status}: ${response.statusText}, ${errorMessage}`),
+    new ErrorBase(response.statusText, response.status),
   )) as E;
 }

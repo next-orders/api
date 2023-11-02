@@ -1,8 +1,9 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
@@ -53,13 +54,19 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       // Have required permissions, but token is not defined
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'You have no access token',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const payload = await this.extractPayloadFromToken(token);
     if (!payload) {
       // Payload in token is not correct
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'Payload in token is not correct',
+        HttpStatus.FORBIDDEN,
+      );
     }
 
     const permissions = payload.user.permissions;
@@ -68,7 +75,10 @@ export class AuthGuard implements CanActivate {
     for (const p of requiredPermissions) {
       if (!permissions.includes(p)) {
         // This required permission is not found
-        throw new UnauthorizedException();
+        throw new HttpException(
+          `You have no required permissions: ${p}`,
+          HttpStatus.FORBIDDEN,
+        );
       }
     }
 
