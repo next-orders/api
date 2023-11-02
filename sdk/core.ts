@@ -23,7 +23,7 @@ import {
 } from './endpoints';
 import { NextFetchRequestConfig } from './types/next';
 import { JWTEmployeeAccessTokenPayload } from './types/jwt';
-import { ErrorGeneral } from './types/errors';
+import { ErrorBase } from './errors';
 
 export class MainAPI {
   private readonly apiUrl: string;
@@ -287,12 +287,12 @@ export class MainAPI {
     return `${this.apiUrl}/avatar/${avatarId}?size=${size}${gender}${emotion}${clothing}`;
   }
 
-  private async coreRequest<T, E = ErrorGeneral>(
+  private async coreRequest<T, E = ErrorBase>(
     endpoint: string,
     method: 'POST' | 'GET' = 'POST',
     data?: unknown,
     externalConfig?: NextFetchRequestConfig,
-  ) {
+  ): Promise<T | E> {
     return client<T, E>(
       {
         token: this.apiToken,

@@ -1,8 +1,7 @@
 import { NextFetchRequestConfig } from './types/next';
 import { ErrorBase } from './errors';
-import { ErrorGeneral } from './types/errors';
 
-export async function client<T = unknown, E = ErrorGeneral>(
+export async function client<T = unknown, E = ErrorBase>(
   api: {
     token: string;
     url: string;
@@ -24,13 +23,21 @@ export async function client<T = unknown, E = ErrorGeneral>(
     ...externalConfig,
   };
 
-  const response = await fetch(`${api.url}/${endpoint}`, config);
+  try {
+    const response = await fetch(`${api.url}/${endpoint}`, config);
+    if (response.ok) {
+      return (await response.json()) as T;
+    }
 
-  if (response.ok) {
-    return (await response.json()) as T;
+    const errorMessage = (await response.json()) as ErrorBase;
+    return new ErrorBase(errorMessage.message, errorMessage.statusCode) as E;
+  } catch (err) {
+    console.warn(err);
+
+    if (err instanceof Error) {
+      return new ErrorBase(err.message, 0) as E;
+    }
+
+    return err as E;
   }
-
-  return (await Promise.reject(
-    new ErrorBase(response.statusText, response.status),
-  )) as E;
 }

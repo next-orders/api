@@ -1,8 +1,8 @@
 import { ErrorGeneral } from '../types/errors';
 
 export class ErrorBase extends Error implements Error, ErrorGeneral {
-  message: string;
-  statusCode: number;
+  public message: string;
+  public statusCode: number;
 
   constructor(message: string, statusCode: number) {
     super();
