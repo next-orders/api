@@ -8,6 +8,7 @@ import { createId } from '@paralleldrive/cuid2';
 let tempCheckout: Checkout = {
   id: '123',
   deliveryMethod: 'DELIVERY',
+  totalPrice: 0,
   lines: [],
 };
 
@@ -62,9 +63,17 @@ export class CheckoutService {
         return line;
       });
 
+      // Recount
+      const updatedTotal = updatedLines.reduce(
+        (accumulator, line) =>
+          accumulator + line.quantity * (line.variant.gross || 1),
+        0,
+      );
+
       tempCheckout = {
         ...tempCheckout,
         lines: updatedLines,
+        totalPrice: updatedTotal,
       };
     } else {
       // Add new to Cart
@@ -74,9 +83,19 @@ export class CheckoutService {
         variant,
       };
 
+      const updatedLines = [...tempCheckout.lines, newLine];
+
+      // Recount
+      const updatedTotal = updatedLines.reduce(
+        (accumulator, line) =>
+          accumulator + line.quantity * (line.variant.gross || 1),
+        0,
+      );
+
       tempCheckout = {
         ...tempCheckout,
-        lines: [...tempCheckout.lines, newLine],
+        lines: updatedLines,
+        totalPrice: updatedTotal,
       };
     }
 

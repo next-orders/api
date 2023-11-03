@@ -241,6 +241,7 @@ model Checkout {
   createdAt      DateTime               @default(now())
   updatedAt      DateTime               @default(now())
   deliveryMethod CheckoutDeliveryMethod
+  totalPrice     Float                  @default(0)
   channelId      String
   channel        Channel                @relation(fields: [channelId], references: [id])
   lines          CheckoutLine[]
