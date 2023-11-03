@@ -14,6 +14,8 @@ import {
   Shop,
 } from './types/objects';
 import {
+  CheckoutChangeDeliveryMethodRequest,
+  CheckoutChangeDeliveryMethodResponse,
   ProductVariantAddToCheckoutRequest,
   ProductVariantAddToCheckoutResponse,
   SignInByEmailRequest,
@@ -195,6 +197,19 @@ export class MainAPI {
       `checkout/${id}`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async changeCheckoutDeliveryMethod(
+    checkoutId: string,
+    data: CheckoutChangeDeliveryMethodRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<CheckoutChangeDeliveryMethodResponse>(
+      `checkout/${checkoutId}/method`,
+      'POST',
+      data,
       externalConfig,
     );
   }

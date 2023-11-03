@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Checkout, CheckoutLine } from '@api-sdk';
-import { AddProductDto } from '@/checkout/dto/add-product.dto';
+import { AddProductDto, ChangeDeliveryMethodDto } from '@/checkout/dto';
 import { PrismaService } from '@/db/prisma.service';
 import { ProductVariantService } from '@/product-variant/product-variant.service';
 import { createId } from '@paralleldrive/cuid2';
 
 let tempCheckout: Checkout = {
   id: '123',
+  deliveryMethod: 'DELIVERY',
   lines: [],
 };
 
@@ -17,8 +18,22 @@ export class CheckoutService {
     private readonly productVariant: ProductVariantService,
   ) {}
 
+  async changeCheckoutDeliveryMethod(id: string, dto: ChangeDeliveryMethodDto) {
+    Logger.log(
+      `Checkout ${id}: delivery method changing to ${dto.method}`,
+      'changeCheckoutDeliveryMethod',
+    );
+
+    tempCheckout.deliveryMethod = dto.method;
+
+    return { ok: true, result: tempCheckout };
+  }
+
   async addProductToCheckout(id: string, dto: AddProductDto) {
-    Logger.log(`Checkout ${id}: adding product Id ${dto.productVariantId}`);
+    Logger.log(
+      `Checkout ${id}: adding product Id ${dto.productVariantId}`,
+      'addProductToCheckout',
+    );
 
     // Find ProductVariant
     const variant = await this.productVariant.findProductVariantById(

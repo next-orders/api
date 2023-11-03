@@ -237,12 +237,13 @@ model ProductMedia {
 }
 
 model Checkout {
-  id        String         @id @default(cuid())
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @default(now())
-  channelId String
-  channel   Channel        @relation(fields: [channelId], references: [id])
-  lines     CheckoutLine[]
+  id             String                 @id @default(cuid())
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @default(now())
+  deliveryMethod CheckoutDeliveryMethod
+  channelId      String
+  channel        Channel                @relation(fields: [channelId], references: [id])
+  lines          CheckoutLine[]
 }
 
 model CheckoutLine {
@@ -260,6 +261,11 @@ enum Gender {
   MALE
   FEMALE
   UNKNOWN
+}
+
+enum CheckoutDeliveryMethod {
+  WAREHOUSE
+  DELIVERY
 }
 
 enum ProductType {
