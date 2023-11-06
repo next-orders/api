@@ -103,7 +103,9 @@ export class CheckoutService {
     );
 
     // Custom: recount cart with 10% discount for WAREHOUSE
-    updatedTotal = Number((updatedTotal * 0.9).toFixed(2));
+    if (checkout.deliveryMethod === 'WAREHOUSE') {
+      updatedTotal = Number((updatedTotal * 0.9).toFixed(2));
+    }
 
     tempCheckout = {
       ...tempCheckout,
