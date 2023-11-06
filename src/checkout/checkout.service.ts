@@ -27,6 +27,8 @@ export class CheckoutService {
 
     tempCheckout.deliveryMethod = dto.method;
 
+    this.recountTotal(tempCheckout);
+
     return { ok: true, result: tempCheckout };
   }
 
@@ -63,17 +65,9 @@ export class CheckoutService {
         return line;
       });
 
-      // Recount
-      const updatedTotal = updatedLines.reduce(
-        (accumulator, line) =>
-          accumulator + line.quantity * (line.variant.gross || 1),
-        0,
-      );
-
       tempCheckout = {
         ...tempCheckout,
         lines: updatedLines,
-        totalPrice: updatedTotal,
       };
     } else {
       // Add new to Cart
@@ -85,24 +79,35 @@ export class CheckoutService {
 
       const updatedLines = [...tempCheckout.lines, newLine];
 
-      // Recount
-      const updatedTotal = updatedLines.reduce(
-        (accumulator, line) =>
-          accumulator + line.quantity * (line.variant.gross || 1),
-        0,
-      );
-
       tempCheckout = {
         ...tempCheckout,
         lines: updatedLines,
-        totalPrice: updatedTotal,
       };
     }
+
+    // Recount
+    this.recountTotal(tempCheckout);
 
     return { ok: true, result: tempCheckout };
   }
 
   async findCheckoutById(id: string) {
     return tempCheckout;
+  }
+
+  recountTotal(checkout: Checkout) {
+    let updatedTotal = checkout.lines.reduce(
+      (accumulator, line) =>
+        accumulator + line.quantity * (line.variant.gross || 1),
+      0,
+    );
+
+    // Custom: recount cart with 10% discount for WAREHOUSE
+    updatedTotal = Number((updatedTotal * 0.9).toFixed(2));
+
+    tempCheckout = {
+      ...tempCheckout,
+      totalPrice: updatedTotal,
+    };
   }
 }
