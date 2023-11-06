@@ -8,6 +8,7 @@ import { createId } from '@paralleldrive/cuid2';
 let tempCheckout: Checkout = {
   id: '123',
   deliveryMethod: 'DELIVERY',
+  shippingPrice: 0,
   totalPrice: 0,
   lines: [],
 };
@@ -96,6 +97,7 @@ export class CheckoutService {
   }
 
   recountTotal(checkout: Checkout) {
+    let updatedShippingPrice = 0;
     let updatedTotal = checkout.lines.reduce(
       (accumulator, line) =>
         accumulator + line.quantity * (line.variant.gross || 1),
@@ -111,12 +113,14 @@ export class CheckoutService {
     if (checkout.deliveryMethod === 'DELIVERY') {
       // Total less than 25$
       if (updatedTotal < 25) {
+        updatedShippingPrice = 5;
         updatedTotal = updatedTotal + 5;
       }
     }
 
     tempCheckout = {
       ...tempCheckout,
+      shippingPrice: updatedShippingPrice,
       totalPrice: updatedTotal,
     };
   }

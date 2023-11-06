@@ -146,6 +146,7 @@ export type ProductMedia = {
 export type Checkout = {
   id: string;
   deliveryMethod: 'DELIVERY' | 'WAREHOUSE';
+  shippingPrice: number;
   totalPrice: number;
   lines: CheckoutLine[];
 };
