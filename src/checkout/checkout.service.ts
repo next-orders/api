@@ -8,7 +8,7 @@ import { createId } from '@paralleldrive/cuid2';
 let tempCheckout: Checkout = {
   id: '123',
   deliveryMethod: 'DELIVERY',
-  shippingPrice: 0,
+  shippingPrice: 5,
   totalPrice: 0,
   lines: [],
 };
