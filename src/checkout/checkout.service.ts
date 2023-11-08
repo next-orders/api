@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Checkout, CheckoutLine } from '@api-sdk';
+import { Checkout, CheckoutLine, ProductVariant } from '@api-sdk';
 import { AddProductDto, ChangeDeliveryMethodDto } from '@/checkout/dto';
 import { PrismaService } from '@/db/prisma.service';
 import { ProductVariantService } from '@/product-variant/product-variant.service';
@@ -28,7 +28,7 @@ export class CheckoutService {
 
     tempCheckout.deliveryMethod = dto.method;
 
-    this.recountTotal(tempCheckout);
+    tempCheckout = this.recountTotal(tempCheckout);
 
     return { ok: true, result: tempCheckout };
   }
@@ -52,42 +52,16 @@ export class CheckoutService {
       return null;
     }
 
-    // Check, if already in Cart
-    const findLine = tempCheckout.lines.find(
-      (line) => line.variant.id === variant.id,
+    const isAlreadyInCart = this.checkIfAlreadyInCheckout(
+      tempCheckout,
+      variant.id,
     );
-    const isAlreadyInCart = !!findLine;
-    if (isAlreadyInCart) {
-      // +1
-      const updatedLines = tempCheckout.lines.map((line) => {
-        if (line.variant.id === variant.id) {
-          line.quantity++;
-        }
-        return line;
-      });
 
-      tempCheckout = {
-        ...tempCheckout,
-        lines: updatedLines,
-      };
-    } else {
-      // Add new to Cart
-      const newLine: CheckoutLine = {
-        id: createId(),
-        quantity: 1,
-        variant,
-      };
+    tempCheckout = isAlreadyInCart
+      ? this.addOneToCheckoutLine(tempCheckout, variant.id)
+      : this.addNewLineToCheckout(tempCheckout, variant);
 
-      const updatedLines = [...tempCheckout.lines, newLine];
-
-      tempCheckout = {
-        ...tempCheckout,
-        lines: updatedLines,
-      };
-    }
-
-    // Recount
-    this.recountTotal(tempCheckout);
+    tempCheckout = this.recountTotal(tempCheckout);
 
     return { ok: true, result: tempCheckout };
   }
@@ -96,7 +70,7 @@ export class CheckoutService {
     return tempCheckout;
   }
 
-  recountTotal(checkout: Checkout) {
+  recountTotal(checkout: Checkout): Checkout {
     let updatedShippingPrice = 0;
     let updatedTotal = checkout.lines.reduce(
       (accumulator, line) =>
@@ -114,14 +88,47 @@ export class CheckoutService {
       // Total less than 25$
       if (updatedTotal < 25) {
         updatedShippingPrice = 5;
-        updatedTotal = updatedTotal + 5;
+        updatedTotal = Number((updatedTotal + 5).toFixed(2));
       }
     }
 
-    tempCheckout = {
-      ...tempCheckout,
+    return {
+      ...checkout,
       shippingPrice: updatedShippingPrice,
       totalPrice: updatedTotal,
+    };
+  }
+
+  checkIfAlreadyInCheckout(checkout: Checkout, variantId: string): boolean {
+    return !!checkout.lines.find((line) => line.variant.id === variantId);
+  }
+
+  addOneToCheckoutLine(checkout: Checkout, variantId: string): Checkout {
+    const updatedLines = checkout.lines.map((line) => {
+      if (line.variant.id === variantId) {
+        line.quantity++;
+      }
+      return line;
+    });
+
+    return {
+      ...checkout,
+      lines: updatedLines,
+    };
+  }
+
+  addNewLineToCheckout(checkout: Checkout, variant: ProductVariant): Checkout {
+    const newLine: CheckoutLine = {
+      id: createId(),
+      quantity: 1,
+      variant,
+    };
+
+    const updatedLines = [...checkout.lines, newLine];
+
+    return {
+      ...checkout,
+      lines: updatedLines,
     };
   }
 }
