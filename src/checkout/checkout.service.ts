@@ -161,12 +161,14 @@ export class CheckoutService {
     checkout: Checkout,
     lineId: string,
   ): Checkout {
-    const updatedLines = checkout.lines.map((line) => {
-      if (line.id === lineId) {
-        line.quantity--;
-      }
-      return line;
-    });
+    const updatedLines = checkout.lines
+      .map((line) => {
+        if (line.id === lineId) {
+          line.quantity--;
+        }
+        return line;
+      })
+      .filter((line) => line.quantity > 0);
 
     return {
       ...checkout,
