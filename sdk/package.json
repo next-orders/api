@@ -1,6 +1,6 @@
 {
   "name": "@next-orders/api-sdk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "TS Lib: Easy ability to make requests to main API via NPM package. 100% typed.",
   "scripts": {
     "build": "tsup",

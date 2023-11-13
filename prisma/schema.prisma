@@ -159,22 +159,23 @@ model ClientTrait {
 }
 
 model Channel {
-  id                 String     @id @default(cuid())
+  id                 String       @id @default(cuid())
   slug               String
   name               String
   description        String?
   currencyCode       String
-  isActive           Boolean    @default(true)
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @default(now())
-  accentTextColor    String     @default("#65a30d")
-  accentButtonColor  String     @default("#d9f99d")
+  languageCode       LanguageCode @default(EN)
+  isActive           Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @default(now())
+  accentTextColor    String       @default("#65a30d")
+  accentButtonColor  String       @default("#d9f99d")
   accentGradientFrom String?
   accentGradientTo   String?
   shopId             String
-  shop               Shop       @relation(fields: [shopId], references: [id])
+  shop               Shop         @relation(fields: [shopId], references: [id])
   domainId           String?
-  domain             Domain?    @relation(fields: [domainId], references: [id])
+  domain             Domain?      @relation(fields: [domainId], references: [id])
   menus              Menu[]
   checkouts          Checkout[]
 }
@@ -296,4 +297,9 @@ enum EmployeePermissionType {
   EDIT_CLIENTS
   READ_MEDIA
   EDIT_MEDIA
+}
+
+enum LanguageCode {
+  EN
+  RU
 }

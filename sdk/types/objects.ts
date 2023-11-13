@@ -88,6 +88,7 @@ export type Channel = {
   name: string;
   description: string | null;
   currencyCode: string;
+  languageCode: 'EN' | 'RU';
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
