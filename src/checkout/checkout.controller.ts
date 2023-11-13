@@ -7,7 +7,9 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodResponse,
+  CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutResponse,
 } from '@api-sdk';
 import { CheckoutService } from './checkout.service';
@@ -44,6 +46,34 @@ export class CheckoutController {
     }
 
     return added;
+  }
+
+  @Public()
+  @Post(':id/:lineId/add-one')
+  async addOneToCheckoutLine(
+    @Param('id') id: string,
+    @Param('lineId') lineId: string,
+  ): Promise<CheckoutAddOneToLineResponse> {
+    const added = await this.service.addOneToCheckoutLine(id, lineId);
+    if (!added) {
+      throw new BadRequestException();
+    }
+
+    return added;
+  }
+
+  @Public()
+  @Post(':id/:lineId/remove-one')
+  async removeOneFromCheckoutLine(
+    @Param('id') id: string,
+    @Param('lineId') lineId: string,
+  ): Promise<CheckoutRemoveOneFromLineResponse> {
+    const removed = await this.service.removeOneFromCheckoutLine(id, lineId);
+    if (!removed) {
+      throw new BadRequestException();
+    }
+
+    return removed;
   }
 
   @Public()

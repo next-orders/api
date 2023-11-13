@@ -12,3 +12,13 @@ export type CheckoutChangeDeliveryMethodResponse = {
   ok: boolean;
   result: Checkout;
 };
+
+export type CheckoutAddOneToLineResponse = {
+  ok: boolean;
+  result: Checkout;
+};
+
+export type CheckoutRemoveOneFromLineResponse = {
+  ok: boolean;
+  result: Checkout;
+};

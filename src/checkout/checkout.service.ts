@@ -27,7 +27,6 @@ export class CheckoutService {
     );
 
     tempCheckout.deliveryMethod = dto.method;
-
     tempCheckout = this.recountTotal(tempCheckout);
 
     return { ok: true, result: tempCheckout };
@@ -58,9 +57,33 @@ export class CheckoutService {
     );
 
     tempCheckout = isAlreadyInCart
-      ? this.addOneToCheckoutLine(tempCheckout, variant.id)
+      ? this.addOneToCheckoutLineByVariantId(tempCheckout, variant.id)
       : this.addNewLineToCheckout(tempCheckout, variant);
 
+    tempCheckout = this.recountTotal(tempCheckout);
+
+    return { ok: true, result: tempCheckout };
+  }
+
+  async addOneToCheckoutLine(checkoutId: string, lineId: string) {
+    Logger.log(
+      `Checkout ${checkoutId}: adding one to line Id ${lineId}`,
+      'addOneToCheckoutLine',
+    );
+
+    tempCheckout = this.addOneToCheckoutLineByLineId(tempCheckout, lineId);
+    tempCheckout = this.recountTotal(tempCheckout);
+
+    return { ok: true, result: tempCheckout };
+  }
+
+  async removeOneFromCheckoutLine(checkoutId: string, lineId: string) {
+    Logger.log(
+      `Checkout ${checkoutId}: removing one from line Id ${lineId}`,
+      'removeOneFromCheckoutLine',
+    );
+
+    tempCheckout = this.removeOneFromCheckoutLineByLineId(tempCheckout, lineId);
     tempCheckout = this.recountTotal(tempCheckout);
 
     return { ok: true, result: tempCheckout };
@@ -103,10 +126,44 @@ export class CheckoutService {
     return !!checkout.lines.find((line) => line.variant.id === variantId);
   }
 
-  addOneToCheckoutLine(checkout: Checkout, variantId: string): Checkout {
+  addOneToCheckoutLineByVariantId(
+    checkout: Checkout,
+    variantId: string,
+  ): Checkout {
     const updatedLines = checkout.lines.map((line) => {
       if (line.variant.id === variantId) {
         line.quantity++;
+      }
+      return line;
+    });
+
+    return {
+      ...checkout,
+      lines: updatedLines,
+    };
+  }
+
+  addOneToCheckoutLineByLineId(checkout: Checkout, lineId: string): Checkout {
+    const updatedLines = checkout.lines.map((line) => {
+      if (line.id === lineId) {
+        line.quantity++;
+      }
+      return line;
+    });
+
+    return {
+      ...checkout,
+      lines: updatedLines,
+    };
+  }
+
+  removeOneFromCheckoutLineByLineId(
+    checkout: Checkout,
+    lineId: string,
+  ): Checkout {
+    const updatedLines = checkout.lines.map((line) => {
+      if (line.id === lineId) {
+        line.quantity--;
       }
       return line;
     });

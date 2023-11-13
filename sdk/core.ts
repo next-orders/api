@@ -14,8 +14,10 @@ import {
   Shop,
 } from './types/objects';
 import {
+  CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodRequest,
   CheckoutChangeDeliveryMethodResponse,
+  CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutRequest,
   ProductVariantAddToCheckoutResponse,
   SignInByEmailRequest,
@@ -223,6 +225,32 @@ export class MainAPI {
       `checkout/${checkoutId}/add`,
       'POST',
       data,
+      externalConfig,
+    );
+  }
+
+  public async addOneToCheckoutLine(
+    checkoutId: string,
+    lineId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<CheckoutAddOneToLineResponse>(
+      `checkout/${checkoutId}/${lineId}/add-one`,
+      'POST',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async removeOneFromCheckoutLine(
+    checkoutId: string,
+    lineId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<CheckoutRemoveOneFromLineResponse>(
+      `checkout/${checkoutId}/${lineId}/remove-one`,
+      'POST',
+      undefined,
       externalConfig,
     );
   }
