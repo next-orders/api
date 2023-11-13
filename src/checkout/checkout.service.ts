@@ -95,10 +95,14 @@ export class CheckoutService {
 
   recountTotal(checkout: Checkout): Checkout {
     let updatedShippingPrice = 0;
-    let updatedTotal = checkout.lines.reduce(
-      (accumulator, line) =>
-        accumulator + line.quantity * (line.variant.gross || 1),
-      0,
+    let updatedTotal = Number(
+      checkout.lines
+        .reduce(
+          (accumulator, line) =>
+            accumulator + line.quantity * (line.variant.gross || 1),
+          0,
+        )
+        .toFixed(2),
     );
 
     // Custom: recount cart with 10% discount
