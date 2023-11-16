@@ -46,14 +46,13 @@ model Media {
 }
 
 model Category {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   level     Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   shopId    String
-  shop      Shop      @relation(fields: [shopId], references: [id])
-  products  Product[]
+  shop      Shop     @relation(fields: [shopId], references: [id])
 }
 
 model Warehouse {
@@ -78,8 +77,7 @@ model Product {
   description            String?
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @default(now())
-  categoryId             String
-  category               Category         @relation(fields: [categoryId], references: [id])
+  categoryId             String?
   rating                 Float            @default(0)
   score                  Int              @default(0)
   isAvailableForPurchase Boolean          @default(true)
@@ -210,8 +208,8 @@ model ProductVariant {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @default(now())
   sku            String?
-  weightUnit     String?
-  weightValue    Float?
+  weightUnit     WeightUnit     @default(G)
+  weightValue    Float
   onSale         Boolean        @default(false)
   currency       String?
   gross          Float?
@@ -297,6 +295,13 @@ enum EmployeePermissionType {
   EDIT_CLIENTS
   READ_MEDIA
   EDIT_MEDIA
+}
+
+enum WeightUnit {
+  G
+  KG
+  LB
+  OZ
 }
 
 enum LanguageCode {

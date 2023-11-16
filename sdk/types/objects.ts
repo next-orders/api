@@ -125,8 +125,8 @@ export type ProductVariant = {
   createdAt: Date;
   updatedAt: Date;
   sku?: string | null;
-  weightUnit?: string | null;
-  weightValue?: number | null;
+  weightUnit: 'G' | 'KG' | 'OZ' | 'LB';
+  weightValue: number;
   onSale: boolean;
   currency?: string | null;
   gross?: number | null;
