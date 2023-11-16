@@ -7,9 +7,9 @@ export class MenuCategoryController {
   constructor(private readonly service: MenuCategoryService) {}
 
   @Public()
-  @Get('list')
-  listMenuCategories() {
-    return this.service.listMenuCategories();
+  @Get(':menuId/list')
+  listMenuCategories(@Param('menuId') menuId: string) {
+    return this.service.listMenuCategories(menuId);
   }
 
   @Public()

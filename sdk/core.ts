@@ -264,9 +264,12 @@ export class MainAPI {
     );
   }
 
-  public async getMenuCategories(externalConfig?: NextFetchRequestConfig) {
+  public async getMenuCategories(
+    menuId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
     return this.coreRequest<MenuCategory[]>(
-      'menu-category/list',
+      `menu-category/${menuId}/list`,
       'GET',
       undefined,
       externalConfig,
