@@ -20,6 +20,8 @@ import {
   CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutRequest,
   ProductVariantAddToCheckoutResponse,
+  ShopCreateRequest,
+  ShopCreateResponse,
   SignInByEmailRequest,
   SignInByEmailResponse,
   UploadMediaRequest,
@@ -40,6 +42,18 @@ export class MainAPI {
 
   public async getShop(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Shop>(`shop`, 'GET', undefined, externalConfig);
+  }
+
+  public async createShop(
+    data: ShopCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ShopCreateResponse>(
+      `shop`,
+      'POST',
+      data,
+      externalConfig,
+    );
   }
 
   public async getChannel(

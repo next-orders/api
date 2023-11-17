@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { createId } from '@paralleldrive/cuid2';
 import { PrismaService } from '@/db/prisma.service';
 import type { Shop } from '@api-sdk';
+import { CreateShopDto } from '@/shop/dto/create-shop.dto';
 
 @Injectable()
 export class ShopService {
@@ -26,5 +28,33 @@ export class ShopService {
     }
 
     return shop;
+  }
+
+  async createShop(dto: CreateShopDto): Promise<Shop | null> {
+    // Check if already in DB
+    const alreadyInDb = await this.prisma.shop.findFirst();
+    if (alreadyInDb) {
+      return null;
+    }
+
+    return this.prisma.shop.create({
+      data: {
+        id: createId(),
+        name: dto.name,
+        description: dto.description,
+      },
+      include: {
+        domains: true,
+        channels: {
+          include: {
+            menus: {
+              include: {
+                categories: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 }

@@ -1,6 +1,14 @@
-import { Controller, Get, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+} from '@nestjs/common';
 import { ShopService } from '@/shop/shop.service';
 import { Public } from '@/auth/auth.decorator';
+import { CreateShopDto } from '@/shop/dto/create-shop.dto';
 
 @Controller('shop')
 export class ShopController {
@@ -16,5 +24,16 @@ export class ShopController {
     }
 
     return shop;
+  }
+
+  @Public()
+  @Post()
+  async createShop(@Body() dto: CreateShopDto) {
+    const created = await this.service.createShop(dto);
+    if (!created) {
+      throw new BadRequestException();
+    }
+
+    return created;
   }
 }
