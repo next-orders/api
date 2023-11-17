@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, Get, NotFoundException } from '@nestjs/common';
 import { ShopService } from '@/shop/shop.service';
 import { Public } from '@/auth/auth.decorator';
 
@@ -7,9 +7,10 @@ export class ShopController {
   constructor(private readonly service: ShopService) {}
 
   @Public()
-  @Get(':id')
-  async findShopById(@Param('id') id: string) {
-    const shop = await this.service.findShopById(id);
+  @Get()
+  async getShopData() {
+    /** Shop can be only one in DB */
+    const shop = await this.service.getShopData();
     if (!shop) {
       throw new NotFoundException();
     }

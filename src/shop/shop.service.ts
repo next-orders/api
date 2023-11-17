@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
-import { Shop } from '@api-sdk';
+import type { Shop } from '@api-sdk';
 
 @Injectable()
 export class ShopService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findShopById(id: string): Promise<Shop | null> {
-    const shop = await this.prisma.shop.findUnique({
-      where: { id },
+  async getShopData(): Promise<Shop | null> {
+    const shop = await this.prisma.shop.findFirst({
       include: {
         domains: true,
         channels: {

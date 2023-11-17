@@ -38,16 +38,8 @@ export class MainAPI {
     this.apiToken = apiToken;
   }
 
-  public async getShop(
-    shopId: string,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.coreRequest<Shop>(
-      `shop/${shopId}`,
-      'GET',
-      undefined,
-      externalConfig,
-    );
+  public async getShop(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<Shop>(`shop`, 'GET', undefined, externalConfig);
   }
 
   public async getChannel(
