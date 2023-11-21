@@ -9,20 +9,7 @@ export class ShopService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getShopData(): Promise<Shop | null> {
-    const shop = await this.prisma.shop.findFirst({
-      include: {
-        domains: true,
-        channels: {
-          include: {
-            menus: {
-              include: {
-                categories: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const shop = await this.prisma.shop.findFirst();
     if (!shop) {
       return null;
     }
@@ -42,18 +29,6 @@ export class ShopService {
         id: createId(),
         name: dto.name,
         description: dto.description,
-      },
-      include: {
-        domains: true,
-        channels: {
-          include: {
-            menus: {
-              include: {
-                categories: true,
-              },
-            },
-          },
-        },
       },
     });
   }

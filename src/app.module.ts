@@ -6,7 +6,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from '@/product/product.module';
 import { CheckoutModule } from '@/checkout/checkout.module';
-import { CategoryModule } from '@/category/category.module';
 import { MenuModule } from '@/menu/menu.module';
 import { MenuCategoryModule } from '@/menu-category/menu-category.module';
 import { ShopModule } from '@/shop/shop.module';
@@ -46,7 +45,6 @@ import { AuthGuard } from '@/auth/auth.guard';
     ClientModule,
     EmployeeModule,
     AuthModule,
-    CategoryModule,
     ProductModule,
     ProductVariantModule,
     CheckoutModule,

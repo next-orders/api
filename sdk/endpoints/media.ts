@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { Media } from '../types/objects';
 
 export const UploadMediaRequestSchema = z.object({
-  shopId: z.string(),
   alt: z.string(),
   file: z.any(),
 });

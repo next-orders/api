@@ -1,7 +1,6 @@
 import { client } from './client';
 import {
   AvatarParams,
-  Category,
   Channel,
   Checkout,
   Client,
@@ -38,6 +37,15 @@ export class MainAPI {
   constructor(apiUrl: string, apiToken: string) {
     this.apiUrl = apiUrl;
     this.apiToken = apiToken;
+  }
+
+  public async getApiVersion(externalConfig?: NextFetchRequestConfig) {
+    return this.coreRequest<{ ok: boolean; version: string }>(
+      `version`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
   }
 
   public async getShop(externalConfig?: NextFetchRequestConfig) {
@@ -149,18 +157,6 @@ export class MainAPI {
     );
   }
 
-  public async getProductsInCategory(
-    categoryId: string,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.coreRequest<Product[]>(
-      `product/category/${categoryId}`,
-      'GET',
-      undefined,
-      externalConfig,
-    );
-  }
-
   public async getProductById(
     id: string,
     externalConfig?: NextFetchRequestConfig,
@@ -256,15 +252,6 @@ export class MainAPI {
     return this.coreRequest<CheckoutRemoveOneFromLineResponse>(
       `checkout/${checkoutId}/${lineId}/remove-one`,
       'POST',
-      undefined,
-      externalConfig,
-    );
-  }
-
-  public async getCategories(externalConfig?: NextFetchRequestConfig) {
-    return this.coreRequest<Category[]>(
-      'category/list',
-      'GET',
       undefined,
       externalConfig,
     );

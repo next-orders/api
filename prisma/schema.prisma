@@ -9,18 +9,11 @@ datasource db {
 
 // Main Entity
 model Shop {
-  id          String     @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @default(now())
-  domains     Domain[]
-  media       Media[]
-  categories  Category[]
-  products    Product[]
-  employees   Employee[]
-  clients     Client[]
-  channels    Channel[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }
 
 // Shop Entities
@@ -29,8 +22,6 @@ model Domain {
   host      String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
-  shopId    String
-  shop      Shop      @relation(fields: [shopId], references: [id])
   channel   Channel[]
 }
 
@@ -40,19 +31,7 @@ model Media {
   url          String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now())
-  shopId       String
-  shop         Shop           @relation(fields: [shopId], references: [id])
   productMedia ProductMedia[]
-}
-
-model Category {
-  id        String   @id @default(cuid())
-  name      String
-  level     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  shopId    String
-  shop      Shop     @relation(fields: [shopId], references: [id])
 }
 
 model Warehouse {
@@ -77,12 +56,9 @@ model Product {
   description            String?
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @default(now())
-  categoryId             String?
   rating                 Float            @default(0)
   score                  Int              @default(0)
   isAvailableForPurchase Boolean          @default(true)
-  shopId                 String
-  shop                   Shop             @relation(fields: [shopId], references: [id])
   variants               ProductVariant[]
 }
 
@@ -94,8 +70,6 @@ model Employee {
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @default(now())
   lastLogin   DateTime?
-  shopId      String
-  shop        Shop                 @relation(fields: [shopId], references: [id])
   permissions EmployeePermission[]
   contacts    EmployeeContact[]
   passwords   EmployeePassword[]
@@ -142,8 +116,6 @@ model Client {
   emotion   Int           @default(7)
   loyalty   Int           @default(0)
   avatarId  String
-  shopId    String
-  shop      Shop          @relation(fields: [shopId], references: [id])
   traits    ClientTrait[]
 }
 
@@ -170,8 +142,6 @@ model Channel {
   accentButtonColor  String       @default("#d9f99d")
   accentGradientFrom String?
   accentGradientTo   String?
-  shopId             String
-  shop               Shop         @relation(fields: [shopId], references: [id])
   domainId           String?
   domain             Domain?      @relation(fields: [domainId], references: [id])
   menus              Menu[]

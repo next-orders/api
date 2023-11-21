@@ -65,7 +65,6 @@ export class MediaService {
         id,
         url,
         alt: dto.alt,
-        shopId: dto.shopId,
       },
     });
 

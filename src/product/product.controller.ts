@@ -15,12 +15,6 @@ export class ProductController {
   constructor(private readonly service: ProductService) {}
 
   @Public()
-  @Get('category/:id')
-  findProductsInCategory(@Param('id') id: string) {
-    return this.service.findProductsInCategory(id);
-  }
-
-  @Public()
   @Get('list')
   async findProducts() {
     const products = await this.service.findProducts();

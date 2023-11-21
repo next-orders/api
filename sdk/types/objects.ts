@@ -5,8 +5,6 @@ export type Shop = {
   description: string | null;
   createdAt: Date;
   updatedAt: Date;
-  domains?: Domain[];
-  channels: Channel[];
 };
 
 // Shop Entities
@@ -25,14 +23,6 @@ export type Media = {
   updatedAt: Date;
 };
 
-export type Category = {
-  id: string;
-  name: string;
-  level: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 export type Product = {
   id: string;
   type: 'PRODUCTION' | 'READY' | 'INGREDIENT';
@@ -40,7 +30,6 @@ export type Product = {
   description: string | null;
   createdAt: Date;
   updatedAt: Date;
-  category: Category;
   variants?: ProductVariant[];
   rating: number;
   score: number;
