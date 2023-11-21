@@ -30,8 +30,7 @@ COPY package*.json ./
 COPY /prisma ./
 
 # Install production dependencies.
-# If you have a package-lock.json, speedier builds with 'npm ci', otherwise use 'npm install --only=production'
-RUN npm ci --only=production && npx prisma generate
+RUN npm ci --omit=dev && npx prisma generate
 
 # Bundle app source
 COPY . .
