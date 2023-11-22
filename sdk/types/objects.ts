@@ -25,7 +25,7 @@ export type Media = {
 
 export type Product = {
   id: string;
-  type: 'PRODUCTION' | 'READY' | 'INGREDIENT';
+  type: ProductType;
   name: string;
   description: string | null;
   createdAt: Date;
@@ -36,16 +36,20 @@ export type Product = {
   isAvailableForPurchase: boolean;
 };
 
+export type ProductType = 'PRODUCTION' | 'READY' | 'INGREDIENT';
+
 export type EmployeePermission = {
   id: string;
-  type:
-    | 'READ_CLIENTS'
-    | 'EDIT_CLIENTS'
-    | 'READ_MEDIA'
-    | 'EDIT_MEDIA'
-    | 'READ_CHANNEL'
-    | 'EDIT_CHANNEL';
+  type: EmployeePermissionType;
 };
+
+export type EmployeePermissionType =
+  | 'READ_CLIENTS'
+  | 'EDIT_CLIENTS'
+  | 'READ_MEDIA'
+  | 'EDIT_MEDIA'
+  | 'READ_CHANNELS'
+  | 'EDIT_CHANNELS';
 
 export type Client = {
   id: string;
@@ -55,7 +59,7 @@ export type Client = {
   createdAt: Date;
   updatedAt: Date;
   level: number;
-  gender: 'UNKNOWN' | 'MALE' | 'FEMALE';
+  gender: Gender;
   emotion: number;
   loyalty: number;
   avatarId: string;
@@ -64,26 +68,28 @@ export type Client = {
 
 export type ClientTrait = {
   id: string;
-  type:
-    | 'BLANK'
-    | 'ORDERLY'
-    | 'SPONTANEOUS'
-    | 'COLD'
-    | 'WELL_FED'
-    | 'SATISFIED'
-    | 'PICKY'
-    | 'CAUTIOUS';
+  type: ClientTraitType;
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type ClientTraitType =
+  | 'BLANK'
+  | 'ORDERLY'
+  | 'SPONTANEOUS'
+  | 'COLD'
+  | 'WELL_FED'
+  | 'SATISFIED'
+  | 'PICKY'
+  | 'CAUTIOUS';
 
 export type Channel = {
   id: string;
   slug: string;
   name: string;
   description: string | null;
-  currencyCode: string;
-  languageCode: 'EN' | 'RU';
+  currencyCode: CurrencyCode;
+  languageCode: LanguageCode;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -94,6 +100,10 @@ export type Channel = {
   accentGradientTo: string | null;
   menus: Menu[];
 };
+
+export type LanguageCode = 'EN' | 'RU';
+
+export type CurrencyCode = 'USD' | 'RUB';
 
 // Channel Entities
 export type Menu = {
@@ -120,7 +130,7 @@ export type ProductVariant = {
   createdAt: Date;
   updatedAt: Date;
   sku?: string | null;
-  weightUnit: 'G' | 'KG' | 'OZ' | 'LB';
+  weightUnit: WeightUnit;
   weightValue: number;
   onSale: boolean;
   currency?: string | null;
@@ -133,6 +143,8 @@ export type ProductVariant = {
   category: MenuCategory;
 };
 
+export type WeightUnit = 'G' | 'KG' | 'OZ' | 'LB';
+
 export type ProductMedia = {
   id: string;
   alt: string;
@@ -141,11 +153,13 @@ export type ProductMedia = {
 
 export type Checkout = {
   id: string;
-  deliveryMethod: 'DELIVERY' | 'WAREHOUSE';
+  deliveryMethod: CheckoutDeliveryMethod;
   shippingPrice: number;
   totalPrice: number;
   lines: CheckoutLine[];
 };
+
+export type CheckoutDeliveryMethod = 'DELIVERY' | 'WAREHOUSE';
 
 export type CheckoutLine = {
   id: string;
@@ -154,7 +168,9 @@ export type CheckoutLine = {
 };
 
 export type AvatarParams = {
-  gender?: 'MALE' | 'FEMALE' | 'UNKNOWN';
+  gender?: Gender;
   emotion?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | number;
   clothing?: 'amber' | 'green' | 'blue' | 'teal' | 'pink' | 'violet';
 };
+
+export type Gender = 'MALE' | 'FEMALE' | 'UNKNOWN';

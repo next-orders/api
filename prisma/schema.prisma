@@ -133,7 +133,7 @@ model Channel {
   slug               String
   name               String
   description        String?
-  currencyCode       String
+  currencyCode       CurrencyCode @default(USD)
   languageCode       LanguageCode @default(EN)
   isActive           Boolean      @default(true)
   createdAt          DateTime     @default(now())
@@ -279,4 +279,9 @@ enum WeightUnit {
 enum LanguageCode {
   EN
   RU
+}
+
+enum CurrencyCode {
+  USD
+  RUB
 }
