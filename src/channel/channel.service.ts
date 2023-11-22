@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { createId } from '@paralleldrive/cuid2';
 import { PrismaService } from '@/db/prisma.service';
 import { Channel } from '@api-sdk';
+import { CreateChannelDto } from '@/channel/dto/create-channel.dto';
 
 @Injectable()
 export class ChannelService {
@@ -34,5 +36,25 @@ export class ChannelService {
     }
 
     return channel;
+  }
+
+  async createChannel(dto: CreateChannelDto): Promise<Channel> {
+    return this.prisma.channel.create({
+      data: {
+        id: createId(),
+        slug: dto.slug,
+        name: dto.name,
+        description: dto.description,
+        currencyCode: dto.currencyCode,
+        languageCode: dto.languageCode,
+      },
+      include: {
+        menus: {
+          include: {
+            categories: true,
+          },
+        },
+      },
+    });
   }
 }

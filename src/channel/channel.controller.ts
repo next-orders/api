@@ -1,6 +1,15 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
+import { Permissions, Public } from '@/auth/auth.decorator';
 import { ChannelService } from '@/channel/channel.service';
-import { Public } from '@/auth/auth.decorator';
+import { CreateChannelDto } from '@/channel/dto/create-channel.dto';
 
 @Controller('channel')
 export class ChannelController {
@@ -26,5 +35,16 @@ export class ChannelController {
     }
 
     return channel;
+  }
+
+  @Permissions(['EDIT_CHANNEL'])
+  @Post()
+  async createChannel(@Body() dto: CreateChannelDto) {
+    const created = await this.service.createChannel(dto);
+    if (!created) {
+      throw new BadRequestException();
+    }
+
+    return created;
   }
 }

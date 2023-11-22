@@ -13,6 +13,8 @@ import {
   Shop,
 } from './types/objects';
 import {
+  ChannelCreateRequest,
+  ChannelCreateResponse,
   CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodRequest,
   CheckoutChangeDeliveryMethodResponse,
@@ -41,7 +43,7 @@ export class MainAPI {
 
   public async getApiVersion(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<{ ok: boolean; version: string }>(
-      `version`,
+      'version',
       'GET',
       undefined,
       externalConfig,
@@ -57,7 +59,7 @@ export class MainAPI {
     externalConfig?: NextFetchRequestConfig,
   ) {
     return this.coreRequest<ShopCreateResponse>(
-      `shop`,
+      'shop',
       'POST',
       data,
       externalConfig,
@@ -78,16 +80,28 @@ export class MainAPI {
 
   public async getChannels(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Channel[]>(
-      `channel/list`,
+      'channel/list',
       'GET',
       undefined,
       externalConfig,
     );
   }
 
+  public async createChannel(
+    data: ChannelCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ChannelCreateResponse>(
+      'channel',
+      'POST',
+      data,
+      externalConfig,
+    );
+  }
+
   public async getAllMedia(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Media[]>(
-      `media/list`,
+      'media/list',
       'GET',
       undefined,
       externalConfig,
@@ -99,7 +113,7 @@ export class MainAPI {
     externalConfig?: NextFetchRequestConfig,
   ) {
     return this.coreRequest<UploadMediaResponse>(
-      `media/upload`,
+      'media/upload',
       'POST',
       data,
       externalConfig,
@@ -108,7 +122,7 @@ export class MainAPI {
 
   public async getAllDomains(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Domain[]>(
-      `domain/list`,
+      'domain/list',
       'GET',
       undefined,
       externalConfig,
@@ -129,7 +143,7 @@ export class MainAPI {
 
   public async getClients(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Client[]>(
-      `client/list`,
+      'client/list',
       'GET',
       undefined,
       externalConfig,
@@ -150,7 +164,7 @@ export class MainAPI {
 
   public async getProducts(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Product[]>(
-      `product/list`,
+      'product/list',
       'GET',
       undefined,
       externalConfig,
@@ -286,7 +300,7 @@ export class MainAPI {
     externalConfig?: NextFetchRequestConfig,
   ) {
     return this.coreRequest<SignInByEmailResponse>(
-      `auth/employee/email`,
+      'auth/employee/email',
       'POST',
       data,
       externalConfig,
@@ -307,7 +321,7 @@ export class MainAPI {
 
   public async signInDemoData(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<{ email: string; password: string }>(
-      `auth/employee/demo`,
+      'auth/employee/demo',
       'GET',
       undefined,
       externalConfig,

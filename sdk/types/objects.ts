@@ -38,7 +38,13 @@ export type Product = {
 
 export type EmployeePermission = {
   id: string;
-  type: 'READ_CLIENTS' | 'EDIT_CLIENTS' | 'READ_MEDIA' | 'EDIT_MEDIA';
+  type:
+    | 'READ_CLIENTS'
+    | 'EDIT_CLIENTS'
+    | 'READ_MEDIA'
+    | 'EDIT_MEDIA'
+    | 'READ_CHANNEL'
+    | 'EDIT_CHANNEL';
 };
 
 export type Client = {
