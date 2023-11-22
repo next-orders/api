@@ -37,7 +37,7 @@ export class ChannelController {
     return channel;
   }
 
-  @Permissions(['EDIT_CHANNEL'])
+  @Permissions(['EDIT_CHANNELS'])
   @Post()
   async createChannel(@Body() dto: CreateChannelDto) {
     const created = await this.service.createChannel(dto);
