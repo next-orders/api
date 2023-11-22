@@ -129,6 +129,18 @@ export class MainAPI {
     );
   }
 
+  public async getAllMenusInChannel(
+    channelId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<Menu[]>(
+      `menu/list/${channelId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getMenuById(
     menuId: string,
     externalConfig?: NextFetchRequestConfig,

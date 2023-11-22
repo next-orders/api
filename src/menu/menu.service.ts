@@ -6,15 +6,20 @@ import { Menu } from '@api-sdk';
 export class MenuService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAllMenusInChannel(channelId: string): Promise<Menu[] | null> {
+    return this.prisma.menu.findMany({
+      where: { channelId },
+      include: {
+        categories: true,
+      },
+    });
+  }
+
   async findMenuById(id: string): Promise<Menu | null> {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
       include: {
-        categories: {
-          include: {
-            products: true,
-          },
-        },
+        categories: true,
       },
     });
     if (!menu) {
