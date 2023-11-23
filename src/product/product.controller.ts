@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -8,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { Public } from '@/auth/auth.decorator';
+import { Permissions, Public } from '@/auth/auth.decorator';
 
 @Controller('product')
 export class ProductController {
@@ -25,6 +26,17 @@ export class ProductController {
     return products;
   }
 
+  @Permissions(['EDIT_PRODUCTS'])
+  @Post()
+  async createProduct(@Body() dto: CreateProductDto) {
+    const product = await this.service.createProduct(dto);
+    if (!product) {
+      throw new BadRequestException();
+    }
+
+    return product;
+  }
+
   @Public()
   @Get(':id')
   async findProductById(@Param('id') id: string) {
@@ -34,13 +46,5 @@ export class ProductController {
     }
 
     return product;
-  }
-
-  @Public()
-  @Post('create')
-  async createProduct(@Body() dto: CreateProductDto) {
-    return {
-      ...dto,
-    };
   }
 }

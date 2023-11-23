@@ -267,6 +267,8 @@ enum EmployeePermissionType {
   EDIT_MEDIA
   READ_CHANNELS
   EDIT_CHANNELS
+  READ_PRODUCTS
+  EDIT_PRODUCTS
 }
 
 enum WeightUnit {

@@ -19,13 +19,14 @@ import {
   CheckoutChangeDeliveryMethodRequest,
   CheckoutChangeDeliveryMethodResponse,
   CheckoutRemoveOneFromLineResponse,
+  ProductCreateRequest,
+  ProductCreateResponse,
   ProductVariantAddToCheckoutRequest,
   ProductVariantAddToCheckoutResponse,
   ShopCreateRequest,
   ShopCreateResponse,
   SignInByEmailRequest,
   SignInByEmailResponse,
-  UploadMediaRequest,
   UploadMediaResponse,
 } from './endpoints';
 import { NextFetchRequestConfig } from './types/next';
@@ -109,12 +110,11 @@ export class MainAPI {
   }
 
   public async uploadMedia(
-    data: UploadMediaRequest,
+    data: FormData,
     externalConfig?: NextFetchRequestConfig,
   ) {
-    return this.coreRequest<UploadMediaResponse>(
+    return this.coreRequestWithFiles<UploadMediaResponse>(
       'media/upload',
-      'POST',
       data,
       externalConfig,
     );
@@ -191,6 +191,18 @@ export class MainAPI {
       `product/${id}`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async createProduct(
+    data: ProductCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductCreateResponse>(
+      'product',
+      'POST',
+      data,
       externalConfig,
     );
   }
@@ -363,6 +375,28 @@ export class MainAPI {
       {
         body: JSON.stringify(data),
         method,
+      },
+      externalConfig,
+    );
+  }
+
+  private async coreRequestWithFiles<T, E = ErrorBase>(
+    endpoint: string,
+    data: unknown,
+    externalConfig?: NextFetchRequestConfig,
+  ): Promise<T | E> {
+    return client<T, E>(
+      {
+        token: this.apiToken,
+        url: this.apiUrl,
+      },
+      endpoint,
+      {
+        body: data as BodyInit,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.apiToken}`,
+        },
       },
       externalConfig,
     );

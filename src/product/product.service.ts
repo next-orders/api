@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { createId } from '@paralleldrive/cuid2';
 import { PrismaService } from '@/db/prisma.service';
 import { Product } from '@api-sdk';
 import { changeMediaInProductVariant } from '@/lib/helpers';
+import { CreateProductDto } from '@/product/dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -70,5 +72,41 @@ export class ProductService {
     }
 
     return productsPrepared;
+  }
+
+  async createProduct(dto: CreateProductDto): Promise<Product | null> {
+    const product = await this.prisma.product.create({
+      data: {
+        id: createId(),
+        type: dto.type,
+        name: dto.name,
+        description: dto.description,
+      },
+      include: {
+        variants: {
+          include: {
+            category: true,
+            media: {
+              include: {
+                media: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      return null;
+    }
+
+    const productVariantsPrepared = changeMediaInProductVariant(
+      product.variants,
+    );
+
+    return {
+      ...product,
+      variants: productVariantsPrepared,
+    };
   }
 }
