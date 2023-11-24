@@ -164,8 +164,8 @@ model MenuCategory {
   updatedAt DateTime         @default(now())
   name      String
   slug      String
-  menuId    String
   iconUrl   String?
+  menuId    String
   menu      Menu             @relation(fields: [menuId], references: [id])
   products  ProductVariant[]
 }
@@ -268,6 +268,8 @@ enum EmployeePermissionType {
   EDIT_CHANNELS
   READ_PRODUCTS
   EDIT_PRODUCTS
+  READ_MENUS
+  EDIT_MENUS
 }
 
 enum WeightUnit {

@@ -1,10 +1,30 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
+import { Permissions, Public } from '@/auth/auth.decorator';
 import { MenuCategoryService } from '@/menu-category/menu-category.service';
-import { Public } from '@/auth/auth.decorator';
+import { CreateMenuCategoryDto } from '@/menu-category/dto/create-menu-category.dto';
 
 @Controller('menu-category')
 export class MenuCategoryController {
   constructor(private readonly service: MenuCategoryService) {}
+
+  @Permissions(['EDIT_MENUS'])
+  @Post()
+  async createCategory(@Body() dto: CreateMenuCategoryDto) {
+    const category = await this.service.createCategory(dto);
+    if (!category) {
+      throw new BadRequestException();
+    }
+
+    return category;
+  }
 
   @Public()
   @Get(':menuId/list')

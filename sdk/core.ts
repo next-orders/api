@@ -19,6 +19,8 @@ import {
   CheckoutChangeDeliveryMethodRequest,
   CheckoutChangeDeliveryMethodResponse,
   CheckoutRemoveOneFromLineResponse,
+  MenuCategoryCreateRequest,
+  MenuCategoryCreateResponse,
   ProductCreateRequest,
   ProductCreateResponse,
   ProductVariantAddToCheckoutRequest,
@@ -329,6 +331,18 @@ export class MainAPI {
       `menu-category/slug/${slug}`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async createMenuCategory(
+    data: MenuCategoryCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<MenuCategoryCreateResponse>(
+      'menu-category',
+      'POST',
+      data,
       externalConfig,
     );
   }

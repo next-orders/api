@@ -51,7 +51,9 @@ export type EmployeePermissionType =
   | 'READ_CHANNELS'
   | 'EDIT_CHANNELS'
   | 'READ_PRODUCTS'
-  | 'EDIT_PRODUCTS';
+  | 'EDIT_PRODUCTS'
+  | 'READ_MENUS'
+  | 'EDIT_MENUS';
 
 export type Client = {
   id: string;
