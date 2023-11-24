@@ -181,8 +181,7 @@ model ProductVariant {
   weightUnit     WeightUnit     @default(G)
   weightValue    Float
   onSale         Boolean        @default(false)
-  currency       String?
-  gross          Float?
+  gross          Float          @default(0)
   net            Float?
   tax            Float?
   seoTitle       String?

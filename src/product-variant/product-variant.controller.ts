@@ -1,6 +1,15 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ProductVariantService } from '@/product-variant/product-variant.service';
-import { Public } from '@/auth/auth.decorator';
+import { Permissions, Public } from '@/auth/auth.decorator';
+import { CreateProductVariantDto } from '@/product-variant/dto/create-product-variant.dto';
 
 @Controller('product-variant')
 export class ProductVariantController {
@@ -18,6 +27,17 @@ export class ProductVariantController {
     const product = await this.service.findProductVariantBySlug(slug);
     if (!product) {
       throw new NotFoundException();
+    }
+
+    return product;
+  }
+
+  @Permissions(['EDIT_PRODUCTS'])
+  @Post()
+  async createProductVariant(@Body() dto: CreateProductVariantDto) {
+    const product = await this.service.createProductVariant(dto);
+    if (!product) {
+      throw new BadRequestException();
     }
 
     return product;

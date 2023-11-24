@@ -23,6 +23,8 @@ import {
   ProductCreateResponse,
   ProductVariantAddToCheckoutRequest,
   ProductVariantAddToCheckoutResponse,
+  ProductVariantCreateRequest,
+  ProductVariantCreateResponse,
   ShopCreateRequest,
   ShopCreateResponse,
   SignInByEmailRequest,
@@ -227,6 +229,18 @@ export class MainAPI {
       `product-variant/slug/${slug}`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async createProductVariant(
+    data: ProductVariantCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductVariantCreateResponse>(
+      'product-variant',
+      'POST',
+      data,
       externalConfig,
     );
   }

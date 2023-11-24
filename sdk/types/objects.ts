@@ -135,8 +135,7 @@ export type ProductVariant = {
   weightUnit: WeightUnit;
   weightValue: number;
   onSale: boolean;
-  currency?: string | null;
-  gross?: number | null;
+  gross: number;
   net?: number | null;
   tax?: number | null;
   seoTitle: string | null;
