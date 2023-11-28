@@ -1,23 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { createId } from '@paralleldrive/cuid2';
 import {
   Checkout,
   CheckoutAddOneToLineResponse,
+  CheckoutChangeDeliveryMethodResponse,
   CheckoutLine,
   CheckoutRemoveOneFromLineResponse,
-  ProductVariant,
+  ProductVariantAddToCheckoutResponse,
 } from '@api-sdk';
 import { AddProductDto, ChangeDeliveryMethodDto } from '@/checkout/dto';
 import { PrismaService } from '@/db/prisma.service';
 import { ProductVariantService } from '@/product-variant/product-variant.service';
-import { createId } from '@paralleldrive/cuid2';
-
-let tempCheckout: Checkout = {
-  id: '123',
-  deliveryMethod: 'DELIVERY',
-  shippingPrice: 5,
-  totalPrice: 0,
-  lines: [],
-};
 
 @Injectable()
 export class CheckoutService {
@@ -26,49 +19,72 @@ export class CheckoutService {
     private readonly productVariant: ProductVariantService,
   ) {}
 
-  async changeCheckoutDeliveryMethod(id: string, dto: ChangeDeliveryMethodDto) {
+  async changeCheckoutDeliveryMethod(
+    id: string,
+    dto: ChangeDeliveryMethodDto,
+  ): Promise<CheckoutChangeDeliveryMethodResponse> {
     Logger.log(
       `Checkout ${id}: delivery method changing to ${dto.method}`,
       'changeCheckoutDeliveryMethod',
     );
 
-    tempCheckout.deliveryMethod = dto.method;
-    tempCheckout = this.recountTotal(tempCheckout);
+    // Update data
+    await this.prisma.checkout.update({
+      where: { id },
+      data: {
+        deliveryMethod: dto.method,
+      },
+    });
 
-    return { ok: true, result: tempCheckout };
+    await this.recountTotal(id);
+
+    // Get new data
+    const checkout = await this.findCheckoutById(id);
+    if (!checkout) {
+      throw new BadRequestException();
+    }
+
+    return { ok: true, result: checkout };
   }
 
-  async addProductToCheckout(id: string, dto: AddProductDto) {
+  async addProductToCheckout(
+    id: string,
+    dto: AddProductDto,
+  ): Promise<ProductVariantAddToCheckoutResponse> {
     Logger.log(
       `Checkout ${id}: adding product Id ${dto.productVariantId}`,
       'addProductToCheckout',
     );
+
+    // Limit lines
+    const checkoutCheck = await this.findCheckoutById(id);
+    if (checkoutCheck?.lines && checkoutCheck.lines.length >= 20) {
+      throw new BadRequestException();
+    }
 
     // Find ProductVariant
     const variant = await this.productVariant.findProductVariantById(
       dto.productVariantId,
     );
     if (!variant) {
-      return null;
+      throw new BadRequestException();
     }
 
-    // Max lines = 20
-    if (tempCheckout.lines.length >= 20) {
-      return null;
+    const checkoutLine = await this.checkIfAlreadyInCheckout(id, variant.id);
+
+    checkoutLine
+      ? await this.addOneToCheckoutLineByLineId(checkoutLine.id)
+      : await this.addNewLineToCheckout(id, variant.id);
+
+    await this.recountTotal(id);
+
+    // Get new data
+    const checkout = await this.findCheckoutById(id);
+    if (!checkout) {
+      throw new BadRequestException();
     }
 
-    const isAlreadyInCart = this.checkIfAlreadyInCheckout(
-      tempCheckout,
-      variant.id,
-    );
-
-    tempCheckout = isAlreadyInCart
-      ? this.addOneToCheckoutLineByVariantId(tempCheckout, variant.id)
-      : this.addNewLineToCheckout(tempCheckout, variant);
-
-    tempCheckout = this.recountTotal(tempCheckout);
-
-    return { ok: true, result: tempCheckout };
+    return { ok: true, result: checkout };
   }
 
   async addOneToCheckoutLine(
@@ -80,10 +96,16 @@ export class CheckoutService {
       'addOneToCheckoutLine',
     );
 
-    tempCheckout = this.addOneToCheckoutLineByLineId(tempCheckout, lineId);
-    tempCheckout = this.recountTotal(tempCheckout);
+    await this.addOneToCheckoutLineByLineId(lineId);
+    await this.recountTotal(checkoutId);
 
-    return { ok: true, result: tempCheckout };
+    // Get new data
+    const checkout = await this.findCheckoutById(checkoutId);
+    if (!checkout) {
+      throw new BadRequestException();
+    }
+
+    return { ok: true, result: checkout };
   }
 
   async removeOneFromCheckoutLine(
@@ -95,10 +117,16 @@ export class CheckoutService {
       'removeOneFromCheckoutLine',
     );
 
-    tempCheckout = this.removeOneFromCheckoutLineByLineId(tempCheckout, lineId);
-    tempCheckout = this.recountTotal(tempCheckout);
+    await this.removeOneFromCheckoutLineByLineId(lineId);
+    await this.recountTotal(checkoutId);
 
-    return { ok: true, result: tempCheckout };
+    // Get new data
+    const checkout = await this.findCheckoutById(checkoutId);
+    if (!checkout) {
+      throw new BadRequestException();
+    }
+
+    return { ok: true, result: checkout };
   }
 
   async findCheckoutById(id: string): Promise<Checkout | null> {
@@ -128,7 +156,12 @@ export class CheckoutService {
     return checkout;
   }
 
-  recountTotal(checkout: Checkout): Checkout {
+  async recountTotal(checkoutId: string): Promise<boolean> {
+    const checkout = await this.findCheckoutById(checkoutId);
+    if (!checkout) {
+      return false;
+    }
+
     let updatedShippingPrice = 0;
     let updatedTotal = Number(
       checkout.lines
@@ -154,84 +187,73 @@ export class CheckoutService {
       }
     }
 
-    return {
-      ...checkout,
-      shippingPrice: updatedShippingPrice,
-      totalPrice: updatedTotal,
-    };
+    // Update in DB
+    await this.prisma.checkout.update({
+      where: { id: checkoutId },
+      data: {
+        shippingPrice: updatedShippingPrice,
+        totalPrice: updatedTotal,
+      },
+    });
+
+    return true;
   }
 
-  checkIfAlreadyInCheckout(checkout: Checkout, variantId: string): boolean {
-    return !!checkout.lines.find(
-      (line) => line.productVariant.id === variantId,
-    );
-  }
-
-  addOneToCheckoutLineByVariantId(
-    checkout: Checkout,
+  async checkIfAlreadyInCheckout(
+    checkoutId: string,
     variantId: string,
-  ): Checkout {
-    const updatedLines = checkout.lines.map((line) => {
-      if (line.productVariant.id === variantId) {
-        line.quantity++;
-      }
-      return line;
+  ): Promise<CheckoutLine | undefined> {
+    const checkout = await this.findCheckoutById(checkoutId);
+    if (!checkout) {
+      return undefined;
+    }
+
+    return checkout.lines.find((line) => line.productVariant.id === variantId);
+  }
+
+  async addOneToCheckoutLineByLineId(lineId: string): Promise<boolean> {
+    await this.prisma.checkoutLine.update({
+      where: { id: lineId },
+      data: {
+        quantity: {
+          increment: 1,
+        },
+      },
     });
 
-    return {
-      ...checkout,
-      lines: updatedLines,
-    };
+    return true;
   }
 
-  addOneToCheckoutLineByLineId(checkout: Checkout, lineId: string): Checkout {
-    const updatedLines = checkout.lines.map((line) => {
-      if (line.id === lineId) {
-        line.quantity++;
-      }
-      return line;
+  async removeOneFromCheckoutLineByLineId(lineId: string): Promise<boolean> {
+    const updated = await this.prisma.checkoutLine.update({
+      where: { id: lineId },
+      data: {
+        quantity: {
+          decrement: 1,
+        },
+      },
     });
 
-    return {
-      ...checkout,
-      lines: updatedLines,
-    };
+    if (updated.quantity <= 0) {
+      await this.prisma.checkoutLine.delete({ where: { id: lineId } });
+    }
+
+    return true;
   }
 
-  removeOneFromCheckoutLineByLineId(
-    checkout: Checkout,
-    lineId: string,
-  ): Checkout {
-    const updatedLines = checkout.lines
-      .map((line) => {
-        if (line.id === lineId) {
-          line.quantity--;
-        }
-        return line;
-      })
-      .filter((line) => line.quantity > 0);
+  async addNewLineToCheckout(
+    checkoutId: string,
+    productVariantId: string,
+  ): Promise<boolean> {
+    await this.prisma.checkoutLine.create({
+      data: {
+        id: createId(),
+        quantity: 1,
+        checkoutId,
+        productVariantId,
+      },
+    });
 
-    return {
-      ...checkout,
-      lines: updatedLines,
-    };
-  }
-
-  addNewLineToCheckout(
-    checkout: Checkout,
-    productVariant: ProductVariant,
-  ): Checkout {
-    const newLine: CheckoutLine = {
-      id: createId(),
-      quantity: 1,
-      productVariant,
-    };
-
-    const updatedLines = [...checkout.lines, newLine];
-
-    return {
-      ...checkout,
-      lines: updatedLines,
-    };
+    return true;
   }
 }
