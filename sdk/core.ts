@@ -18,6 +18,8 @@ import {
   CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodRequest,
   CheckoutChangeDeliveryMethodResponse,
+  CheckoutCreateRequest,
+  CheckoutCreateResponse,
   CheckoutRemoveOneFromLineResponse,
   MenuCategoryCreateRequest,
   MenuCategoryCreateResponse,
@@ -255,6 +257,18 @@ export class MainAPI {
       `checkout/${id}`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async createCheckout(
+    data: CheckoutCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<CheckoutCreateResponse>(
+      'checkout',
+      'POST',
+      data,
       externalConfig,
     );
   }

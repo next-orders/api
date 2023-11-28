@@ -4,11 +4,16 @@ import {
   Checkout,
   CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodResponse,
+  CheckoutCreateResponse,
   CheckoutLine,
   CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutResponse,
 } from '@api-sdk';
-import { AddProductDto, ChangeDeliveryMethodDto } from '@/checkout/dto';
+import {
+  AddProductDto,
+  ChangeDeliveryMethodDto,
+  CreateCheckoutDto,
+} from '@/checkout/dto';
 import { PrismaService } from '@/db/prisma.service';
 import { ProductVariantService } from '@/product-variant/product-variant.service';
 
@@ -18,6 +23,41 @@ export class CheckoutService {
     private readonly prisma: PrismaService,
     private readonly productVariant: ProductVariantService,
   ) {}
+
+  async createCheckout(
+    dto: CreateCheckoutDto,
+  ): Promise<CheckoutCreateResponse> {
+    Logger.log(
+      `Creating new Checkout on Channel Id ${dto.channelId}`,
+      'createCheckout',
+    );
+
+    const newCheckout = await this.prisma.checkout.create({
+      data: {
+        id: createId(),
+        channelId: dto.channelId,
+        deliveryMethod: dto.deliveryMethod,
+      },
+      include: {
+        lines: {
+          include: {
+            productVariant: {
+              include: {
+                media: {
+                  include: {
+                    media: true,
+                  },
+                },
+                category: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { ok: true, result: newCheckout };
+  }
 
   async changeCheckoutDeliveryMethod(
     id: string,

@@ -9,12 +9,17 @@ import {
 import {
   CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodResponse,
+  CheckoutCreateResponse,
   CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutResponse,
 } from '@api-sdk';
 import { CheckoutService } from './checkout.service';
 import { Public } from '@/auth/auth.decorator';
-import { AddProductDto, ChangeDeliveryMethodDto } from '@/checkout/dto';
+import {
+  AddProductDto,
+  ChangeDeliveryMethodDto,
+  CreateCheckoutDto,
+} from '@/checkout/dto';
 
 @Controller('checkout')
 export class CheckoutController {
@@ -74,6 +79,19 @@ export class CheckoutController {
     }
 
     return removed;
+  }
+
+  @Public()
+  @Post()
+  async createCheckout(
+    @Body() dto: CreateCheckoutDto,
+  ): Promise<CheckoutCreateResponse> {
+    const created = await this.service.createCheckout(dto);
+    if (!created) {
+      throw new BadRequestException();
+    }
+
+    return created;
   }
 
   @Public()

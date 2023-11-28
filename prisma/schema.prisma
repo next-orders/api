@@ -138,10 +138,10 @@ model Channel {
   isActive           Boolean      @default(true)
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @default(now())
-  accentTextColor    String       @default("#65a30d")
-  accentButtonColor  String       @default("#d9f99d")
-  accentGradientFrom String?
-  accentGradientTo   String?
+  accentTextColor    String       @default("#15803d")
+  accentButtonColor  String       @default("#86efac")
+  accentGradientFrom String?      @default("#fef3c7")
+  accentGradientTo   String?      @default("#86efac")
   domainId           String?
   domain             Domain?      @relation(fields: [domainId], references: [id])
   menus              Menu[]
