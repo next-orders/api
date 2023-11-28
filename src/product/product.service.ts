@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { createId } from '@paralleldrive/cuid2';
 import { PrismaService } from '@/db/prisma.service';
 import { Product } from '@api-sdk';
-import { changeMediaInProductVariant } from '@/lib/helpers';
 import { CreateProductDto } from '@/product/dto/create-product.dto';
 
 @Injectable()
@@ -29,14 +28,7 @@ export class ProductService {
       return null;
     }
 
-    const productVariantsPrepared = changeMediaInProductVariant(
-      product.variants,
-    );
-
-    return {
-      ...product,
-      variants: productVariantsPrepared,
-    };
+    return product;
   }
 
   async findProducts(): Promise<Product[] | null> {
@@ -58,20 +50,7 @@ export class ProductService {
       return null;
     }
 
-    const productsPrepared: Product[] = [];
-
-    for (const product of products) {
-      const productVariantsPrepared = changeMediaInProductVariant(
-        product.variants,
-      );
-
-      productsPrepared.push({
-        ...product,
-        variants: productVariantsPrepared,
-      });
-    }
-
-    return productsPrepared;
+    return products;
   }
 
   async createProduct(dto: CreateProductDto): Promise<Product | null> {
@@ -100,13 +79,6 @@ export class ProductService {
       return null;
     }
 
-    const productVariantsPrepared = changeMediaInProductVariant(
-      product.variants,
-    );
-
-    return {
-      ...product,
-      variants: productVariantsPrepared,
-    };
+    return product;
   }
 }

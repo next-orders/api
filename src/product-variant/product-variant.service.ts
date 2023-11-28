@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { createId } from '@paralleldrive/cuid2';
 import { PrismaService } from '@/db/prisma.service';
 import { ProductVariant } from '@api-sdk';
-import { changeMediaInProductVariant } from '@/lib/helpers';
 import { CreateProductVariantDto } from '@/product-variant/dto/create-product-variant.dto';
 
 @Injectable()
@@ -27,7 +26,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return changeMediaInProductVariant(products);
+    return products;
   }
 
   async findProductVariantBySlug(slug: string): Promise<ProductVariant | null> {
@@ -46,9 +45,7 @@ export class ProductVariantService {
       return null;
     }
 
-    const productVariants = changeMediaInProductVariant([product]);
-
-    return productVariants[0];
+    return product;
   }
 
   async findProductVariantById(id: string): Promise<ProductVariant | null> {
@@ -67,9 +64,7 @@ export class ProductVariantService {
       return null;
     }
 
-    const productVariants = changeMediaInProductVariant([product]);
-
-    return productVariants[0];
+    return product;
   }
 
   async createProductVariant(
@@ -105,8 +100,6 @@ export class ProductVariantService {
       return null;
     }
 
-    const productVariants = changeMediaInProductVariant([product]);
-
-    return productVariants[0];
+    return product;
   }
 }

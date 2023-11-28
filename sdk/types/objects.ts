@@ -150,8 +150,9 @@ export type WeightUnit = 'G' | 'KG' | 'OZ' | 'LB';
 
 export type ProductMedia = {
   id: string;
-  alt: string;
-  url: string;
+  createdAt: Date;
+  updatedAt: Date;
+  media: Media;
 };
 
 export type Checkout = {
@@ -167,7 +168,7 @@ export type CheckoutDeliveryMethod = 'DELIVERY' | 'WAREHOUSE';
 export type CheckoutLine = {
   id: string;
   quantity: number;
-  variant: ProductVariant;
+  productVariant: ProductVariant;
 };
 
 export type AvatarParams = {

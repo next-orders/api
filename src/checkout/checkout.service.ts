@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Checkout, CheckoutLine, ProductVariant } from '@api-sdk';
+import {
+  Checkout,
+  CheckoutAddOneToLineResponse,
+  CheckoutLine,
+  CheckoutRemoveOneFromLineResponse,
+  ProductVariant,
+} from '@api-sdk';
 import { AddProductDto, ChangeDeliveryMethodDto } from '@/checkout/dto';
 import { PrismaService } from '@/db/prisma.service';
 import { ProductVariantService } from '@/product-variant/product-variant.service';
@@ -65,7 +71,10 @@ export class CheckoutService {
     return { ok: true, result: tempCheckout };
   }
 
-  async addOneToCheckoutLine(checkoutId: string, lineId: string) {
+  async addOneToCheckoutLine(
+    checkoutId: string,
+    lineId: string,
+  ): Promise<CheckoutAddOneToLineResponse> {
     Logger.log(
       `Checkout ${checkoutId}: adding one to line Id ${lineId}`,
       'addOneToCheckoutLine',
@@ -77,7 +86,10 @@ export class CheckoutService {
     return { ok: true, result: tempCheckout };
   }
 
-  async removeOneFromCheckoutLine(checkoutId: string, lineId: string) {
+  async removeOneFromCheckoutLine(
+    checkoutId: string,
+    lineId: string,
+  ): Promise<CheckoutRemoveOneFromLineResponse> {
     Logger.log(
       `Checkout ${checkoutId}: removing one from line Id ${lineId}`,
       'removeOneFromCheckoutLine',
@@ -89,8 +101,31 @@ export class CheckoutService {
     return { ok: true, result: tempCheckout };
   }
 
-  async findCheckoutById(id: string) {
-    return tempCheckout;
+  async findCheckoutById(id: string): Promise<Checkout | null> {
+    const checkout = await this.prisma.checkout.findUnique({
+      where: { id },
+      include: {
+        lines: {
+          include: {
+            productVariant: {
+              include: {
+                media: {
+                  include: {
+                    media: true,
+                  },
+                },
+                category: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!checkout) {
+      return null;
+    }
+
+    return checkout;
   }
 
   recountTotal(checkout: Checkout): Checkout {
@@ -99,7 +134,7 @@ export class CheckoutService {
       checkout.lines
         .reduce(
           (accumulator, line) =>
-            accumulator + line.quantity * (line.variant.gross || 1),
+            accumulator + line.quantity * (line.productVariant.gross || 1),
           0,
         )
         .toFixed(2),
@@ -127,7 +162,9 @@ export class CheckoutService {
   }
 
   checkIfAlreadyInCheckout(checkout: Checkout, variantId: string): boolean {
-    return !!checkout.lines.find((line) => line.variant.id === variantId);
+    return !!checkout.lines.find(
+      (line) => line.productVariant.id === variantId,
+    );
   }
 
   addOneToCheckoutLineByVariantId(
@@ -135,7 +172,7 @@ export class CheckoutService {
     variantId: string,
   ): Checkout {
     const updatedLines = checkout.lines.map((line) => {
-      if (line.variant.id === variantId) {
+      if (line.productVariant.id === variantId) {
         line.quantity++;
       }
       return line;
@@ -180,11 +217,14 @@ export class CheckoutService {
     };
   }
 
-  addNewLineToCheckout(checkout: Checkout, variant: ProductVariant): Checkout {
+  addNewLineToCheckout(
+    checkout: Checkout,
+    productVariant: ProductVariant,
+  ): Checkout {
     const newLine: CheckoutLine = {
       id: createId(),
       quantity: 1,
-      variant,
+      productVariant,
     };
 
     const updatedLines = [...checkout.lines, newLine];
