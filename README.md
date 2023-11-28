@@ -48,7 +48,45 @@ npm run test:cov
 You can use latest Docker Image:
 
 ```shell
-docker pull ghcr.io/next-orders/api:main
+docker pull ghcr.io/next-orders/api:latest
+
+# or use the specific version
+docker pull ghcr.io/next-orders/api:v0.1.0
 ```
 
-Work in progress, so there are no configs for now.
+You need to use env variables:
+
+```text
+API_URL= # URL of this Main API
+
+DATABASE_URL= # PostgreSQL connection URL for Prisma
+
+JWT_SECRET= # Secret string
+JWT_EXPIRATION_TIME= # Example, "30d"
+
+AWS_ACCESS_KEY_ID= # S3 Config
+AWS_SECRET_ACCESS_KEY= # S3 Config
+AWS_S3_REGION= # S3 Config
+AWS_S3_BUCKET_NAME= # S3 Config
+CUSTOM_S3_ENDPOINT= # Optional
+
+DEMO_AUTH_EMAIL= # Optional, used on Command Center Login Page
+DEMO_AUTH_PASS= # Optional, used on Command Center Login Page
+```
+
+Check **.env.example** in root dir for more info about env.
+
+On Kubernetes you can use health check of container:
+
+```yaml
+livenessProbe:
+  httpGet:
+    port: 4001
+    path: /api/health
+  initialDelaySeconds: 20
+  periodSeconds: 30
+```
+
+## License
+
+This project is licensed under the **MIT License** - see the [**MIT License**](https://github.com/next-orders/v1/blob/main/LICENSE) file for details.
