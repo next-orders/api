@@ -106,6 +106,19 @@ export class MainAPI {
     );
   }
 
+  public async searchInChannel(
+    channelId: string,
+    query: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductVariant[] | null>(
+      `channel/${channelId}/search/${query}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getAllMedia(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Media[]>(
       'media/list',

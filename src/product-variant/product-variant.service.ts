@@ -48,6 +48,31 @@ export class ProductVariantService {
     return product;
   }
 
+  async findProductVariantByName(
+    name: string,
+  ): Promise<ProductVariant[] | null> {
+    const product = await this.prisma.productVariant.findMany({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+      include: {
+        category: true,
+        media: {
+          include: {
+            media: true,
+          },
+        },
+      },
+    });
+    if (!product) {
+      return null;
+    }
+
+    return product;
+  }
+
   async findProductVariantById(id: string): Promise<ProductVariant | null> {
     const product = await this.prisma.productVariant.findUnique({
       where: { id },
