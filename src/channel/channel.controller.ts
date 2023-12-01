@@ -27,6 +27,17 @@ export class ChannelController {
   }
 
   @Public()
+  @Get(':id/search')
+  async getTopSearchInChannel(@Param('id') id: string) {
+    const top = await this.service.getTopSearchInChannel(id);
+    if (!top) {
+      throw new NotFoundException();
+    }
+
+    return top;
+  }
+
+  @Public()
   @Get(':id/search/:query')
   async searchInChannel(
     @Param('id') id: string,

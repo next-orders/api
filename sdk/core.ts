@@ -119,6 +119,18 @@ export class MainAPI {
     );
   }
 
+  public async getTopSearchInChannel(
+    channelId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductVariant[] | null>(
+      `channel/${channelId}/search`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getAllMedia(externalConfig?: NextFetchRequestConfig) {
     return this.coreRequest<Media[]>(
       'media/list',

@@ -62,6 +62,37 @@ export class ChannelService {
     });
   }
 
+  async getTopSearchInChannel(channelId: string) {
+    const [channel, foundProducts] = await Promise.all([
+      this.findChannelById(channelId),
+      this.productVariant.findPopularProductVariants(),
+    ]);
+
+    if (!foundProducts) {
+      return null;
+    }
+
+    const menus = channel?.menus;
+    if (!menus) {
+      return null;
+    }
+
+    // Get all possible categories for this channel
+    const categories: MenuCategory[] = [];
+    for (const menu of menus) {
+      for (const category of menu.categories) {
+        categories.push(category);
+      }
+    }
+
+    // Filter only in this categories
+    foundProducts.filter((product) =>
+      categories.some((value) => value.id === product.category.id),
+    );
+
+    return foundProducts;
+  }
+
   async searchInChannel(channelId: string, query: string) {
     if (query.length < 2) {
       return null;
