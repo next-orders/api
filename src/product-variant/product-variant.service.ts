@@ -54,6 +54,7 @@ export class ProductVariantService {
     const product = await this.prisma.productVariant.findMany({
       where: {
         name: {
+          mode: 'insensitive',
           contains: name,
         },
       },
