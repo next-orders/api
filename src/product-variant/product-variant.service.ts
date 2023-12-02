@@ -147,4 +147,20 @@ export class ProductVariantService {
 
     return product;
   }
+
+  async addMediaToProductVariant(productVariantId: string, mediaId: string) {
+    const added = await this.prisma.productMedia.create({
+      data: {
+        id: createId(),
+        productVariantId,
+        mediaId,
+      },
+    });
+
+    if (!added) {
+      return null;
+    }
+
+    return added;
+  }
 }

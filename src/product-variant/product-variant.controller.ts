@@ -43,6 +43,20 @@ export class ProductVariantController {
     return product;
   }
 
+  @Permissions(['EDIT_PRODUCTS'])
+  @Post(':id/media/:mediaId')
+  async addMediaToProductVariant(
+    @Param('id') id: string,
+    @Param('mediaId') mediaId: string,
+  ) {
+    const added = await this.service.addMediaToProductVariant(id, mediaId);
+    if (!added) {
+      throw new BadRequestException();
+    }
+
+    return added;
+  }
+
   @Public()
   @Get(':id')
   async findProductVariantById(@Param('id') id: string) {

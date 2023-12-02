@@ -250,6 +250,18 @@ export class MainAPI {
     );
   }
 
+  public async getProductVariantById(
+    id: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductVariant>(
+      `product-variant/${id}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async getProductVariantBySlug(
     slug: string,
     externalConfig?: NextFetchRequestConfig,
@@ -257,6 +269,19 @@ export class MainAPI {
     return this.coreRequest<ProductVariant>(
       `product-variant/slug/${slug}`,
       'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async addMediaToProductVariant(
+    productVariantId: string,
+    mediaId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<ProductVariant>(
+      `product-variant/${productVariantId}/media/${mediaId}`,
+      'POST',
       undefined,
       externalConfig,
     );
