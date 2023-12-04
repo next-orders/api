@@ -164,7 +164,7 @@ model MenuCategory {
   updatedAt DateTime         @default(now())
   name      String
   slug      String
-  iconUrl   String?
+  icon      String?
   menuId    String
   menu      Menu             @relation(fields: [menuId], references: [id])
   products  ProductVariant[]

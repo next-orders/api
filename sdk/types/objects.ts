@@ -123,7 +123,7 @@ export type MenuCategory = {
   updatedAt: Date;
   name: string;
   slug: string;
-  iconUrl: string | null;
+  icon: string | null;
 };
 
 export type ProductVariant = {
