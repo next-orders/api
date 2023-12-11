@@ -26,7 +26,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return products;
+    return products as ProductVariant[];
   }
 
   async findProductVariantBySlug(slug: string): Promise<ProductVariant | null> {
@@ -45,7 +45,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return product;
+    return product as ProductVariant;
   }
 
   async findProductVariantByName(
@@ -71,7 +71,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return product;
+    return product as ProductVariant[];
   }
 
   async findPopularProductVariants(): Promise<ProductVariant[] | null> {
@@ -90,7 +90,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return products;
+    return products as ProductVariant[];
   }
 
   async findProductVariantById(id: string): Promise<ProductVariant | null> {
@@ -109,7 +109,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return product;
+    return product as ProductVariant;
   }
 
   async createProductVariant(
@@ -145,7 +145,7 @@ export class ProductVariantService {
       return null;
     }
 
-    return product;
+    return product as ProductVariant;
   }
 
   async addMediaToProductVariant(productVariantId: string, mediaId: string) {

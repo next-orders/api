@@ -56,7 +56,7 @@ export class CheckoutService {
       },
     });
 
-    return { ok: true, result: newCheckout };
+    return { ok: true, result: newCheckout as Checkout };
   }
 
   async changeCheckoutDeliveryMethod(
@@ -193,7 +193,7 @@ export class CheckoutService {
       return null;
     }
 
-    return checkout;
+    return checkout as Checkout;
   }
 
   async recountTotal(checkoutId: string): Promise<boolean> {

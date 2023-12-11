@@ -28,7 +28,7 @@ export class ProductService {
       return null;
     }
 
-    return product;
+    return product as Product;
   }
 
   async findProducts(): Promise<Product[] | null> {
@@ -50,7 +50,7 @@ export class ProductService {
       return null;
     }
 
-    return products;
+    return products as Product[];
   }
 
   async createProduct(dto: CreateProductDto): Promise<Product | null> {
@@ -79,6 +79,6 @@ export class ProductService {
       return null;
     }
 
-    return product;
+    return product as Product;
   }
 }
