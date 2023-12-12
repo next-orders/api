@@ -38,6 +38,17 @@ export type Product = {
 
 export type ProductType = 'PRODUCTION' | 'READY' | 'INGREDIENT';
 
+export type Employee = {
+  id: string;
+  firstName: string;
+  lastName: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  lastLogin: Date | null;
+  permissions: EmployeePermission[];
+};
+
 export type EmployeePermission = {
   id: string;
   type: EmployeePermissionType;
@@ -54,6 +65,13 @@ export type EmployeePermissionType =
   | 'EDIT_PRODUCTS'
   | 'READ_MENUS'
   | 'EDIT_MENUS';
+
+export type EmployeeContact = {
+  id: string;
+  type: EmployeeContactType;
+};
+
+export type EmployeeContactType = 'EMAIL';
 
 export type Client = {
   id: string;

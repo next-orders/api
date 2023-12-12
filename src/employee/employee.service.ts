@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { PrismaService } from '@/db/prisma.service';
+import { Employee, EmployeeContactType } from '@api-sdk';
 
 @Injectable()
 export class EmployeeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findEmployeeByContact(contactValue: string, type: 'EMAIL') {
+  async findEmployeeByContact(
+    contactValue: string,
+    type: EmployeeContactType,
+  ): Promise<Employee | null> {
     const employeeContact = await this.prisma.employeeContact.findFirst({
       where: { value: contactValue, type },
     });
@@ -14,13 +18,17 @@ export class EmployeeService {
       return null;
     }
 
-    // Return Employee
-    return this.prisma.employee.findUnique({
+    const employee = await this.prisma.employee.findUnique({
       where: { id: employeeContact.employeeId },
       include: {
         permissions: true,
       },
     });
+    if (!employee) {
+      return null;
+    }
+
+    return employee as Employee;
   }
 
   async checkPassword(employeeId: string, password: string) {

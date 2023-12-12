@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { createId } from '@paralleldrive/cuid2';
 import type {
-  EmployeePermission,
+  EmployeePermissionType,
   JWTEmployeeAccessTokenPayload,
   JWTEmployeeData,
 } from '@api-sdk';
@@ -57,7 +57,7 @@ export class AuthService {
 
     // Get all Permissions
     const permissions = employee.permissions.map(
-      (p: { type: EmployeePermission['type'] }) => p.type,
+      (p: { type: EmployeePermissionType }) => p.type,
     );
 
     // Generate a JWT

@@ -1,8 +1,16 @@
 import { z } from 'zod';
-import { Checkout, Product, ProductVariant } from '../types/objects';
+import {
+  Checkout,
+  Product,
+  ProductType,
+  ProductVariant,
+  WeightUnit,
+} from '../types/objects';
+
+const productTypes: ProductType[] = ['PRODUCTION', 'READY', 'INGREDIENT'];
 
 export const ProductCreateRequestSchema = z.object({
-  type: z.enum(['PRODUCTION', 'READY', 'INGREDIENT']),
+  type: z.enum(productTypes as [string, ...string[]]),
   name: z.string(),
   description: z.string().optional(),
 });
@@ -13,12 +21,14 @@ export type ProductCreateResponse = {
   result: Product;
 };
 
+const weightUnits: WeightUnit[] = ['G', 'KG', 'LB', 'OZ'];
+
 export const ProductVariantCreateRequestSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   slug: z.string(),
   sku: z.string().optional(),
-  weightUnit: z.enum(['G', 'KG', 'LB', 'OZ']),
+  weightUnit: z.enum(weightUnits as [string, ...string[]]),
   weightValue: z.number(),
   gross: z.number(),
   net: z.number().optional(),

@@ -51,7 +51,7 @@ model WarehouseProduct {
 
 model Product {
   id                     String           @id @default(cuid())
-  type                   ProductType      @default(PRODUCTION)
+  type                   String           @default("PRODUCTION")
   name                   String
   description            String?
   createdAt              DateTime         @default(now())
@@ -76,23 +76,23 @@ model Employee {
 }
 
 model EmployeePermission {
-  id         String                 @id @default(cuid())
-  type       EmployeePermissionType
-  createdAt  DateTime               @default(now())
-  updatedAt  DateTime               @default(now())
+  id         String   @id @default(cuid())
+  type       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
   employeeId String
-  employee   Employee               @relation(fields: [employeeId], references: [id])
+  employee   Employee @relation(fields: [employeeId], references: [id])
 }
 
 model EmployeeContact {
-  id                      String              @id @default(cuid())
-  type                    EmployeeContactType
+  id                      String   @id @default(cuid())
+  type                    String
   value                   String
-  isUsedForAuthentication Boolean             @default(false)
-  createdAt               DateTime            @default(now())
-  updatedAt               DateTime            @default(now())
+  isUsedForAuthentication Boolean  @default(false)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @default(now())
   employeeId              String
-  employee                Employee            @relation(fields: [employeeId], references: [id])
+  employee                Employee @relation(fields: [employeeId], references: [id])
 }
 
 model EmployeePassword {
@@ -112,7 +112,7 @@ model Client {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now())
   level     Int           @default(0)
-  gender    Gender        @default(UNKNOWN)
+  gender    String        @default("UNKNOWN")
   emotion   Int           @default(7)
   loyalty   Int           @default(0)
   avatarId  String
@@ -120,30 +120,30 @@ model Client {
 }
 
 model ClientTrait {
-  id        String          @id @default(cuid())
-  type      ClientTraitType @default(BLANK)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @default(now())
+  id        String   @id @default(cuid())
+  type      String   @default("BLANK")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
   clientId  String
-  client    Client          @relation(fields: [clientId], references: [id])
+  client    Client   @relation(fields: [clientId], references: [id])
 }
 
 model Channel {
-  id                 String       @id @default(cuid())
+  id                 String     @id @default(cuid())
   slug               String
   name               String
   description        String?
-  currencyCode       CurrencyCode @default(USD)
-  languageCode       LanguageCode @default(EN)
-  isActive           Boolean      @default(true)
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @default(now())
-  accentTextColor    String       @default("#15803d")
-  accentButtonColor  String       @default("#86efac")
-  accentGradientFrom String?      @default("#fef3c7")
-  accentGradientTo   String?      @default("#86efac")
+  currencyCode       String     @default("USD")
+  languageCode       String     @default("EN")
+  isActive           Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @default(now())
+  accentTextColor    String     @default("#15803d")
+  accentButtonColor  String     @default("#86efac")
+  accentGradientFrom String?    @default("#fef3c7")
+  accentGradientTo   String?    @default("#86efac")
   domainId           String?
-  domain             Domain?      @relation(fields: [domainId], references: [id])
+  domain             Domain?    @relation(fields: [domainId], references: [id])
   menus              Menu[]
   checkouts          Checkout[]
 }
@@ -205,14 +205,14 @@ model ProductMedia {
 }
 
 model Checkout {
-  id             String                 @id @default(cuid())
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @default(now())
-  deliveryMethod CheckoutDeliveryMethod
-  shippingPrice  Float                  @default(0)
-  totalPrice     Float                  @default(0)
+  id             String         @id @default(cuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now())
+  deliveryMethod String
+  shippingPrice  Float          @default(0)
+  totalPrice     Float          @default(0)
   channelId      String
-  channel        Channel                @relation(fields: [channelId], references: [id])
+  channel        Channel        @relation(fields: [channelId], references: [id])
   lines          CheckoutLine[]
 }
 
@@ -225,59 +225,4 @@ model CheckoutLine {
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
   checkoutId       String
   checkout         Checkout       @relation(fields: [checkoutId], references: [id])
-}
-
-enum Gender {
-  MALE
-  FEMALE
-  UNKNOWN
-}
-
-enum CheckoutDeliveryMethod {
-  WAREHOUSE
-  DELIVERY
-}
-
-enum ProductType {
-  PRODUCTION
-  READY
-  INGREDIENT
-}
-
-enum ClientTraitType {
-  BLANK
-  ORDERLY
-  SPONTANEOUS
-  COLD
-  WELL_FED
-  SATISFIED
-  PICKY
-  CAUTIOUS
-}
-
-enum EmployeeContactType {
-  EMAIL
-}
-
-enum EmployeePermissionType {
-  READ_CLIENTS
-  EDIT_CLIENTS
-  READ_MEDIA
-  EDIT_MEDIA
-  READ_CHANNELS
-  EDIT_CHANNELS
-  READ_PRODUCTS
-  EDIT_PRODUCTS
-  READ_MENUS
-  EDIT_MENUS
-}
-
-enum LanguageCode {
-  EN
-  RU
-}
-
-enum CurrencyCode {
-  USD
-  RUB
 }

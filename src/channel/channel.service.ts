@@ -13,7 +13,7 @@ export class ChannelService {
   ) {}
 
   async findAllChannels(): Promise<Channel[] | null> {
-    return this.prisma.channel.findMany({
+    const all = await this.prisma.channel.findMany({
       include: {
         menus: {
           include: {
@@ -22,6 +22,11 @@ export class ChannelService {
         },
       },
     });
+    if (!all) {
+      return null;
+    }
+
+    return all as Channel[];
   }
 
   async findChannelById(id: string): Promise<Channel | null> {
@@ -39,11 +44,11 @@ export class ChannelService {
       return null;
     }
 
-    return channel;
+    return channel as Channel;
   }
 
   async createChannel(dto: CreateChannelDto): Promise<Channel> {
-    return this.prisma.channel.create({
+    const created = await this.prisma.channel.create({
       data: {
         id: createId(),
         slug: dto.slug,
@@ -60,6 +65,8 @@ export class ChannelService {
         },
       },
     });
+
+    return created as Channel;
   }
 
   async getTopSearchInChannel(channelId: string) {

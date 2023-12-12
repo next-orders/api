@@ -1,9 +1,11 @@
 import { z } from 'zod';
-import { Checkout } from '../types/objects';
+import { Checkout, CheckoutDeliveryMethod } from '../types/objects';
+
+const deliveryMethods: CheckoutDeliveryMethod[] = ['DELIVERY', 'WAREHOUSE'];
 
 export const CheckoutCreateRequestSchema = z.object({
   channelId: z.string(),
-  deliveryMethod: z.enum(['DELIVERY', 'WAREHOUSE']),
+  deliveryMethod: z.enum(deliveryMethods as [string, ...string[]]),
 });
 
 export type CheckoutCreateRequest = z.infer<typeof CheckoutCreateRequestSchema>;
@@ -13,7 +15,7 @@ export type CheckoutCreateResponse = {
 };
 
 export const CheckoutChangeDeliveryMethodRequestSchema = z.object({
-  method: z.enum(['DELIVERY', 'WAREHOUSE']),
+  method: z.enum(deliveryMethods as [string, ...string[]]),
 });
 
 export type CheckoutChangeDeliveryMethodRequest = z.infer<

@@ -7,11 +7,16 @@ export class ClientService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllClients(): Promise<Client[] | null> {
-    return this.prisma.client.findMany({
+    const all = await this.prisma.client.findMany({
       include: {
         traits: true,
       },
     });
+    if (!all) {
+      return null;
+    }
+
+    return all as Client[];
   }
 
   async findClientById(id: string): Promise<Client | null> {
@@ -25,6 +30,6 @@ export class ClientService {
       return null;
     }
 
-    return client;
+    return client as Client;
   }
 }
