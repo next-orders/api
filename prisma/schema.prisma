@@ -171,27 +171,31 @@ model MenuCategory {
 }
 
 model ProductVariant {
-  id             String         @id @default(cuid())
-  name           String
-  description    String?
-  slug           String
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @default(now())
-  sku            String?
-  weightUnit     String         @default("G")
-  weightValue    Float
-  onSale         Boolean        @default(false)
-  gross          Float          @default(0)
-  net            Float?
-  tax            Float?
-  seoTitle       String?
-  seoDescription String?
-  productId      String
-  product        Product        @relation(fields: [productId], references: [id])
-  categoryId     String
-  category       MenuCategory   @relation(fields: [categoryId], references: [id])
-  media          ProductMedia[]
-  checkoutLines  CheckoutLine[]
+  id                  String         @id @default(cuid())
+  name                String
+  description         String?
+  slug                String
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now())
+  sku                 String?
+  weightUnit          String         @default("G")
+  weightValue         Float
+  onSale              Boolean        @default(false)
+  gross               Float          @default(0)
+  net                 Float?
+  tax                 Float?
+  per100gEnergy       Float?
+  per100gProtein      Float?
+  per100gFat          Float?
+  per100gCarbohydrate Float?
+  seoTitle            String?
+  seoDescription      String?
+  productId           String
+  product             Product        @relation(fields: [productId], references: [id])
+  categoryId          String
+  category            MenuCategory   @relation(fields: [categoryId], references: [id])
+  media               ProductMedia[]
+  checkoutLines       CheckoutLine[]
 }
 
 model ProductMedia {
