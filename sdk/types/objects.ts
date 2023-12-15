@@ -168,7 +168,7 @@ export type ProductVariant = {
   category: MenuCategory;
 };
 
-export type WeightUnit = 'G' | 'KG' | 'OZ' | 'LB';
+export type WeightUnit = 'G' | 'KG' | 'ML' | 'L' | 'OZ' | 'LB';
 
 export type ProductMedia = {
   id: string;

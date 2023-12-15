@@ -21,7 +21,7 @@ export type ProductCreateResponse = {
   result: Product;
 };
 
-const weightUnits: WeightUnit[] = ['G', 'KG', 'LB', 'OZ'];
+const weightUnits: WeightUnit[] = ['G', 'KG', 'ML', 'L', 'LB', 'OZ'];
 
 export const ProductVariantCreateRequestSchema = z.object({
   name: z.string(),
