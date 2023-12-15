@@ -174,6 +174,7 @@ export class CheckoutService {
       where: { id },
       include: {
         lines: {
+          orderBy: { createdAt: 'asc' },
           include: {
             productVariant: {
               include: {
@@ -251,9 +252,9 @@ export class CheckoutService {
     return checkout.lines.find((line) => line.productVariant.id === variantId);
   }
 
-  async addOneToCheckoutLineByLineId(lineId: string): Promise<boolean> {
+  async addOneToCheckoutLineByLineId(id: string): Promise<boolean> {
     await this.prisma.checkoutLine.update({
-      where: { id: lineId },
+      where: { id },
       data: {
         quantity: {
           increment: 1,
@@ -264,9 +265,9 @@ export class CheckoutService {
     return true;
   }
 
-  async removeOneFromCheckoutLineByLineId(lineId: string): Promise<boolean> {
+  async removeOneFromCheckoutLineByLineId(id: string): Promise<boolean> {
     const updated = await this.prisma.checkoutLine.update({
-      where: { id: lineId },
+      where: { id },
       data: {
         quantity: {
           decrement: 1,
@@ -275,7 +276,7 @@ export class CheckoutService {
     });
 
     if (updated.quantity <= 0) {
-      await this.prisma.checkoutLine.delete({ where: { id: lineId } });
+      await this.prisma.checkoutLine.delete({ where: { id } });
     }
 
     return true;
