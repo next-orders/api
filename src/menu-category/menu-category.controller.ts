@@ -63,6 +63,17 @@ export class MenuCategoryController {
   }
 
   @Public()
+  @Get('id/:id')
+  async findMenuCategoryById(@Param('id') id: string) {
+    const category = await this.service.findMenuCategoryById(id);
+    if (!category) {
+      throw new NotFoundException();
+    }
+
+    return category;
+  }
+
+  @Public()
   @Get('slug/:slug')
   async findMenuCategoryBySlug(@Param('slug') slug: string) {
     const category = await this.service.findMenuCategoryBySlug(slug);

@@ -401,6 +401,18 @@ export class MainAPI {
     );
   }
 
+  public async getMenuCategoryById(
+    id: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<MenuCategory>(
+      `menu-category/id/${id}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
   public async createMenuCategory(
     data: MenuCategoryCreateRequest,
     externalConfig?: NextFetchRequestConfig,

@@ -22,6 +22,17 @@ export class MenuCategoryService {
     return list as MenuCategory[];
   }
 
+  async findMenuCategoryById(id: string): Promise<MenuCategory | null> {
+    const category = await this.prisma.menuCategory.findFirst({
+      where: { id },
+    });
+    if (!category) {
+      return null;
+    }
+
+    return category as MenuCategory;
+  }
+
   async findMenuCategoryBySlug(slug: string): Promise<MenuCategory | null> {
     const category = await this.prisma.menuCategory.findFirst({
       where: { slug },
