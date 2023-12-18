@@ -23,6 +23,7 @@ const icons: MenuCategoryIcon[] = [
   'SUSHI',
   'WOK',
   'CAKE',
+  'LASAGNA',
   'DRINK',
 ];
 

@@ -152,6 +152,7 @@ export type MenuCategoryIcon =
   | 'SUSHI'
   | 'WOK'
   | 'CAKE'
+  | 'LASAGNA'
   | 'DRINK';
 
 export type ProductVariant = {
