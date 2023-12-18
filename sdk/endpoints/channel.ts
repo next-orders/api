@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import type { Channel, CurrencyCode, LanguageCode } from '../types/objects';
 
-const currencyCodes: CurrencyCode[] = ['USD', 'RUB'];
-const languageCodes: LanguageCode[] = ['EN', 'RU'];
+const currencyCodes: CurrencyCode[] = ['USD', 'EUR', 'RUB'];
+const languageCodes: LanguageCode[] = ['EN', 'ES', 'RU'];
 
 export const ChannelCreateRequestSchema = z.object({
   slug: z.string(),

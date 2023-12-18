@@ -123,9 +123,9 @@ export type Channel = {
   menus: Menu[];
 };
 
-export type LanguageCode = 'EN' | 'RU';
+export type LanguageCode = 'EN' | 'ES' | 'RU';
 
-export type CurrencyCode = 'USD' | 'RUB';
+export type CurrencyCode = 'USD' | 'EUR' | 'RUB';
 
 // Channel Entities
 export type Menu = {
