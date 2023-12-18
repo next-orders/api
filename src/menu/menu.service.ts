@@ -7,12 +7,17 @@ export class MenuService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllMenusInChannel(channelId: string): Promise<Menu[] | null> {
-    return this.prisma.menu.findMany({
+    const menus = await this.prisma.menu.findMany({
       where: { channelId },
       include: {
         categories: true,
       },
     });
+    if (!menus) {
+      return null;
+    }
+
+    return menus as Menu[];
   }
 
   async findMenuById(id: string): Promise<Menu | null> {
@@ -26,6 +31,6 @@ export class MenuService {
       return null;
     }
 
-    return menu;
+    return menu as Menu;
   }
 }

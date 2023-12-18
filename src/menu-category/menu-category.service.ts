@@ -2,22 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { createId } from '@paralleldrive/cuid2';
 import { MenuCategory } from '@api-sdk';
 import { PrismaService } from '@/db/prisma.service';
-import { CreateMenuCategoryDto } from '@/menu-category/dto/create-menu-category.dto';
+import {
+  CreateMenuCategoryDto,
+  UpdateMenuCategoryDto,
+} from '@/menu-category/dto';
 
 @Injectable()
 export class MenuCategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
   async listMenuCategories(menuId: string): Promise<MenuCategory[]> {
-    return this.prisma.menuCategory.findMany({
+    const list = await this.prisma.menuCategory.findMany({
       where: { menuId },
     });
+    if (!list) {
+      return [];
+    }
+
+    return list as MenuCategory[];
   }
 
   async findMenuCategoryBySlug(slug: string): Promise<MenuCategory | null> {
-    return this.prisma.menuCategory.findFirst({
+    const category = await this.prisma.menuCategory.findFirst({
       where: { slug },
     });
+    if (!category) {
+      return null;
+    }
+
+    return category as MenuCategory;
   }
 
   async createCategory(
@@ -31,11 +44,37 @@ export class MenuCategoryService {
         slug: dto.slug,
       },
     });
-
     if (!category) {
       return null;
     }
 
-    return category;
+    return category as MenuCategory;
+  }
+
+  async updateCategory(
+    categoryId: string,
+    dto: UpdateMenuCategoryDto,
+  ): Promise<MenuCategory | null> {
+    // Exist?
+    const category = await this.prisma.menuCategory.findFirst({
+      where: { id: categoryId },
+    });
+    if (!category) {
+      return null;
+    }
+
+    const updated = await this.prisma.menuCategory.update({
+      where: { id: categoryId },
+      data: {
+        name: dto.name,
+        slug: dto.slug,
+        icon: dto.icon,
+      },
+    });
+    if (!updated) {
+      return null;
+    }
+
+    return updated as MenuCategory;
   }
 }

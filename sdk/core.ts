@@ -23,6 +23,8 @@ import {
   CheckoutRemoveOneFromLineResponse,
   MenuCategoryCreateRequest,
   MenuCategoryCreateResponse,
+  MenuCategoryUpdateRequest,
+  MenuCategoryUpdateResponse,
   ProductCreateRequest,
   ProductCreateResponse,
   ProductVariantAddToCheckoutRequest,
@@ -411,6 +413,19 @@ export class MainAPI {
     );
   }
 
+  public async updateMenuCategory(
+    categoryId: string,
+    data: MenuCategoryUpdateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.coreRequest<MenuCategoryUpdateResponse>(
+      `menu-category/${categoryId}`,
+      'PATCH',
+      data,
+      externalConfig,
+    );
+  }
+
   public async signInEmployeeByEmail(
     data: SignInByEmailRequest,
     externalConfig?: NextFetchRequestConfig,
@@ -454,7 +469,7 @@ export class MainAPI {
 
   private async coreRequest<T, E = ErrorBase>(
     endpoint: string,
-    method: 'POST' | 'GET' = 'POST',
+    method: 'POST' | 'GET' | 'PATCH' = 'POST',
     data?: unknown,
     externalConfig?: NextFetchRequestConfig,
   ): Promise<T | E> {
