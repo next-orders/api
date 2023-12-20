@@ -19,7 +19,7 @@ import { MediaService } from '@/media/media.service';
 import { Permissions, Public } from '@/auth/auth.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadMediaDto } from '@/media/dto/upload-media.dto';
-import { UploadMediaResponse } from '@api-sdk';
+import { UploadMediaResponse } from '@/../sdk/endpoints';
 
 @Controller('media')
 export class MediaController {

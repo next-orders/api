@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '@/auth/auth.service';
 import { SignInByEmailDto } from '@/auth/dto/signin-by-email.dto';
-import { SignInByEmailResponse } from '@api-sdk';
+import { SignInByEmailResponse } from '@/../sdk/endpoints';
 import { Public } from '@/auth/auth.decorator';
 import { ConfigService } from '@nestjs/config';
 

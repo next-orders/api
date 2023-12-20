@@ -1,14 +1,13 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { createId } from '@paralleldrive/cuid2';
+import { Checkout, CheckoutLine } from '@api-sdk';
 import {
-  Checkout,
   CheckoutAddOneToLineResponse,
   CheckoutChangeDeliveryMethodResponse,
   CheckoutCreateResponse,
-  CheckoutLine,
   CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutResponse,
-} from '@api-sdk';
+} from '@/../sdk/endpoints';
 import {
   AddProductDto,
   ChangeDeliveryMethodDto,

@@ -17,7 +17,7 @@ import {
 import {
   MenuCategoryCreateResponse,
   MenuCategoryUpdateResponse,
-} from '@api-sdk';
+} from '@/../sdk/endpoints';
 
 @Controller('menu-category')
 export class MenuCategoryController {

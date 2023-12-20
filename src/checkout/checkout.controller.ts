@@ -12,7 +12,7 @@ import {
   CheckoutCreateResponse,
   CheckoutRemoveOneFromLineResponse,
   ProductVariantAddToCheckoutResponse,
-} from '@api-sdk';
+} from '@/../sdk/endpoints';
 import { CheckoutService } from './checkout.service';
 import { Public } from '@/auth/auth.decorator';
 import {
