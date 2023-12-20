@@ -14,6 +14,7 @@ import {
   ProductVariantEntity,
   ShopEntity,
 } from './entities';
+import { fetchAPI } from './fetchAPI';
 
 export class MainAPI {
   private readonly apiUrl: string;
@@ -33,15 +34,15 @@ export class MainAPI {
     this.apiUrl = apiUrl;
     this.apiToken = apiToken;
 
-    this.shop = new ShopEntity(this.request);
-    this.channel = new ChannelEntity(this.request);
-    this.media = new MediaEntity(this.request, this.requestWithFiles);
-    this.menu = new MenuEntity(this.request);
-    this.menuCategory = new MenuCategoryEntity(this.request);
-    this.client = new ClientEntity(this.request);
-    this.checkout = new CheckoutEntity(this.request);
-    this.product = new ProductEntity(this.request);
-    this.productVariant = new ProductVariantEntity(this.request);
+    this.shop = new ShopEntity(apiUrl, apiToken);
+    this.channel = new ChannelEntity(apiUrl, apiToken);
+    this.media = new MediaEntity(apiUrl, apiToken);
+    this.menu = new MenuEntity(apiUrl, apiToken);
+    this.menuCategory = new MenuCategoryEntity(apiUrl, apiToken);
+    this.client = new ClientEntity(apiUrl, apiToken);
+    this.checkout = new CheckoutEntity(apiUrl, apiToken);
+    this.product = new ProductEntity(apiUrl, apiToken);
+    this.productVariant = new ProductVariantEntity(apiUrl, apiToken);
   }
 
   public async getApiVersion(externalConfig?: NextFetchRequestConfig) {
@@ -94,72 +95,21 @@ export class MainAPI {
     return `${this.apiUrl}/avatar/${avatarId}?size=${size}${gender}${emotion}${clothing}`;
   }
 
-  private async fetchAPI<T = unknown, E = ErrorBase>(
-    endpoint: string,
-    customConfig: RequestInit = {},
-    externalConfig: NextFetchRequestConfig = {},
-  ): Promise<T | E> {
-    const { body, ...otherConfig } = customConfig;
-
-    const config: RequestInit = {
-      method: otherConfig?.method || 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: `Bearer ${this.apiToken}`,
-      },
-      body,
-      ...otherConfig,
-      ...externalConfig,
-    };
-
-    try {
-      const response = await fetch(`${this.apiUrl}/${endpoint}`, config);
-      if (response.ok) {
-        return (await response.json()) as T;
-      }
-
-      const errorMessage = (await response.json()) as ErrorBase;
-      return new ErrorBase(errorMessage.message, errorMessage.statusCode) as E;
-    } catch (err) {
-      console.warn(err);
-
-      if (err instanceof Error) {
-        return new ErrorBase(err.message, 0) as E;
-      }
-
-      return err as E;
-    }
-  }
-
   private async request<T, E = ErrorBase>(
     endpoint: string,
     method: 'POST' | 'GET' | 'PATCH' = 'POST',
     data?: unknown,
     externalConfig?: NextFetchRequestConfig,
   ): Promise<T | E> {
-    return this.fetchAPI<T, E>(
+    return fetchAPI<T, E>(
+      {
+        token: this.apiToken,
+        url: this.apiUrl,
+      },
       endpoint,
       {
         body: JSON.stringify(data),
         method,
-      },
-      externalConfig,
-    );
-  }
-
-  private async requestWithFiles<T, E = ErrorBase>(
-    endpoint: string,
-    data: unknown,
-    externalConfig?: NextFetchRequestConfig,
-  ): Promise<T | E> {
-    return this.fetchAPI<T, E>(
-      endpoint,
-      {
-        body: data as BodyInit,
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${this.apiToken}`,
-        },
       },
       externalConfig,
     );

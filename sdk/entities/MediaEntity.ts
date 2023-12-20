@@ -1,15 +1,58 @@
 import { NextFetchRequestConfig } from '../types/next';
 import { UploadMediaResponse } from '../endpoints';
 import type { Media } from '../types/objects';
-import type { RequestAPI, RequestAPIWithFiles } from '../types/request';
+import { ErrorBase } from '../errors';
+import { fetchAPI } from '../fetchAPI';
 
 export class MediaEntity {
-  private readonly request: RequestAPI;
-  private readonly requestWithFiles: RequestAPIWithFiles;
+  private readonly apiUrl: string;
+  private readonly apiToken: string;
 
-  constructor(request: RequestAPI, requestWithFiles: RequestAPIWithFiles) {
-    this.request = request;
-    this.requestWithFiles = requestWithFiles;
+  constructor(apiUrl: string, apiToken: string) {
+    this.apiUrl = apiUrl;
+    this.apiToken = apiToken;
+  }
+
+  private async request<T, E = ErrorBase>(
+    endpoint: string,
+    method: 'POST' | 'GET' | 'PATCH' = 'POST',
+    data?: unknown,
+    externalConfig?: NextFetchRequestConfig,
+  ): Promise<T | E> {
+    return fetchAPI<T, E>(
+      {
+        token: this.apiToken,
+        url: this.apiUrl,
+      },
+      endpoint,
+      {
+        body: JSON.stringify(data),
+        method,
+      },
+      externalConfig,
+    );
+  }
+
+  private async requestWithFiles<T, E = ErrorBase>(
+    endpoint: string,
+    data: unknown,
+    externalConfig?: NextFetchRequestConfig,
+  ): Promise<T | E> {
+    return fetchAPI<T, E>(
+      {
+        token: this.apiToken,
+        url: this.apiUrl,
+      },
+      endpoint,
+      {
+        body: data as BodyInit,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.apiToken}`,
+        },
+      },
+      externalConfig,
+    );
   }
 
   public async list(externalConfig?: NextFetchRequestConfig) {

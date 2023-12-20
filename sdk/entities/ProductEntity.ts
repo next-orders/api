@@ -1,13 +1,36 @@
 import { NextFetchRequestConfig } from '../types/next';
 import { ProductCreateRequest, ProductCreateResponse } from '../endpoints';
 import type { Product } from '../types/objects';
-import { RequestAPI } from '../types/request';
+import { ErrorBase } from '../errors';
+import { fetchAPI } from '../fetchAPI';
 
 export class ProductEntity {
-  private readonly request: RequestAPI;
+  private readonly apiUrl: string;
+  private readonly apiToken: string;
 
-  constructor(request: RequestAPI) {
-    this.request = request;
+  constructor(apiUrl: string, apiToken: string) {
+    this.apiUrl = apiUrl;
+    this.apiToken = apiToken;
+  }
+
+  private async request<T, E = ErrorBase>(
+    endpoint: string,
+    method: 'POST' | 'GET' | 'PATCH' = 'POST',
+    data?: unknown,
+    externalConfig?: NextFetchRequestConfig,
+  ): Promise<T | E> {
+    return fetchAPI<T, E>(
+      {
+        token: this.apiToken,
+        url: this.apiUrl,
+      },
+      endpoint,
+      {
+        body: JSON.stringify(data),
+        method,
+      },
+      externalConfig,
+    );
   }
 
   public async list(externalConfig?: NextFetchRequestConfig) {
