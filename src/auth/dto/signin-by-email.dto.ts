@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { SignInByEmailRequestSchema } from '@api-sdk';
+import { SignInByEmailRequestSchema } from '@/../sdk/endpoints';
 
 export class SignInByEmailDto extends createZodDto(
   SignInByEmailRequestSchema,

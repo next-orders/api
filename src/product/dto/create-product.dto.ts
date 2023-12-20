@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { ProductCreateRequestSchema } from '@api-sdk';
+import { ProductCreateRequestSchema } from '@/../sdk/endpoints';
 
 export class CreateProductDto extends createZodDto(
   ProductCreateRequestSchema,
