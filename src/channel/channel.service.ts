@@ -56,6 +56,7 @@ export class ChannelService {
         description: dto.description,
         currencyCode: dto.currencyCode,
         languageCode: dto.languageCode,
+        countryCode: dto.countryCode,
       },
       include: {
         menus: {

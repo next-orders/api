@@ -135,6 +135,7 @@ model Channel {
   description        String?
   currencyCode       String     @default("USD")
   languageCode       String     @default("EN")
+  countryCode        String     @default("US")
   isActive           Boolean    @default(true)
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @default(now())
