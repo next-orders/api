@@ -4,10 +4,10 @@ import { AppModule } from './app.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 const DEFAULT_PREFIX = 'api';
-const GLOBAL_PREFIX = process.env.GLOBAL_PREFIX || DEFAULT_PREFIX;
+const GLOBAL_PREFIX = process.env.GLOBAL_PREFIX ?? DEFAULT_PREFIX;
 
 const DEFAULT_PORT = 4001;
-const PORT = process.env.PORT || DEFAULT_PORT;
+const PORT = process.env.PORT ?? DEFAULT_PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

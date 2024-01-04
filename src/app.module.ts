@@ -2,22 +2,22 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ProductModule } from '@/product/product.module';
-import { CheckoutModule } from '@/checkout/checkout.module';
-import { MenuModule } from '@/menu/menu.module';
-import { MenuCategoryModule } from '@/menu-category/menu-category.module';
-import { ShopModule } from '@/shop/shop.module';
-import { ChannelModule } from '@/channel/channel.module';
-import { ProductVariantModule } from '@/product-variant/product-variant.module';
-import { MediaModule } from '@/media/media.module';
-import { DomainModule } from '@/domain/domain.module';
-import { AvatarModule } from '@/avatar/avatar.module';
-import { ClientModule } from '@/client/client.module';
-import { EmployeeModule } from '@/employee/employee.module';
-import { AuthModule } from '@/auth/auth.module';
-import { AuthGuard } from '@/auth/auth.guard';
+import { ProductModule } from '@/core/product/product.module';
+import { CheckoutModule } from '@/core/checkout/checkout.module';
+import { MenuModule } from '@/core/menu/menu.module';
+import { MenuCategoryModule } from '@/core/menu-category/menu-category.module';
+import { ShopModule } from '@/core/shop/shop.module';
+import { ChannelModule } from '@/core/channel/channel.module';
+import { ProductVariantModule } from '@/core/product-variant/product-variant.module';
+import { MediaModule } from '@/core/media/media.module';
+import { DomainModule } from '@/core/domain/domain.module';
+import { AvatarModule } from '@/core/avatar/avatar.module';
+import { ClientModule } from '@/core/client/client.module';
+import { EmployeeModule } from '@/core/employee/employee.module';
+import { AuthModule } from '@/core/auth/auth.module';
+import { AuthGuard } from '@/core/auth/auth.guard';
+import { HealthModule } from '@/core/health/health.module';
+import { VersionModule } from '@/core/version/version.module';
 
 @Module({
   imports: [
@@ -38,6 +38,8 @@ import { AuthGuard } from '@/auth/auth.guard';
       },
       inject: [ConfigService],
     }),
+    HealthModule,
+    VersionModule,
     ShopModule,
     ChannelModule,
     MediaModule,
@@ -52,13 +54,11 @@ import { AuthGuard } from '@/auth/auth.guard';
     MenuCategoryModule,
     AvatarModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    AppService,
   ],
 })
 export class AppModule {}
