@@ -2,12 +2,31 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Provider } from '@nestjs/common';
 import { ChannelService } from '@/core/channel/channel.service';
 import { ChannelRepository } from '@/core/channel/channel.repository';
-import { ProductVariantService } from '@/core/product-variant/product-variant.service';
 import { CreateChannelDto } from '@/core/channel/dto/create-channel.dto';
+import { Channel } from '@prisma/client';
 
 describe('ChannelService', () => {
   let service: ChannelService;
   let repo: jest.Mocked<ChannelRepository>;
+
+  const dummyChannel: Channel = {
+    id: '1',
+    name: 'Channel1',
+    slug: 'test',
+    description: 'test',
+    currencyCode: 'USD',
+    languageCode: 'EN',
+    countryCode: 'US',
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    accentTextColor: '',
+    accentButtonColor: '',
+    accentGradientFrom: '',
+    accentGradientTo: '',
+    domainId: '',
+  };
+  const dummyChannels = [dummyChannel];
 
   beforeEach(async () => {
     const ChannelRepositoryProvider: Provider = {
@@ -19,20 +38,8 @@ describe('ChannelService', () => {
       })),
     };
 
-    const ProductVariantRepositoryProvider: Provider = {
-      provide: ProductVariantService,
-      useClass: jest.fn(() => ({
-        findProductVariantBySlug: jest.fn(),
-        findPopularProductVariants: jest.fn(),
-      })),
-    };
-
     const moduleRef: TestingModule = await Test.createTestingModule({
-      providers: [
-        ChannelService,
-        ChannelRepositoryProvider,
-        ProductVariantRepositoryProvider,
-      ],
+      providers: [ChannelService, ChannelRepositoryProvider],
     }).compile();
 
     service = moduleRef.get(ChannelService);
@@ -45,32 +52,11 @@ describe('ChannelService', () => {
 
   describe('findAllChannels', () => {
     it('should return all channels', async () => {
-      const channelData = [
-        {
-          id: '1',
-          name: 'Channel1',
-          slug: 'test',
-          description: 'test',
-          currencyCode: 'USD',
-          languageCode: 'EN',
-          countryCode: 'US',
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          accentTextColor: '',
-          accentButtonColor: '',
-          accentGradientFrom: '',
-          accentGradientTo: '',
-          domainId: '',
-          menus: [],
-        },
-      ];
-
-      repo.findAll.mockResolvedValue(channelData);
+      repo.findAll.mockResolvedValue(dummyChannels);
 
       const result = await service.findAllChannels();
 
-      expect(result).toEqual(channelData);
+      expect(result).toEqual(dummyChannels);
     });
 
     it('should return empty array if no channels are found', async () => {

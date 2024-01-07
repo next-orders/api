@@ -1,6 +1,6 @@
 import { NextFetchRequestConfig } from '../types/next';
 import { ChannelCreateRequest, ChannelCreateResponse } from '../endpoints';
-import type { Channel, ProductVariant } from '../types/objects';
+import type { Channel } from '../types/objects';
 import { ErrorBase } from '../errors';
 import { fetchAPI } from '../fetchAPI';
 
@@ -59,31 +59,6 @@ export class ChannelEntity {
       'channel',
       'POST',
       data,
-      externalConfig,
-    );
-  }
-
-  public async search(
-    channelId: string,
-    query: string,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.request<ProductVariant[] | null>(
-      `channel/${channelId}/search/${query}`,
-      'GET',
-      undefined,
-      externalConfig,
-    );
-  }
-
-  public async getTopSearch(
-    channelId: string,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.request<ProductVariant[] | null>(
-      `channel/${channelId}/search`,
-      'GET',
-      undefined,
       externalConfig,
     );
   }

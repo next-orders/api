@@ -151,12 +151,13 @@ model Channel {
 
 // Channel Entities
 model Menu {
-  id         String         @id @default(cuid())
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @default(now())
+  id         String           @id @default(cuid())
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now())
   channelId  String
-  channel    Channel        @relation(fields: [channelId], references: [id])
+  channel    Channel          @relation(fields: [channelId], references: [id])
   categories MenuCategory[]
+  products   ProductVariant[]
 }
 
 model MenuCategory {
@@ -195,6 +196,8 @@ model ProductVariant {
   product             Product        @relation(fields: [productId], references: [id])
   categoryId          String
   category            MenuCategory   @relation(fields: [categoryId], references: [id])
+  menuId              String
+  menu                Menu           @relation(fields: [menuId], references: [id])
   media               ProductMedia[]
   checkoutLines       CheckoutLine[]
 }

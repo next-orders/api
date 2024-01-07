@@ -35,6 +35,7 @@ export const ProductVariantCreateRequestSchema = z.object({
   tax: z.number().optional(),
   productId: z.string(),
   categoryId: z.string(),
+  menuId: z.string(),
 });
 
 export type ProductVariantCreateRequest = z.infer<

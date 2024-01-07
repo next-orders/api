@@ -1,5 +1,5 @@
 import { NextFetchRequestConfig } from '../types/next';
-import type { Menu } from '../types/objects';
+import type { Menu, ProductVariant } from '../types/objects';
 import { ErrorBase } from '../errors';
 import { fetchAPI } from '../fetchAPI';
 
@@ -50,6 +50,31 @@ export class MenuEntity {
   ) {
     return this.request<Menu>(
       `menu/${menuId}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async search(
+    menuId: string,
+    query: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.request<ProductVariant[] | null>(
+      `menu/${menuId}/search/${query}`,
+      'GET',
+      undefined,
+      externalConfig,
+    );
+  }
+
+  public async getTopSearch(
+    menuId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.request<ProductVariant[] | null>(
+      `menu/${menuId}/search`,
       'GET',
       undefined,
       externalConfig,

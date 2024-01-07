@@ -27,4 +27,26 @@ export class MenuController {
 
     return menu;
   }
+
+  @Public()
+  @Get(':id/search')
+  async getTopSearchOnMenu(@Param('id') id: string) {
+    const top = await this.service.getTopSearchOnMenu(id);
+    if (!top) {
+      throw new NotFoundException();
+    }
+
+    return top;
+  }
+
+  @Public()
+  @Get(':id/search/:query')
+  async searchOnMenu(@Param('id') id: string, @Param('query') query: string) {
+    const found = await this.service.searchOnMenu(id, query);
+    if (!found) {
+      throw new NotFoundException();
+    }
+
+    return found;
+  }
 }

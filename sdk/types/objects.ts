@@ -121,7 +121,6 @@ export type Channel = {
   accentButtonColor: string;
   accentGradientFrom: string | null;
   accentGradientTo: string | null;
-  menus: Menu[];
 };
 
 export type LanguageCode = 'EN' | 'ES' | 'RU';

@@ -48,11 +48,13 @@ export class ProductVariantService {
     return product as ProductVariant;
   }
 
-  async findProductVariantByName(
+  async findProductVariantByNameAndMenuId(
+    menuId: string,
     name: string,
   ): Promise<ProductVariant[] | null> {
     const product = await this.prisma.productVariant.findMany({
       where: {
+        menuId,
         name: {
           mode: 'insensitive',
           contains: name,
@@ -74,8 +76,11 @@ export class ProductVariantService {
     return product as ProductVariant[];
   }
 
-  async findPopularProductVariants(): Promise<ProductVariant[] | null> {
+  async findPopularProductVariantsByMenuId(
+    menuId: string,
+  ): Promise<ProductVariant[] | null> {
     const products = await this.prisma.productVariant.findMany({
+      where: { menuId },
       take: 5,
       include: {
         category: true,
@@ -118,6 +123,7 @@ export class ProductVariantService {
     const product = await this.prisma.productVariant.create({
       data: {
         id: createId(),
+        menuId: dto.menuId,
         productId: dto.productId,
         categoryId: dto.categoryId,
         name: dto.name,

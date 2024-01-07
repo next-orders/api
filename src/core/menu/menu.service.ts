@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
-import { Menu } from '@api-sdk';
+import { Menu, ProductVariant } from '@api-sdk';
+import { ProductVariantService } from '@/core/product-variant/product-variant.service';
 
 @Injectable()
 export class MenuService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly productVariant: ProductVariantService,
+  ) {}
 
   async findAllMenusInChannel(channelId: string): Promise<Menu[] | null> {
     const menus = await this.prisma.menu.findMany({
@@ -32,5 +36,20 @@ export class MenuService {
     }
 
     return menu as Menu;
+  }
+
+  async getTopSearchOnMenu(menuId: string): Promise<ProductVariant[] | null> {
+    return this.productVariant.findPopularProductVariantsByMenuId(menuId);
+  }
+
+  async searchOnMenu(
+    menuId: string,
+    query: string,
+  ): Promise<ProductVariant[] | null> {
+    if (query.length < 2) {
+      return null;
+    }
+
+    return this.productVariant.findProductVariantByNameAndMenuId(menuId, query);
   }
 }
