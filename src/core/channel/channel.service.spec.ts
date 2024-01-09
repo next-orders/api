@@ -3,13 +3,13 @@ import { Provider } from '@nestjs/common';
 import { ChannelService } from '@/core/channel/channel.service';
 import { ChannelRepository } from '@/core/channel/channel.repository';
 import { CreateChannelDto } from '@/core/channel/dto/create-channel.dto';
-import { Channel } from '@prisma/client';
+import { ChannelMapper } from '@/core/channel/channel.mapper';
 
 describe('ChannelService', () => {
   let service: ChannelService;
   let repo: jest.Mocked<ChannelRepository>;
 
-  const dummyChannel: Channel = {
+  const testChannelInDB = {
     id: '1',
     name: 'Channel1',
     slug: 'test',
@@ -26,7 +26,17 @@ describe('ChannelService', () => {
     accentGradientTo: '',
     domainId: '',
   };
-  const dummyChannels = [dummyChannel];
+  const testChannelEntity = new ChannelMapper().toEntity(testChannelInDB);
+  const testChannelEntities = [testChannelEntity];
+
+  const testCreateChannelDto: CreateChannelDto = {
+    slug: 'test-channel',
+    name: 'Test Channel',
+    description: 'This is a test channel',
+    currencyCode: 'USD',
+    languageCode: 'en',
+    countryCode: 'US',
+  };
 
   beforeEach(async () => {
     const ChannelRepositoryProvider: Provider = {
@@ -52,11 +62,11 @@ describe('ChannelService', () => {
 
   describe('findAllChannels', () => {
     it('should return all channels', async () => {
-      repo.findAll.mockResolvedValue(dummyChannels);
+      repo.findAll.mockResolvedValue(testChannelEntities);
 
       const result = await service.findAllChannels();
 
-      expect(result).toEqual(dummyChannels);
+      expect(result).toEqual(testChannelEntities);
     });
 
     it('should return empty array if no channels are found', async () => {
@@ -76,45 +86,17 @@ describe('ChannelService', () => {
     });
 
     it('should return a Channel if found', async () => {
-      const mockChannel = {
-        id: 'test-id',
-        slug: 'test-slug',
-        name: 'test-name',
-        description: 'test-description',
-        currencyCode: 'test-currencyCode',
-        languageCode: 'test-languageCode',
-        countryCode: 'test-countryCode',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        domainId: 'test-domainId',
-        accentTextColor: 'test-accentTextColor',
-        accentButtonColor: 'test-accentButtonColor',
-        accentGradientFrom: 'test-accentGradientFrom',
-        accentGradientTo: 'test-accentGradientTo',
-        menus: [],
-      };
-
-      repo.findById.mockResolvedValue(mockChannel);
+      repo.findById.mockResolvedValue(testChannelEntity);
       const result = await service.findChannelById('test-id');
-      expect(result).toEqual(mockChannel);
+      expect(result).toEqual(testChannelEntity);
     });
   });
 
   describe('createChannel', () => {
     it('should create a new channel', async () => {
-      const dto: CreateChannelDto = {
-        slug: 'test-channel',
-        name: 'Test Channel',
-        description: 'This is a test channel',
-        currencyCode: 'USD',
-        languageCode: 'en',
-        countryCode: 'US',
-      };
-
-      repo.create.mockResolvedValueOnce(dto as any);
-      const result = await service.createChannel(dto);
-      expect(result).toMatchObject(dto);
+      repo.create.mockResolvedValueOnce(testChannelEntity);
+      const result = await service.createChannel(testCreateChannelDto);
+      expect(result).toMatchObject(testChannelEntity);
     });
   });
 });

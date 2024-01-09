@@ -1,19 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/db/prisma.service';
+import { ChannelEntity } from '@/core/channel/channel.entity';
+import { ChannelMapper } from '@/core/channel/channel.mapper';
 
 @Injectable()
 export class ChannelRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly mapper: ChannelMapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
-  findAll() {
-    return this.prisma.channel.findMany();
+  async findAll(): Promise<ChannelEntity[]> {
+    const channels = await this.prisma.channel.findMany();
+    return channels.map(this.mapper.toEntity);
   }
 
-  findById(id: string) {
-    return this.prisma.channel.findUnique({ where: { id } });
+  async findById(id: string): Promise<ChannelEntity | null> {
+    const channel = await this.prisma.channel.findUnique({ where: { id } });
+    return channel ? this.mapper.toEntity(channel) : null;
   }
 
-  create(data: any) {
-    return this.prisma.channel.create({ data });
+  async create(data: ChannelEntity): Promise<ChannelEntity> {
+    const channel = await this.prisma.channel.create({ data });
+    return this.mapper.toEntity(channel);
   }
 }
