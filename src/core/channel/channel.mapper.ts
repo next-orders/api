@@ -1,25 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ChannelEntity } from '@/core/channel/channel.entity';
 import { CountryCode, CurrencyCode, LanguageCode } from '@api-sdk';
-import { Channel } from '@prisma/client';
+import { PrismaModels } from '@/db/prisma.service';
 
-export interface ModelChannel extends Channel {
-  id: string;
-  slug: string;
-  name: string;
-  description: string | null;
-  currencyCode: string;
-  languageCode: string;
-  countryCode: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  accentTextColor: string;
-  accentButtonColor: string;
-  accentGradientFrom: string | null;
-  accentGradientTo: string | null;
-  domainId: string | null;
-}
+type ModelChannel = PrismaModels['Channel'];
 
 @Injectable()
 export class ChannelMapper {
