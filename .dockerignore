@@ -1,7 +1,15 @@
+.dockerignore
+node_modules
+Dockerfile
 .git
+.gitignore
 .github
+.gitlab-*
 npm-debug.log
+.npmrc
 .coverage
 .coverage.*
 .env
+.env-*
 .aws
+*.md
