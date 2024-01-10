@@ -1,5 +1,4 @@
 import type { AvatarParams } from './types/objects';
-import { SignInByEmailRequest, SignInByEmailResponse } from './endpoints';
 import { NextFetchRequestConfig } from './types/next';
 import { JWTEmployeeAccessTokenPayload } from './types/jwt';
 import { ErrorBase } from './errors';
@@ -7,6 +6,7 @@ import {
   ChannelEntity,
   CheckoutEntity,
   ClientEntity,
+  EmployeeEntity,
   MediaEntity,
   MenuCategoryEntity,
   MenuEntity,
@@ -29,6 +29,7 @@ export class MainAPI {
   public readonly checkout: CheckoutEntity;
   public readonly product: ProductEntity;
   public readonly productVariant: ProductVariantEntity;
+  public readonly employee: EmployeeEntity;
 
   constructor(apiUrl: string, apiToken: string) {
     this.apiUrl = apiUrl;
@@ -43,6 +44,7 @@ export class MainAPI {
     this.checkout = new CheckoutEntity(apiUrl, apiToken);
     this.product = new ProductEntity(apiUrl, apiToken);
     this.productVariant = new ProductVariantEntity(apiUrl, apiToken);
+    this.employee = new EmployeeEntity(apiUrl, apiToken);
   }
 
   public async getApiVersion(externalConfig?: NextFetchRequestConfig) {
@@ -50,18 +52,6 @@ export class MainAPI {
       'version',
       'GET',
       undefined,
-      externalConfig,
-    );
-  }
-
-  public async signInEmployeeByEmail(
-    data: SignInByEmailRequest,
-    externalConfig?: NextFetchRequestConfig,
-  ) {
-    return this.request<SignInByEmailResponse>(
-      'auth/employee/email',
-      'POST',
-      data,
       externalConfig,
     );
   }

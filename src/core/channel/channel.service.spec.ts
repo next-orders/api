@@ -3,13 +3,13 @@ import { Provider } from '@nestjs/common';
 import { ChannelService } from '@/core/channel/channel.service';
 import { ChannelRepository } from '@/core/channel/channel.repository';
 import { CreateChannelDto } from '@/core/channel/dto/create-channel.dto';
-import { ChannelMapper } from '@/core/channel/channel.mapper';
+import { ChannelMapper, ModelChannel } from '@/core/channel/channel.mapper';
 
 describe('ChannelService', () => {
   let service: ChannelService;
   let repo: jest.Mocked<ChannelRepository>;
 
-  const testChannelInDB = {
+  const testChannelInDB: ModelChannel = {
     id: '1',
     name: 'Channel1',
     slug: 'test',
@@ -34,7 +34,7 @@ describe('ChannelService', () => {
     name: 'Test Channel',
     description: 'This is a test channel',
     currencyCode: 'USD',
-    languageCode: 'en',
+    languageCode: 'EN',
     countryCode: 'US',
   };
 
@@ -56,19 +56,19 @@ describe('ChannelService', () => {
     repo = moduleRef.get(ChannelRepository);
   });
 
-  it('should be defined', () => {
+  it('Should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findAllChannels', () => {
-    it('should return all channels', async () => {
+  describe('#findAllChannels', () => {
+    it('Should return all channels', async () => {
       repo.findAll.mockResolvedValue(testChannelEntities);
 
       const result = await service.findAllChannels();
       expect(result).toEqual(testChannelEntities);
     });
 
-    it('should return empty array if no channels are found', async () => {
+    it('Should return empty array if no channels are found', async () => {
       repo.findAll.mockResolvedValue([]);
 
       const result = await service.findAllChannels();
@@ -76,15 +76,15 @@ describe('ChannelService', () => {
     });
   });
 
-  describe('findChannelById', () => {
-    it('should return null if no Channel is found', async () => {
+  describe('#findChannelById', () => {
+    it('Should return null if no Channel is found', async () => {
       repo.findById.mockResolvedValue(null);
 
       const result = await service.findChannelById('test-id');
       expect(result).toBeNull();
     });
 
-    it('should return a Channel if found', async () => {
+    it('Should return a Channel if found', async () => {
       repo.findById.mockResolvedValue(testChannelEntity);
 
       const result = await service.findChannelById('test-id');
@@ -92,8 +92,8 @@ describe('ChannelService', () => {
     });
   });
 
-  describe('createChannel', () => {
-    it('should create a new channel', async () => {
+  describe('#createChannel', () => {
+    it('Should create a new channel', async () => {
       repo.create.mockResolvedValueOnce(testChannelEntity);
 
       const result = await service.createChannel(testCreateChannelDto);

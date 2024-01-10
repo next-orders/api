@@ -7,3 +7,4 @@ export { MenuCategoryEntity } from './MenuCategoryEntity';
 export { CheckoutEntity } from './CheckoutEntity';
 export { ProductEntity } from './ProductEntity';
 export { ProductVariantEntity } from './ProductVariantEntity';
+export { EmployeeEntity } from './EmployeeEntity';

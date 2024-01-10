@@ -29,6 +29,7 @@ export type EmployeeCreateResponse = {
   result: Employee;
 };
 
+// ---------------------------------------------------- //
 export const EmployeeContactCreateRequestSchema = z.object({
   employeeId: z.string(),
   type: z.string(),
@@ -44,6 +45,7 @@ export type EmployeeContactCreateResponse = {
   result: EmployeeContact;
 };
 
+// ---------------------------------------------------- //
 export const EmployeePasswordCreateRequestSchema = z.object({
   employeeId: z.string(),
   password: z.string(),
@@ -56,6 +58,7 @@ export type EmployeePasswordCreateResponse = {
   ok: boolean;
 };
 
+// ---------------------------------------------------- //
 export const EmployeePermissionCreateRequestSchema = z.object({
   employeeId: z.string(),
   type: z.enum(employeePermissionTypes as [string, ...string[]]),
@@ -67,4 +70,18 @@ export type EmployeePermissionCreateRequest = z.infer<
 export type EmployeePermissionCreateResponse = {
   ok: boolean;
   result: EmployeePermission;
+};
+
+// ---------------------------------------------------- //
+export const SignInByEmailRequestSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export type SignInByEmailRequest = z.infer<typeof SignInByEmailRequestSchema>;
+export type SignInByEmailResponse = {
+  ok: boolean;
+  result: {
+    access_token: string;
+  };
 };

@@ -1,4 +1,12 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { EmployeeService } from '@/core/employee/employee.service';
 import { Public } from '@/core/auth/auth.decorator';
 import {
@@ -6,12 +14,14 @@ import {
   EmployeeCreateResponse,
   EmployeePasswordCreateResponse,
   EmployeePermissionCreateResponse,
+  SignInByEmailResponse,
 } from '../../../sdk/endpoints';
 import {
   CreateEmployeeContactDto,
   CreateEmployeeDto,
   CreateEmployeePasswordDto,
   CreateEmployeePermissionDto,
+  SignInByEmailDto,
 } from '@/core/employee/dto';
 
 @Controller('employee')
@@ -68,5 +78,19 @@ export class EmployeeController {
     }
 
     return created;
+  }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Post('email')
+  async signInByEmail(
+    @Body() dto: SignInByEmailDto,
+  ): Promise<SignInByEmailResponse> {
+    const jwt = await this.service.signInByEmail(dto);
+    if (!jwt) {
+      throw new UnauthorizedException();
+    }
+
+    return jwt;
   }
 }

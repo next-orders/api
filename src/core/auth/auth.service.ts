@@ -7,17 +7,12 @@ import type {
   JWTEmployeeAccessTokenPayload,
   JWTEmployeeData,
 } from '@api-sdk';
-import { PrismaService } from '@/db/prisma.service';
-import { EmployeeService } from '@/core/employee/employee.service';
-import { SignInByEmailDto } from '@/core/auth/dto/signin-by-email.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly config: ConfigService,
-    private readonly employee: EmployeeService,
     private readonly jwt: JwtService,
-    private readonly prisma: PrismaService,
   ) {}
 
   async verifyToken(token: string) {
@@ -38,32 +33,13 @@ export class AuthService {
     }
   }
 
-  async signInByEmail(dto: SignInByEmailDto) {
-    const employee = await this.employee.findEmployeeByContact(
-      dto.email,
-      'EMAIL',
-    );
-    if (!employee) {
-      return null;
-    }
-
-    const isPasswordValid = await this.employee.checkPassword(
-      employee.id,
-      dto.password,
-    );
-    if (!isPasswordValid) {
-      return null;
-    }
-
-    // Get all Permissions
-    const permissions = employee.permissions.map(
-      (p: { type: EmployeePermissionType }) => p.type,
-    );
-
-    // Generate a JWT
+  async createToken(
+    userId: string,
+    permissions: EmployeePermissionType[],
+  ): Promise<string> {
     const sub = createId();
     const user: JWTEmployeeData = {
-      id: employee.id,
+      id: userId,
       permissions,
     };
 
@@ -72,15 +48,8 @@ export class AuthService {
       user,
     };
 
-    const access_token = await this.jwt.signAsync(payload, {
+    return this.jwt.signAsync(payload, {
       secret: this.config.getOrThrow('JWT_SECRET'),
     });
-
-    return {
-      ok: true,
-      result: {
-        access_token,
-      },
-    };
   }
 }

@@ -1,17 +1,5 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
 import { AuthService } from '@/core/auth/auth.service';
-import { SignInByEmailDto } from '@/core/auth/dto/signin-by-email.dto';
-import { SignInByEmailResponse } from '../../../sdk/endpoints';
 import { Public } from '@/core/auth/auth.decorator';
 import { ConfigService } from '@nestjs/config';
 
@@ -31,20 +19,6 @@ export class AuthController {
     }
 
     return payload;
-  }
-
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  @Post('employee/email')
-  async signInByEmail(
-    @Body() dto: SignInByEmailDto,
-  ): Promise<SignInByEmailResponse> {
-    const jwt = await this.service.signInByEmail(dto);
-    if (!jwt) {
-      throw new UnauthorizedException();
-    }
-
-    return jwt;
   }
 
   @Public()

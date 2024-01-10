@@ -6,6 +6,7 @@ import {
   EmployeeContact,
   EmployeeContactType,
   EmployeePermission,
+  type EmployeePermissionType,
 } from '@api-sdk';
 import { createId } from '@paralleldrive/cuid2';
 import {
@@ -13,11 +14,16 @@ import {
   CreateEmployeeDto,
   CreateEmployeePasswordDto,
   CreateEmployeePermissionDto,
+  SignInByEmailDto,
 } from '@/core/employee/dto';
+import { AuthService } from '@/core/auth/auth.service';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auth: AuthService,
+  ) {}
 
   async create(dto: CreateEmployeeDto) {
     const created = await this.prisma.employee.create({
@@ -139,5 +145,31 @@ export class EmployeeService {
 
     // No similar Passwords
     return false;
+  }
+
+  async signInByEmail(dto: SignInByEmailDto) {
+    const employee = await this.findEmployeeByContact(dto.email, 'EMAIL');
+    if (!employee) {
+      return null;
+    }
+
+    const isPasswordValid = await this.checkPassword(employee.id, dto.password);
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    // Get all Permissions
+    const permissions = employee.permissions.map(
+      (p: { type: EmployeePermissionType }) => p.type,
+    );
+
+    const access_token = await this.auth.createToken(employee.id, permissions);
+
+    return {
+      ok: true,
+      result: {
+        access_token,
+      },
+    };
   }
 }
