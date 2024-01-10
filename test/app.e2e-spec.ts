@@ -94,8 +94,28 @@ describe('AppController (e2e)', () => {
 
           expect(contact.body).toHaveProperty('ok', true);
 
+          // Create Employee Password
+          const password = await request(app.getHttpServer())
+            .post('/employee/password')
+            .send({
+              employeeId,
+              password: '12345678',
+            });
+
+          expect(password.body).toHaveProperty('ok', true);
+
           // Sign In to get Bearer Token
-          bearerToken = 'Bearer XXX';
+          const sign = await request(app.getHttpServer())
+            .post('/auth/employee/email')
+            .send({
+              email: 'tester@test.com',
+              password: '12345678',
+            });
+
+          expect(sign.body).toHaveProperty('ok', true);
+          expect(sign.body).toHaveProperty('result.access_token');
+
+          bearerToken = `Bearer ${sign.body.result.access_token}`;
         });
 
         it('Should return 403 on creating new Channel with bad data', async () => {
@@ -105,7 +125,7 @@ describe('AppController (e2e)', () => {
             .set('Accept', 'application/json')
             .set('Authorization', bearerToken);
 
-          expect(response.status).toEqual(201);
+          expect(response.status).toEqual(403);
         });
 
         it('Should return 201 on creating new Channel with good data', async () => {

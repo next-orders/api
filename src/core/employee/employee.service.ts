@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { PrismaService } from '@/db/prisma.service';
 import { Employee, EmployeeContact, EmployeeContactType } from '@api-sdk';
-import { CreateEmployeeDto } from '@/core/employee/dto/create-employee.dto';
 import { createId } from '@paralleldrive/cuid2';
-import { CreateEmployeeContactDto } from '@/core/employee/dto';
+import {
+  CreateEmployeeContactDto,
+  CreateEmployeeDto,
+  CreateEmployeePasswordDto,
+} from '@/core/employee/dto';
 
 @Injectable()
 export class EmployeeService {
@@ -47,6 +50,25 @@ export class EmployeeService {
     return {
       ok: true,
       result: created as EmployeeContact,
+    };
+  }
+
+  async createPassword(dto: CreateEmployeePasswordDto) {
+    const hashedPassword = await hash(dto.password, 10);
+
+    const created = await this.prisma.employeePassword.create({
+      data: {
+        id: createId(),
+        hash: hashedPassword,
+        employeeId: dto.employeeId,
+      },
+    });
+    if (!created) {
+      return null;
+    }
+
+    return {
+      ok: true,
     };
   }
 

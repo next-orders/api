@@ -25,3 +25,15 @@ export type EmployeeContactCreateResponse = {
   ok: boolean;
   result: EmployeeContact;
 };
+
+export const EmployeePasswordCreateRequestSchema = z.object({
+  employeeId: z.string(),
+  password: z.string(),
+});
+
+export type EmployeePasswordCreateRequest = z.infer<
+  typeof EmployeePasswordCreateRequestSchema
+>;
+export type EmployeePasswordCreateResponse = {
+  ok: boolean;
+};
