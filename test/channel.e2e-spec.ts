@@ -64,7 +64,7 @@ describe('ChannelController (e2e)', () => {
 
     // Sign In to get Bearer Token
     const sign = await request(app.getHttpServer())
-      .post('/auth/employee/email')
+      .post('/employee/email')
       .send({
         email: 'tester@test.org',
         password: '12345678',
