@@ -48,7 +48,7 @@
     "@nestjs/jwt": "10.2.0",
     "@nestjs/platform-express": "10.3.0",
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "5.7.1",
+    "@prisma/client": "5.8.0",
     "bcrypt": "5.1.1",
     "nestjs-zod": "3.0.0",
     "reflect-metadata": "0.1.14",
