@@ -65,7 +65,6 @@ describe('ChannelService', () => {
       repo.findAll.mockResolvedValue(testChannelEntities);
 
       const result = await service.findAllChannels();
-
       expect(result).toEqual(testChannelEntities);
     });
 
@@ -73,7 +72,6 @@ describe('ChannelService', () => {
       repo.findAll.mockResolvedValue([]);
 
       const result = await service.findAllChannels();
-
       expect(result).toEqual([]);
     });
   });
@@ -81,12 +79,14 @@ describe('ChannelService', () => {
   describe('findChannelById', () => {
     it('should return null if no Channel is found', async () => {
       repo.findById.mockResolvedValue(null);
+
       const result = await service.findChannelById('test-id');
       expect(result).toBeNull();
     });
 
     it('should return a Channel if found', async () => {
       repo.findById.mockResolvedValue(testChannelEntity);
+
       const result = await service.findChannelById('test-id');
       expect(result).toEqual(testChannelEntity);
     });
@@ -95,6 +95,7 @@ describe('ChannelService', () => {
   describe('createChannel', () => {
     it('should create a new channel', async () => {
       repo.create.mockResolvedValueOnce(testChannelEntity);
+
       const result = await service.createChannel(testCreateChannelDto);
       expect(result).toMatchObject(testChannelEntity);
     });

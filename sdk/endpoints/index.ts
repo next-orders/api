@@ -5,3 +5,4 @@ export * from './checkout';
 export * from './shop';
 export * from './channel';
 export * from './menu';
+export * from './employee';
