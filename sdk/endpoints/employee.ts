@@ -1,5 +1,23 @@
 import { z } from 'zod';
-import { Employee, EmployeeContact } from '../types/objects';
+import {
+  Employee,
+  EmployeeContact,
+  EmployeePermission,
+  EmployeePermissionType,
+} from '../types/objects';
+
+const employeePermissionTypes: EmployeePermissionType[] = [
+  'READ_CLIENTS',
+  'EDIT_CLIENTS',
+  'READ_MEDIA',
+  'EDIT_MEDIA',
+  'READ_CHANNELS',
+  'EDIT_CHANNELS',
+  'READ_PRODUCTS',
+  'EDIT_PRODUCTS',
+  'READ_MENUS',
+  'EDIT_MENUS',
+];
 
 export const EmployeeCreateRequestSchema = z.object({
   firstName: z.string(),
@@ -36,4 +54,17 @@ export type EmployeePasswordCreateRequest = z.infer<
 >;
 export type EmployeePasswordCreateResponse = {
   ok: boolean;
+};
+
+export const EmployeePermissionCreateRequestSchema = z.object({
+  employeeId: z.string(),
+  type: z.enum(employeePermissionTypes as [string, ...string[]]),
+});
+
+export type EmployeePermissionCreateRequest = z.infer<
+  typeof EmployeePermissionCreateRequestSchema
+>;
+export type EmployeePermissionCreateResponse = {
+  ok: boolean;
+  result: EmployeePermission;
 };

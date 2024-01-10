@@ -3,6 +3,7 @@ import { Channel, CountryCode, CurrencyCode, LanguageCode } from '@api-sdk';
 import { CreateChannelDto } from '@/core/channel/dto/create-channel.dto';
 import { ChannelRepository } from '@/core/channel/channel.repository';
 import { ChannelEntity } from '@/core/channel/channel.entity';
+import { ChannelCreateResponse } from '../../../sdk/endpoints';
 
 @Injectable()
 export class ChannelService {
@@ -16,7 +17,7 @@ export class ChannelService {
     return this.repository.findById(id);
   }
 
-  createChannel(dto: CreateChannelDto): Promise<Channel> {
+  async createChannel(dto: CreateChannelDto): Promise<ChannelCreateResponse> {
     const channelEntity = new ChannelEntity({
       slug: dto.slug,
       name: dto.name,
@@ -26,6 +27,11 @@ export class ChannelService {
       countryCode: dto.countryCode as CountryCode,
     });
 
-    return this.repository.create(channelEntity);
+    const created = await this.repository.create(channelEntity);
+
+    return {
+      ok: true,
+      result: created,
+    };
   }
 }

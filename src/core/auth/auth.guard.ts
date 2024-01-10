@@ -9,8 +9,10 @@ import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
-import type { JWTEmployeeAccessTokenPayload } from '@api-sdk';
-import { EmployeePermission } from '@api-sdk';
+import type {
+  EmployeePermissionType,
+  JWTEmployeeAccessTokenPayload,
+} from '@api-sdk';
 import { IS_PUBLIC_KEY, Permissions } from '@/core/auth/auth.decorator';
 
 @Injectable()
@@ -47,7 +49,7 @@ export class AuthGuard implements CanActivate {
   /** If endpoint have @Permissions decorator */
   private async processPermissionsDecorator(
     context: ExecutionContext,
-    requiredPermissions: EmployeePermission['type'][],
+    requiredPermissions: EmployeePermissionType[],
   ): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);

@@ -5,11 +5,13 @@ import {
   EmployeeContactCreateResponse,
   EmployeeCreateResponse,
   EmployeePasswordCreateResponse,
+  EmployeePermissionCreateResponse,
 } from '../../../sdk/endpoints';
 import {
   CreateEmployeeContactDto,
   CreateEmployeeDto,
   CreateEmployeePasswordDto,
+  CreateEmployeePermissionDto,
 } from '@/core/employee/dto';
 
 @Controller('employee')
@@ -48,6 +50,19 @@ export class EmployeeController {
     @Body() dto: CreateEmployeePasswordDto,
   ): Promise<EmployeePasswordCreateResponse> {
     const created = await this.service.createPassword(dto);
+    if (!created) {
+      throw new BadRequestException();
+    }
+
+    return created;
+  }
+
+  @Public()
+  @Post('permission')
+  async createPermission(
+    @Body() dto: CreateEmployeePermissionDto,
+  ): Promise<EmployeePermissionCreateResponse> {
+    const created = await this.service.createPermission(dto);
     if (!created) {
       throw new BadRequestException();
     }

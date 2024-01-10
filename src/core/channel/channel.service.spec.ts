@@ -97,7 +97,10 @@ describe('ChannelService', () => {
       repo.create.mockResolvedValueOnce(testChannelEntity);
 
       const result = await service.createChannel(testCreateChannelDto);
-      expect(result).toMatchObject(testChannelEntity);
+      expect(result).toMatchObject({
+        ok: true,
+        result: testChannelEntity,
+      });
     });
   });
 });

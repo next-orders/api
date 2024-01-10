@@ -22,13 +22,10 @@ describe('AppController (e2e)', () => {
 
   describe('/health', () => {
     it('Should return ok status', async () => {
-      return request(app.getHttpServer())
-        .get('/health')
-        .expect(200)
-        .expect(({ body }) => {
-          expect(body.ok).toBeDefined();
-          expect(body.ok).toEqual(true);
-        });
+      const health = await request(app.getHttpServer()).get('/health');
+
+      expect(health.status).toBe(200);
+      expect(health.body).toHaveProperty('ok', true);
     });
   });
 
@@ -50,9 +47,9 @@ describe('AppController (e2e)', () => {
       const newChannelDto: CreateChannelDto = {
         slug: 'test',
         name: 'test',
-        currencyCode: '',
-        languageCode: '',
-        countryCode: '',
+        currencyCode: 'USD',
+        languageCode: 'EN',
+        countryCode: 'US',
       };
 
       it('Should return 401 Unauthorized', async () => {
@@ -88,7 +85,7 @@ describe('AppController (e2e)', () => {
             .send({
               employeeId,
               type: 'EMAIL',
-              value: 'tester@test.com',
+              value: 'tester@test.org',
               isUsedForAuthentication: true,
             });
 
@@ -104,28 +101,39 @@ describe('AppController (e2e)', () => {
 
           expect(password.body).toHaveProperty('ok', true);
 
+          // Create Employee Permission: EDIT_CHANNELS
+          const permission = await request(app.getHttpServer())
+            .post('/employee/permission')
+            .send({
+              employeeId,
+              type: 'EDIT_CHANNELS',
+            });
+
+          expect(permission.body).toHaveProperty('ok', true);
+
           // Sign In to get Bearer Token
           const sign = await request(app.getHttpServer())
             .post('/auth/employee/email')
             .send({
-              email: 'tester@test.com',
+              email: 'tester@test.org',
               password: '12345678',
             });
 
           expect(sign.body).toHaveProperty('ok', true);
           expect(sign.body).toHaveProperty('result.access_token');
+          const accessToken = sign.body.result.access_token;
 
-          bearerToken = `Bearer ${sign.body.result.access_token}`;
+          bearerToken = `Bearer ${accessToken}`;
         });
 
-        it('Should return 403 on creating new Channel with bad data', async () => {
+        it('Should return 400 on creating new Channel with bad data', async () => {
           const response = await request(app.getHttpServer())
             .post('/channel')
             .send({})
             .set('Accept', 'application/json')
             .set('Authorization', bearerToken);
 
-          expect(response.status).toEqual(403);
+          expect(response.status).toEqual(400);
         });
 
         it('Should return 201 on creating new Channel with good data', async () => {
@@ -135,6 +143,8 @@ describe('AppController (e2e)', () => {
             .set('Accept', 'application/json')
             .set('Authorization', bearerToken);
 
+          expect(response.body).toHaveProperty('ok', true);
+          expect(response.body).toHaveProperty('result.id');
           expect(response.status).toEqual(201);
         });
       });

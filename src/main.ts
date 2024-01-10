@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { ZodValidationPipe } from 'nestjs-zod';
 
 const DEFAULT_PREFIX = 'api';
 const GLOBAL_PREFIX = process.env.GLOBAL_PREFIX ?? DEFAULT_PREFIX;
@@ -20,7 +19,6 @@ async function bootstrap() {
     },
   });
 
-  app.useGlobalPipes(new ZodValidationPipe());
   app.setGlobalPrefix(GLOBAL_PREFIX);
 
   await app.listen(PORT);

@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ZodValidationPipe } from 'nestjs-zod';
 import { ProductModule } from '@/core/product/product.module';
 import { CheckoutModule } from '@/core/checkout/checkout.module';
 import { MenuModule } from '@/core/menu/menu.module';
@@ -58,6 +59,10 @@ import { VersionModule } from '@/core/version/version.module';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
     },
   ],
 })
