@@ -1,5 +1,5 @@
-import { Channel, CountryCode, CurrencyCode, LanguageCode } from '@api-sdk';
 import { createId } from '@paralleldrive/cuid2';
+import { Channel, CountryCode, CurrencyCode, LanguageCode } from '@api-sdk';
 
 export class ChannelEntity implements Channel {
   id!: string;

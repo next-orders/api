@@ -46,12 +46,12 @@ export type Employee = {
   createdAt: Date;
   updatedAt: Date;
   lastLogin: Date | null;
-  permissions: EmployeePermission[];
 };
 
 export type EmployeePermission = {
   id: string;
   type: EmployeePermissionType;
+  employeeId: string;
 };
 
 export type EmployeePermissionType =
@@ -66,9 +66,20 @@ export type EmployeePermissionType =
   | 'READ_MENUS'
   | 'EDIT_MENUS';
 
+export type EmployeePassword = {
+  id: string;
+  hash: string;
+  createdAt: Date;
+  updatedAt: Date;
+  employeeId: string;
+};
+
 export type EmployeeContact = {
   id: string;
   type: EmployeeContactType;
+  employeeId: string;
+  value: string;
+  isUsedForAuthentication: boolean;
 };
 
 export type EmployeeContactType = 'EMAIL';

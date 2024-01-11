@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Channel, CountryCode, CurrencyCode, LanguageCode } from '@api-sdk';
+import type {
+  Channel,
+  CountryCode,
+  CurrencyCode,
+  LanguageCode,
+} from '@api-sdk';
 import { CreateChannelDto } from '@/core/channel/dto/create-channel.dto';
 import { ChannelRepository } from '@/core/channel/channel.repository';
-import { ChannelEntity } from '@/core/channel/channel.entity';
-import { ChannelCreateResponse } from '../../../sdk/endpoints';
+import { ChannelEntity } from '@/core/channel/entities';
 
 @Injectable()
 export class ChannelService {
@@ -17,7 +21,7 @@ export class ChannelService {
     return this.repository.findById(id);
   }
 
-  async createChannel(dto: CreateChannelDto): Promise<ChannelCreateResponse> {
+  async createChannel(dto: CreateChannelDto): Promise<Channel> {
     const channelEntity = new ChannelEntity({
       slug: dto.slug,
       name: dto.name,
@@ -27,11 +31,6 @@ export class ChannelService {
       countryCode: dto.countryCode as CountryCode,
     });
 
-    const created = await this.repository.create(channelEntity);
-
-    return {
-      ok: true,
-      result: created,
-    };
+    return this.repository.create(channelEntity);
   }
 }

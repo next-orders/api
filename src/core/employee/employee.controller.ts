@@ -38,7 +38,10 @@ export class EmployeeController {
       throw new BadRequestException();
     }
 
-    return created;
+    return {
+      ok: true,
+      result: created,
+    };
   }
 
   @Public()
@@ -51,7 +54,10 @@ export class EmployeeController {
       throw new BadRequestException();
     }
 
-    return created;
+    return {
+      ok: true,
+      result: created,
+    };
   }
 
   @Public()
@@ -64,7 +70,9 @@ export class EmployeeController {
       throw new BadRequestException();
     }
 
-    return created;
+    return {
+      ok: true,
+    };
   }
 
   @Public()
@@ -77,7 +85,10 @@ export class EmployeeController {
       throw new BadRequestException();
     }
 
-    return created;
+    return {
+      ok: true,
+      result: created,
+    };
   }
 
   @Public()

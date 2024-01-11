@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
-import { PrismaService } from '@/db/prisma.service';
-import {
+import type {
   Employee,
   EmployeeContact,
   EmployeeContactType,
+  EmployeePassword,
   EmployeePermission,
-  type EmployeePermissionType,
+  EmployeePermissionType,
 } from '@api-sdk';
-import { createId } from '@paralleldrive/cuid2';
 import {
   CreateEmployeeContactDto,
   CreateEmployeeDto,
@@ -17,129 +16,98 @@ import {
   SignInByEmailDto,
 } from '@/core/employee/dto';
 import { AuthService } from '@/core/auth/auth.service';
+import {
+  EmployeeContactRepository,
+  EmployeePasswordRepository,
+  EmployeePermissionRepository,
+  EmployeeRepository,
+} from '@/core/employee/repositories';
+import {
+  EmployeeContactEntity,
+  EmployeeEntity,
+  EmployeePasswordEntity,
+  EmployeePermissionEntity,
+} from '@/core/employee/entities';
 
 @Injectable()
 export class EmployeeService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly repository: EmployeeRepository,
+    private readonly contactRepository: EmployeeContactRepository,
+    private readonly passwordRepository: EmployeePasswordRepository,
+    private readonly permissionRepository: EmployeePermissionRepository,
     private readonly auth: AuthService,
   ) {}
 
-  async create(dto: CreateEmployeeDto) {
-    const created = await this.prisma.employee.create({
-      data: {
-        id: createId(),
-        firstName: dto.firstName,
-      },
-      include: {
-        permissions: true,
-      },
+  async create(dto: CreateEmployeeDto): Promise<Employee> {
+    const employeeEntity = new EmployeeEntity({
+      firstName: dto.firstName,
     });
-    if (!created) {
-      return null;
-    }
 
-    return {
-      ok: true,
-      result: created as Employee,
-    };
+    return this.repository.create(employeeEntity);
   }
 
-  async createContact(dto: CreateEmployeeContactDto) {
-    const created = await this.prisma.employeeContact.create({
-      data: {
-        id: createId(),
-        employeeId: dto.employeeId,
-        value: dto.value,
-        type: dto.type,
-        isUsedForAuthentication: dto.isUsedForAuthentication,
-      },
+  async createContact(dto: CreateEmployeeContactDto): Promise<EmployeeContact> {
+    const employeeContactEntity = new EmployeeContactEntity({
+      employeeId: dto.employeeId,
+      value: dto.value,
+      type: dto.type as EmployeeContactType,
+      isUsedForAuthentication: dto.isUsedForAuthentication,
     });
-    if (!created) {
-      return null;
-    }
 
-    return {
-      ok: true,
-      result: created as EmployeeContact,
-    };
+    return this.contactRepository.create(employeeContactEntity);
   }
 
-  async createPassword(dto: CreateEmployeePasswordDto) {
+  async createPassword(
+    dto: CreateEmployeePasswordDto,
+  ): Promise<EmployeePassword> {
     const hashedPassword = await hash(dto.password, 10);
-
-    const created = await this.prisma.employeePassword.create({
-      data: {
-        id: createId(),
-        hash: hashedPassword,
-        employeeId: dto.employeeId,
-      },
+    const employeePasswordEntity = new EmployeePasswordEntity({
+      hash: hashedPassword,
+      employeeId: dto.employeeId,
     });
-    if (!created) {
-      return null;
-    }
 
-    return {
-      ok: true,
-    };
+    return this.passwordRepository.create(employeePasswordEntity);
   }
 
-  async createPermission(dto: CreateEmployeePermissionDto) {
-    const created = await this.prisma.employeePermission.create({
-      data: {
-        id: createId(),
-        employeeId: dto.employeeId,
-        type: dto.type,
-      },
+  async createPermission(
+    dto: CreateEmployeePermissionDto,
+  ): Promise<EmployeePermission> {
+    const employeePermissionEntity = new EmployeePermissionEntity({
+      employeeId: dto.employeeId,
+      type: dto.type as EmployeePermissionType,
     });
-    if (!created) {
-      return null;
-    }
 
-    return {
-      ok: true,
-      result: created as EmployeePermission,
-    };
+    return this.permissionRepository.create(employeePermissionEntity);
   }
 
   async findEmployeeByContact(
     contactValue: string,
     type: EmployeeContactType,
   ): Promise<Employee | null> {
-    const employeeContact = await this.prisma.employeeContact.findFirst({
-      where: { value: contactValue, type },
-    });
+    const employeeContact = await this.contactRepository.findByValueAndType(
+      contactValue,
+      type,
+    );
     if (!employeeContact) {
       return null;
     }
 
-    const employee = await this.prisma.employee.findUnique({
-      where: { id: employeeContact.employeeId },
-      include: {
-        permissions: true,
-      },
-    });
-    if (!employee) {
-      return null;
-    }
-
-    return employee as Employee;
+    return this.repository.findById(employeeContact.employeeId);
   }
 
-  async checkPassword(employeeId: string, password: string) {
-    const passwords = await this.prisma.employeePassword.findMany({
-      where: { employeeId },
-    });
-    if (!passwords) {
-      return null;
+  async checkPassword(employeeId: string, password: string): Promise<boolean> {
+    const passwords =
+      await this.passwordRepository.findAllWithEmployeeId(employeeId);
+    if (!passwords || !passwords.length) {
+      return false;
     }
 
     for (const p of passwords) {
       // Check Hash
       const match = await compare(password, p.hash);
       if (match) {
-        // This Password is valid!
-        return true;
+        return true; // This Password is valid!
       }
     }
 
@@ -158,17 +126,22 @@ export class EmployeeService {
       return null;
     }
 
-    // Get all Permissions
-    const permissions = employee.permissions.map(
-      (p: { type: EmployeePermissionType }) => p.type,
+    const permissions = await this.permissionRepository.findAllWithEmployeeId(
+      employee.id,
+    );
+    const permissionTypes: EmployeePermissionType[] = permissions.map(
+      (p) => p.type,
     );
 
-    const access_token = await this.auth.createToken(employee.id, permissions);
+    const accessToken = await this.auth.createToken(
+      employee.id,
+      permissionTypes,
+    );
 
     return {
       ok: true,
       result: {
-        access_token,
+        access_token: accessToken,
       },
     };
   }

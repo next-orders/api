@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChannelEntity } from '@/core/channel/channel.entity';
+import { ChannelEntity } from '@/core/channel/entities';
 import { CountryCode, CurrencyCode, LanguageCode } from '@api-sdk';
 import { PrismaModels } from '@/db/prisma.service';
 

@@ -11,6 +11,7 @@ import { Permissions, Public } from '@/core/auth/auth.decorator';
 import { ChannelService } from '@/core/channel/channel.service';
 import { CreateChannelDto } from '@/core/channel/dto/create-channel.dto';
 import { ChannelCreateResponse } from '../../../sdk/endpoints';
+import { Channel } from '@api-sdk';
 
 @Controller('channel')
 export class ChannelController {
@@ -18,18 +19,13 @@ export class ChannelController {
 
   @Public()
   @Get('list')
-  async findAllChannels() {
-    const channels = await this.service.findAllChannels();
-    if (!channels) {
-      throw new NotFoundException();
-    }
-
-    return channels;
+  findAllChannels(): Promise<Channel[]> {
+    return this.service.findAllChannels();
   }
 
   @Public()
   @Get(':id')
-  async findChannelById(@Param('id') id: string) {
+  async findChannelById(@Param('id') id: string): Promise<Channel> {
     const channel = await this.service.findChannelById(id);
     if (!channel) {
       throw new NotFoundException();
@@ -48,6 +44,9 @@ export class ChannelController {
       throw new BadRequestException();
     }
 
-    return created;
+    return {
+      ok: true,
+      result: created,
+    };
   }
 }
