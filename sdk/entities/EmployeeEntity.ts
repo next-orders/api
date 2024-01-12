@@ -2,6 +2,7 @@ import { SignInByEmailRequest, SignInByEmailResponse } from '../endpoints';
 import { NextFetchRequestConfig } from '../types/next';
 import { ErrorBase } from '../errors';
 import { fetchAPI } from '../fetchAPI';
+import type { Employee } from '../types/objects';
 
 export class EmployeeEntity {
   private readonly apiUrl: string;
@@ -40,6 +41,18 @@ export class EmployeeEntity {
       'employee/email',
       'POST',
       data,
+      externalConfig,
+    );
+  }
+
+  public async get(
+    employeeId: string,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.request<Employee>(
+      `employee/${employeeId}`,
+      'GET',
+      undefined,
       externalConfig,
     );
   }

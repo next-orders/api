@@ -2,8 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  Param,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -23,6 +26,7 @@ import {
   CreateEmployeePermissionDto,
   SignInByEmailDto,
 } from '@/core/employee/dto';
+import { Employee } from '@api-sdk';
 
 @Controller('employee')
 export class EmployeeController {
@@ -103,5 +107,16 @@ export class EmployeeController {
     }
 
     return jwt;
+  }
+
+  @Public()
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<Employee> {
+    const employee = await this.service.findById(id);
+    if (!employee) {
+      throw new NotFoundException();
+    }
+
+    return employee;
   }
 }

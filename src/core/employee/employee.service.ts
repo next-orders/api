@@ -81,6 +81,10 @@ export class EmployeeService {
     return this.permissionRepository.create(employeePermissionEntity);
   }
 
+  findById(id: string): Promise<Employee | null> {
+    return this.repository.findById(id);
+  }
+
   async findEmployeeByContact(
     contactValue: string,
     type: EmployeeContactType,
