@@ -141,9 +141,10 @@ export type CurrencyCode = 'USD' | 'EUR' | 'RUB';
 // Channel Entities
 export type Menu = {
   id: string;
+  name: string;
   createdAt: Date;
   updatedAt: Date;
-  categories: MenuCategory[];
+  channelId: string;
 };
 
 export type MenuCategory = {

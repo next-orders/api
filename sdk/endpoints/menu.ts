@@ -1,5 +1,16 @@
 import { z } from 'zod';
-import { MenuCategory, MenuCategoryIcon } from '../types/objects';
+import { Menu, MenuCategory, MenuCategoryIcon } from '../types/objects';
+
+export const MenuCreateRequestSchema = z.object({
+  name: z.string(),
+  channelId: z.string(),
+});
+
+export type MenuCreateRequest = z.infer<typeof MenuCreateRequestSchema>;
+export type MenuCreateResponse = {
+  ok: boolean;
+  result: Menu;
+};
 
 export const MenuCategoryCreateRequestSchema = z.object({
   name: z.string(),

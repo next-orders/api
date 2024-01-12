@@ -2,6 +2,7 @@ import { NextFetchRequestConfig } from '../types/next';
 import type { Menu, ProductVariant } from '../types/objects';
 import { ErrorBase } from '../errors';
 import { fetchAPI } from '../fetchAPI';
+import { MenuCreateRequest, MenuCreateResponse } from '../endpoints';
 
 export class MenuEntity {
   private readonly apiUrl: string;
@@ -77,6 +78,18 @@ export class MenuEntity {
       `menu/${menuId}/search`,
       'GET',
       undefined,
+      externalConfig,
+    );
+  }
+
+  public async create(
+    data: MenuCreateRequest,
+    externalConfig?: NextFetchRequestConfig,
+  ) {
+    return this.request<MenuCreateResponse>(
+      'menu',
+      'POST',
+      data,
       externalConfig,
     );
   }

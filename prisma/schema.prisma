@@ -152,6 +152,7 @@ model Channel {
 // Channel Entities
 model Menu {
   id         String           @id @default(cuid())
+  name       String
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @default(now())
   channelId  String

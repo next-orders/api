@@ -1,10 +1,34 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { MenuService } from '@/core/menu/menu.service';
-import { Public } from '@/core/auth/auth.decorator';
+import { Permissions, Public } from '@/core/auth/auth.decorator';
+import { CreateMenuDto } from '@/core/menu/dto/create-menu.dto';
+import { MenuCreateResponse } from '../../../sdk/endpoints';
 
 @Controller('menu')
 export class MenuController {
   constructor(private readonly service: MenuService) {}
+
+  @Permissions(['EDIT_MENUS'])
+  @Post()
+  async create(@Body() dto: CreateMenuDto): Promise<MenuCreateResponse> {
+    const menu = await this.service.create(dto);
+    if (!menu) {
+      throw new BadRequestException();
+    }
+
+    return {
+      ok: true,
+      result: menu,
+    };
+  }
 
   @Public()
   @Get('list/:channelId')
