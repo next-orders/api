@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Menu } from '@api-sdk';
 import { PrismaService } from '@/db/prisma.service';
 import { MenuEntity } from '@/core/menu/entities';
 
@@ -6,22 +7,33 @@ import { MenuEntity } from '@/core/menu/entities';
 export class MenuRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(data: MenuEntity): Promise<MenuEntity> {
-    return this.prisma.menu.create({ data });
+  async create(data: MenuEntity): Promise<Menu> {
+    const created = await this.prisma.menu.create({
+      data,
+      include: {
+        categories: true,
+      },
+    });
+    return MenuEntity.toEntity(created, created.categories);
   }
 
-  findAllByChannelId(channelId: string): Promise<MenuEntity[]> {
-    return this.prisma.menu.findMany({
+  async findAllByChannelId(channelId: string): Promise<Menu[]> {
+    const menus = await this.prisma.menu.findMany({
       where: { channelId },
       include: {
         categories: true,
       },
     });
+    return menus.map((menu) => MenuEntity.toEntity(menu, menu.categories));
   }
 
-  findById(id: string): Promise<MenuEntity | null> {
-    return this.prisma.menu.findUnique({
+  async findById(id: string): Promise<Menu | null> {
+    const menu = await this.prisma.menu.findUnique({
       where: { id },
+      include: {
+        categories: true,
+      },
     });
+    return menu ? MenuEntity.toEntity(menu, menu.categories) : null;
   }
 }

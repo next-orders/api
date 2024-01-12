@@ -12,7 +12,7 @@ export class MenuService {
     private readonly productVariant: ProductVariantService,
   ) {}
 
-  async create(dto: CreateMenuDto) {
+  async create(dto: CreateMenuDto): Promise<Menu> {
     const newMenuEntity = new MenuEntity({
       name: dto.name,
       channelId: dto.channelId,

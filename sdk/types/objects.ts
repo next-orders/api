@@ -145,6 +145,7 @@ export type Menu = {
   createdAt: Date;
   updatedAt: Date;
   channelId: string;
+  categories: MenuCategory[];
 };
 
 export type MenuCategory = {

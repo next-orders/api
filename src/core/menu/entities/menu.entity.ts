@@ -1,7 +1,11 @@
 import { createId } from '@paralleldrive/cuid2';
-import { Menu } from '@api-sdk';
+import { PrismaModels } from '@/db/prisma.service';
+import { Menu, MenuCategory } from '@api-sdk';
 
-export class MenuEntity implements Menu {
+export type ModelMenu = PrismaModels['Menu'];
+type ModelMenuCategory = PrismaModels['MenuCategory'];
+
+export class MenuEntity implements ModelMenu {
   id!: string;
   name!: string;
   createdAt!: Date;
@@ -14,5 +18,15 @@ export class MenuEntity implements Menu {
     if (!data.id) {
       this.id = createId();
     }
+  }
+
+  public static toEntity(
+    menu: ModelMenu,
+    categories: ModelMenuCategory[],
+  ): Menu {
+    return {
+      ...menu,
+      categories: categories as MenuCategory[],
+    };
   }
 }
